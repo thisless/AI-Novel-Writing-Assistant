@@ -15,12 +15,12 @@ const HOME_JOURNEY_GROUPS: readonly {
   label: string;
   stages: readonly WorkflowStepCatalogDisplayStage[];
 }[] = [
-  { id: "setup", label: "项目设定", stages: ["project_setup"] },
-  { id: "story", label: "故事规划", stages: ["story_planning"] },
-  { id: "world-cast", label: "世界与角色", stages: ["world_setup", "character_setup"] },
-  { id: "structure", label: "卷与章节", stages: ["volume_strategy", "structured_outline"] },
-  { id: "writing", label: "正文创作", stages: ["chapter_execution"] },
-  { id: "quality", label: "质量完善", stages: ["quality_repair"] },
+  { id: "setup", label: "Project setup", stages: ["project_setup"] },
+  { id: "story", label: "Story planning", stages: ["story_planning"] },
+  { id: "world-cast", label: "World & characters", stages: ["world_setup", "character_setup"] },
+  { id: "structure", label: "Volumes & chapters", stages: ["volume_strategy", "structured_outline"] },
+  { id: "writing", label: "Chapter writing", stages: ["chapter_execution"] },
+  { id: "quality", label: "Quality review", stages: ["quality_repair"] },
 ] as const;
 
 export function buildHomeJourney(task: NovelAutoDirectorTaskSummary | null): {

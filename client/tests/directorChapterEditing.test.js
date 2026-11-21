@@ -128,10 +128,10 @@ export async function run(scenario) {
     const route='/lab/director/'+(scenario==='preview' ? 'preview' : 'book')+(scenario==='review' ? '?review=chapter_batch_closed' : '');
     await act(async()=>root.render(<QueryClientProvider client={client}><MemoryRouter initialEntries={[route]}><Routes><Route path='/lab/director/:novelId' element={<DirectorNovelPage/>}/></Routes></MemoryRouter></QueryClientProvider>));
     await flush();
-    if(scenario==='preview') return {hasEdit:document.body.textContent.includes('编辑正文'),requests};
+    if(scenario==='preview') return {hasEdit:document.body.textContent.includes('Edit manuscript'),requests};
     const before=document.querySelector('article').textContent;
-    await click('编辑正文');
-    const follow=[...document.querySelectorAll('input[type=checkbox]')].find(input=>input.parentElement.textContent.includes('跟随生成'));
+    await click(scenario==='review' ? 'Edit prose' : 'Edit manuscript');
+    const follow=[...document.querySelectorAll('input[type=checkbox]')].find(input=>input.parentElement.textContent.includes('Follow generation'));
     const pausedFollow=follow.disabled && follow.checked;
     const dialog=document.querySelector('[role=dialog]');
     if(!dialog) throw new Error('V2 editor did not open');
@@ -147,62 +147,62 @@ export async function run(scenario) {
     if(scenario==='cursor-instruction') {
       await enterInstruction();await click('测试放置光标');
       const inputCount=dialog.querySelectorAll('textarea').length;
-      await click('增加对话');return {inputCount,requests};
+      await click('Add dialogue');return {inputCount,requests};
     }
     if(scenario==='chapter-to-selection') {
-      await click('修改整章');await enterInstruction();await click('测试选择片段');
-      await click('按要求修改');return {requests};
+      await click('Edit entire chapter');await enterInstruction();await click('测试选择片段');
+      await click('Revise as instructed');return {requests};
     }
     if(scenario==='cursor-save-pending') {
-      await click('测试放置光标');await click('测试输入正文');await click('保存 · Ctrl/Cmd+S');
-      const button=[...dialog.querySelectorAll('button')].find(row=>row.textContent.trim()==='增加对话');
-      const disabled=button.disabled;await click('增加对话');return {disabled,requests};
+      await click('测试放置光标');await click('测试输入正文');await click('Save · Ctrl/Cmd+S');
+      const button=[...dialog.querySelectorAll('button')].find(row=>row.textContent.trim()==='Add dialogue');
+      const disabled=button.disabled;await click('Add dialogue');return {disabled,requests};
     }
     if(diagnostic) {
       if(scenario==='diagnostic-layout') {
-        const primary=dialog.querySelector('[aria-label="首要问题"]');
-        const other=[...dialog.querySelectorAll('details')].find(item=>item.querySelector('summary')?.textContent.includes('其余问题'));
-        const background=[...dialog.querySelectorAll('details')].find(item=>item.querySelector('summary')?.textContent.includes('章节背景'));
+        const primary=dialog.querySelector('[aria-label="Top issue"]');
+        const other=[...dialog.querySelectorAll('details')].find(item=>item.querySelector('summary')?.textContent.includes('Other issues'));
+        const background=[...dialog.querySelectorAll('details')].find(item=>item.querySelector('summary')?.textContent.includes('Chapter goals and context'));
         return {primaryText:primary?.textContent??'',otherCollapsed:Boolean(other&&!other.open),backgroundCollapsed:Boolean(background&&!background.open),inputCount:dialog.querySelectorAll('textarea').length};
       }
       if(scenario==='diagnostic-supplement') await enterInstruction();
       if(scenario==='diagnostic-unknown') await click('测试选择片段');
-      await click(scenario==='diagnostic-recommended' ? '生成修文方案' : '直接用 AI 处理');
+      await click(scenario==='diagnostic-recommended' ? 'Generate revision plan' : 'Address with AI');
       const previewHasCard=dialog.textContent.includes('开场重复');
       if(scenario==='diagnostic-unknown' || scenario==='diagnostic-stale') return {requests};
-      if(scenario==='diagnostic-reject') await click('拒绝全部');
+      if(scenario==='diagnostic-reject') await click('Reject all');
       else {
         if(scenario==='diagnostic-partial') {
-          const toggle=[...dialog.querySelectorAll('input[type=checkbox]')].find(input=>input.parentElement.textContent.includes('改动 2'));
+          const toggle=[...dialog.querySelectorAll('input[type=checkbox]')].find(input=>input.parentElement.textContent.includes('Change 2'));
           await act(async()=>toggle.click());await flush();
         }
-        await click(scenario==='diagnostic-partial' ? '接受已选' : '接受全部');
+        await click(scenario==='diagnostic-partial' ? 'Accept selected changes' : 'Accept all');
       }
       return {previewHasCard,content:chapter.content,editorText:dialog.querySelector('[data-testid="editor-prose"]').textContent,workspace:client.getQueryData(queryKeys.novels.chapterEditorWorkspace('book','c1')).data,
-        candidateRetained:[...dialog.querySelectorAll('button')].some(button=>button.textContent.trim()==='接受全部' && !button.disabled),requests};
+        candidateRetained:[...dialog.querySelectorAll('button')].some(button=>button.textContent.trim()==='Accept all' && !button.disabled),requests};
     }
     await click(rewrite ? '测试选择片段' : '测试放置光标');
-    await click(rewrite ? 'AI 优化这段' : '增加对话');
+    await click(rewrite ? 'AI polish selection' : 'Add dialogue');
     const previewText=dialog.textContent;
     const savedBeforeAccept=chapter.content;
     if(scenario==='dirty-close') {
-      await click('返回正文阅读');
+      await click('Back to manuscript');
       const protectedCandidate=Boolean(document.querySelector('[role=dialog]'));
       return {protectedCandidate,requests};
     }
-    await click(rewrite ? '接受全部' : '插入正文');
-    if(scenario==='conflict') return {content:chapter.content,candidateRetained:dialog.textContent.includes('插入正文'),requests};
+    await click(rewrite ? 'Accept all' : 'Insert into manuscript');
+    if(scenario==='conflict') return {content:chapter.content,candidateRetained:dialog.textContent.includes('Insert into manuscript'),requests};
     const editorText=dialog.querySelector('[data-testid="editor-prose"]').textContent;
-    const saveDisabled=[...dialog.querySelectorAll('button')].find(row=>row.textContent.trim()==='保存 · Ctrl/Cmd+S').disabled;
+    const saveDisabled=[...dialog.querySelectorAll('button')].find(row=>row.textContent.trim()==='Save · Ctrl/Cmd+S').disabled;
     const storedDraft=sessionStorage.getItem('ai-novel:chapter-draft:v1:book:c1');
     await act(async()=>window.dispatchEvent(new window.KeyboardEvent('keydown',{key:'s',ctrlKey:true,cancelable:true})));
     await flush();
     const writesAfterShortcut=requests.filter(row=>row.method==='put').length;
-    if(scenario==='rewrite-then-edit') {await click('测试输入正文');await click('保存 · Ctrl/Cmd+S');}
-    await click('返回正文阅读');
+    if(scenario==='rewrite-then-edit') {await click('测试输入正文');await click('Save · Ctrl/Cmd+S');}
+    await click('Back to manuscript');
     return {before,pausedFollow,previewText,savedBeforeAccept,editorText,saveDisabled,storedDraft,writesAfterShortcut,content:chapter.content,reader:document.querySelector('article').textContent,
       dialogClosed:!document.querySelector('[role=dialog]'),followRestored:!follow.disabled && follow.checked,
-      routePreserved:document.body.textContent.includes(scenario==='review' ? '查看本阶段结果' : '章节正文'),requests};
+      routePreserved:document.body.textContent.includes(scenario==='review' ? 'Review stage result' : 'Chapter manuscript'),requests};
   } finally {
     if(finishPendingSave) {await act(async()=>finishPendingSave());await flush();}
     await act(async()=>root.unmount());
@@ -268,7 +268,7 @@ test('manual editing and saving after accepting a rewrite retains the accepted p
 
 test('V2 chapter review opens editing and returns to the same review context',async()=>{
   const result=await run('review');
-  assert.match(result.before,/查看本阶段结果/);assert.match(result.reader,/查看本阶段结果/);
+  assert.match(result.before,/Review stage result/);assert.match(result.reader,/Review stage result/);
   assert.match(result.reader,/门外响起敲门声/);
 });
 

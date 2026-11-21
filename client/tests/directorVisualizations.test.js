@@ -37,22 +37,22 @@ client.clear();`,resolveDir:clientDir,loader:'tsx'},bundle:true,platform:'node',
       plugins:[nodeStyles],
     });
     const result = await import(pathToFileURL(output).href);
-    assert.match(result.map,/世界地图 · 2 个地点 · 1 条路线/);
+    assert.match(result.map,/World map · 2 locations · 1 route/);
     assert.match(result.map,/本书县城/);
-    assert.match(result.map,/全屏查看图谱/);
-    assert.match(result.empty,/没有可绘制的地点资料/);
+    assert.match(result.map,/View graph full screen/);
+    assert.match(result.empty,/No locations to map yet/);
     assert.doesNotMatch(result.empty,/个地点 ·/);
     assert.match(result.corrupt,/role="alert"/);
     assert.match(result.corrupt,/世界详细设定读取失败/);
-    assert.match(result.graph,/2 个角色/);
-    assert.match(result.graph,/1 条关系/);
-    assert.match(result.graph,/1 条动态阶段/);
-    assert.match(result.graph,/全屏查看/);
-    assert.doesNotMatch(result.graph,/角色关系读取失败|不应展示/);
-    assert.match(result.preview,/0 条关系/);
-    assert.doesNotMatch(result.preview,/1 条动态阶段/);
-    assert.match(result.failed,/角色关系读取失败/);
+    assert.match(result.graph,/2 characters/);
+    assert.match(result.graph,/1 relationship/);
+    assert.match(result.graph,/1 dynamic stage/);
+    assert.match(result.graph,/View full screen/);
+    assert.doesNotMatch(result.graph,/Couldn't load character relationships|不应展示/);
+    assert.match(result.preview,/0 relationships/);
+    assert.doesNotMatch(result.preview,/1 dynamic stages/);
+    assert.match(result.failed,/Couldn&#x27;t load character relationships/);
     assert.match(result.failed,/关系接口不可用/);
-    assert.match(result.failed,/重新读取关系/);
+    assert.match(result.failed,/Reload relationships/);
   } finally {fs.rmSync(output,{force:true});}
 });

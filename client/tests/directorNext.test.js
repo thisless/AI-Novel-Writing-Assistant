@@ -27,7 +27,7 @@ test('history is read only and new routes do not enter navigation', () => {
 
 test('panel has all four sections and closed diagnostics', () => {
   const source = read('components/directorNext/DirectorPanel.tsx');
-  for (const label of ['正在做什么', '需要你做什么', '质量提醒', '时间线']) assert.ok(source.includes(label));
+  for (const label of ['Current activity', 'Next steps', 'Quality reminders', 'Timeline']) assert.ok(source.includes(label));
   assert.doesNotMatch(source, /<details[^>]*\bopen/);
   assert.match(read('components/directorNext/DirectorBadge.tsx'), /find\(\(action\) => action.primary\)/);
 });
@@ -128,8 +128,9 @@ export function renderedBudgetSettings(tokenLimit) {
     const rows = renderedStates();
     assert.equal(rows.length, 7);
     for (const { view, markup } of rows) {
-      assert.ok(markup.includes(view.headline));
-      assert.match(markup,/aria-label="创作方式"[^>]*>模式：全自动推进<\/span>/);
+      const decodedMarkup = markup.replace(/&amp;/g, "&").replace(/&#x27;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, "<").replace(/&gt;/g, ">");
+      assert.ok(decodedMarkup.includes(view.headline));
+      assert.match(markup,/aria-label="Writing mode"[^>]*>Mode: Fully automatic<\/span>/);
       assert.ok(markup.includes('role="progressbar"'));
       assert.doesNotMatch(markup, /<details[^>]*\bopen/);
       for (const action of view.availableActions) {
@@ -138,8 +139,8 @@ export function renderedBudgetSettings(tokenLimit) {
       }
     }
     for (const {available, label, driver, markup} of renderedSwitchCases()) {
-      const modeLabel=driver==='auto' ? '全自动推进' : '按阶段确认（半自动）';
-      assert.ok(markup.includes(`aria-label="创作方式">模式：${modeLabel}</span>`),'the header shows the current driver even when switching is unavailable');
+      const modeLabel=driver==='auto' ? 'Fully automatic' : 'Confirm each stage (assisted)';
+      assert.ok(markup.includes(`aria-label="Writing mode">Mode: ${modeLabel}</span>`),'the header shows the current driver even when switching is unavailable');
       assert.equal(markup.split(label).length-1, available ? 1 : 0, 'switch renders only once from the projected action');
       if (available) assert.match(markup, /<button[^>]*disabled=""[^>]*>按本次授权切换创作方式<\/button>/);
     }
@@ -148,40 +149,40 @@ export function renderedBudgetSettings(tokenLimit) {
       const split=renderedChapterSplit(completed);
       const currentWork=split.slice(split.indexOf('id="director-current-work"'),split.indexOf('id="director-next-action"'));
       assert.match(currentWork,/正在生成「生成卷拆章列表」/);
-      assert.match(currentWork,/6\/7 阶段/);
-      assert.ok(currentWork.includes(`已生成 ${completed}/12 章`));
+      assert.match(currentWork,/6\/7 stages/);
+      assert.ok(currentWork.includes(`Generated ${completed}/12 chapters`));
       assert.match(currentWork,/正在拆分高潮节奏段/);
-      assert.match(currentWork,new RegExp(`aria-label="章节拆分进度"[^>]*aria-valuemax="12"[^>]*aria-valuenow="${completed}"`));
+      assert.match(currentWork,new RegExp(`aria-label="Chapter breakdown progress"[^>]*aria-valuemax="12"[^>]*aria-valuenow="${completed}"`));
       assert.match(currentWork,new RegExp(`width:${completed/12*100}%`));
-      assert.equal(currentWork.includes('正在校验并保存章节列表'),completed===12);
+      assert.equal(currentWork.includes('Validating and saving the chapter list'),completed===12);
     }
     assert.doesNotMatch(production.running,/章节拆分进度/);
-    assert.match(production.running,/本次正文/);
+    assert.match(production.running,/Current manuscript: Chapters 1–3/);
     assert.match(production.running,/2\/3/);
     assert.match(production.running,/等待本批次完成/);
     assert.doesNotMatch(production.running,/id="director-start"/);
     assert.match(production.failed,/<button[^>]*>重试当前写作步骤<\/button>/);
     assert.doesNotMatch(production.failed,/id="director-start"/);
-    assert.match(production.completed,/提交并生成第 4—6 章/);
-    assert.match(production.completed,/更多创作设置/);
-    assert.ok(production.completed.indexOf('正在做什么')<production.completed.indexOf('id="director-start"'),'status and next-step context come before launch settings');
+    assert.match(production.completed,/Submit and write chapters 4–6/);
+    assert.match(production.completed,/More writing settings/);
+    assert.ok(production.completed.indexOf('Current activity')<production.completed.indexOf('id="director-start"'),'status and next-step context come before launch settings');
     const budget=renderedBudget();
     assert.match(budget,/id="director-chapter-budget"/);
-    assert.match(budget,/本章新上限/);assert.match(budget,/value="122000"/);
-    assert.match(budget,/未命中输入.*输出/);
-    assert.match(budget,/追加额度并继续本章/);
-    assert.match(budget,/同时应用于本任务后续章节/);
-    assert.match(budget,/保持暂停/);
+    assert.match(budget,/New chapter limit/);assert.match(budget,/value="122000"/);
+    assert.match(budget,/Billable usage is uncached input plus output/);
+    assert.match(budget,/Add budget and continue this chapter/);
+    assert.match(budget,/Apply to later chapters in this task as well/);
+    assert.match(budget,/Keep paused/);
     assert.doesNotMatch(budget,/<input[^>]*type="checkbox"[^>]*checked/);
-    assert.match(production.completed,/单章 AI 用量上限/);
+    assert.match(production.completed,/Per-chapter AI usage limit/);
     for(const tokenLimit of [100000,200000]) {
       const settings=renderedBudgetSettings(tokenLimit);
-      assert.match(settings,/单章 AI 用量上限/);
+      assert.match(settings,/Per-chapter AI usage limit/);
       assert.ok(settings.includes(`value="${tokenLimit}"`));
       assert.match(settings,/min="16001".*max="10000000"/);
-      assert.match(settings,/与模型的单次最大输出不同/);
+      assert.match(settings,/differs from the model&#x27;s maximum output per request/);
     }
-    assert.match(budget,/确认后从保存进度继续/);
+    assert.match(budget,/continue from the saved progress/);
   } finally {
     if (fs.existsSync(output)) fs.unlinkSync(output);
   }

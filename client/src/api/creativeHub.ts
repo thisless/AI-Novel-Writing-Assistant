@@ -12,7 +12,7 @@ import { apiClient, type ApiHttpError } from "./client";
 function ensureThreadId(threadId: string): string {
   const normalized = threadId.trim();
   if (!normalized) {
-    throw new Error("创作中枢线程不存在，请先创建线程。");
+    throw new Error("Creative Hub thread not found. Create a thread first.");
   }
   return normalized;
 }
@@ -112,7 +112,7 @@ export async function* streamCreativeHubRun(
 
   if (!response.ok || !response.body) {
     const details = await response.json().catch(() => undefined) as ApiResponse<unknown> | undefined;
-    const title = details?.error || `创作中枢请求失败，状态码 ${response.status}`;
+    const title = details?.error || `Creative Hub request failed with status ${response.status}`;
     const message = details?.message && details.message !== title
       ? `${title} ${details.message}`
       : title;

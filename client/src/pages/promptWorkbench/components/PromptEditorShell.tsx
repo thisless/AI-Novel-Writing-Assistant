@@ -39,13 +39,13 @@ export function PromptEditorShell(props: PromptEditorShellProps) {
           <div className="min-w-0">
             <h2 className="text-xl font-semibold">{props.heading || prompt.shortDescription || prompt.description || prompt.id}</h2>
             <p className="mt-1 text-sm text-muted-foreground">{simplified
-              ? "调整正文模板，用示例或本书章节比较试写效果。"
+              ? "Adjust the prose template and compare results using sample content or a chapter from this novel."
               : prompt.description}</p>
           </div>
           {props.onImmersiveChange ? (
             <Button variant="ghost" size="sm" onClick={() => props.onImmersiveChange?.(!immersive)}>
               {immersive ? <Minimize2 className="mr-2 h-4 w-4" /> : <Maximize2 className="mr-2 h-4 w-4" />}
-              {immersive ? "退出专注" : "专注编辑"}
+              {immersive ? "Exit focus mode" : "Focus mode"}
             </Button>
           ) : null}
         </div>
@@ -53,43 +53,43 @@ export function PromptEditorShell(props: PromptEditorShellProps) {
           {!simplified ? (
             <Tabs value={scope} onValueChange={(value) => props.onScopeChange(value as PromptSlotOverrideScope)}>
               <TabsList>
-                <TabsTrigger value="global">{advanced ? "模板草稿" : "所有小说"}</TabsTrigger>
-                <TabsTrigger value="novel">{advanced ? "本书模板" : "指定小说"}</TabsTrigger>
+                <TabsTrigger value="global">{advanced ? "Template draft" : "All novels"}</TabsTrigger>
+                <TabsTrigger value="novel">{advanced ? "This novel's template" : "Specific novel"}</TabsTrigger>
               </TabsList>
             </Tabs>
           ) : null}
           {scope === "novel" ? (
             <SelectControl value={props.selectedNovelId} onChange={(event) => props.onNovelChange(event.target.value)}
-              aria-label="应用范围：小说" className="h-9 max-w-72 rounded-md border border-input bg-background px-3 text-sm">
-              <option value="">{advanced ? "选择小说（可稍后选择）" : "选择要调整的小说"}</option>
+              aria-label="Scope: novel" className="h-9 max-w-72 rounded-md border border-input bg-background px-3 text-sm">
+              <option value="">{advanced ? "Select a novel (optional for now)" : "Select a novel to customize"}</option>
               {props.novels.map((novel) => <option key={novel.id} value={novel.id}>{novel.title || novel.id}</option>)}
             </SelectControl>
           ) : null}
           <span className="text-xs text-muted-foreground">{advanced
-            ? (scope === "novel" && props.selectedNovelId ? "保存后仅用于这本小说" : "可直接编辑，保存应用时再选择小说")
-            : scope === "global" ? "作为所有小说的默认要求，本书单独设置的内容优先" : "仅影响所选小说"}</span>
+            ? (scope === "novel" && props.selectedNovelId ? "Applies only to this novel after saving." : "Edit now and choose a novel when you apply the changes.")
+            : scope === "global" ? "Default instructions for all novels. Novel-specific settings take precedence." : "Applies only to the selected novel."}</span>
         </div>
         <details className="mt-3 text-xs text-muted-foreground">
-          <summary className="w-fit cursor-pointer">预览设置与提示词信息</summary>
+          <summary className="w-fit cursor-pointer">Preview settings and prompt details</summary>
           <div className="mt-3 flex flex-wrap items-center gap-3">
-            <label className="flex items-center gap-2">模拟使用场景
+            <label className="flex items-center gap-2">Simulated use case
               <SelectControl value={props.entrypoint} onChange={(event) => props.onEntrypointChange(event.target.value)}
                 className="h-8 rounded-md border border-input bg-background px-2">
                 {ENTRYPOINT_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
               </SelectControl>
             </label>
             {scope === "novel" && props.selectedNovelId ? (
-              <label className="flex items-center gap-2">预览章节
+              <label className="flex items-center gap-2">Preview chapter
                 <SelectControl value={props.selectedChapterId} onChange={(event) => props.onChapterChange(event.target.value)}
                   className="h-8 max-w-72 rounded-md border border-input bg-background px-2">
-                  <option value="">选择章节</option>
+                  <option value="">Select a chapter</option>
                   {props.chapters.map((chapter) => <option key={chapter.id} value={chapter.id}>
-                    第 {chapter.order ?? "?"} 章 {chapter.title || "未命名章节"}{chapter.hasContent ? "" : "（无正文）"}
+                    Chapter {chapter.order ?? "?"}: {chapter.title || "Untitled chapter"}{chapter.hasContent ? "" : " (no text)"}
                   </option>)}
                 </SelectControl>
               </label>
-            ) : <span>使用示例内容预览，不改动小说正文</span>}
-            <span className="break-all">{prompt.key} · {OUTPUT_TYPE_LABELS[prompt.outputType] ?? prompt.outputType} · 上下文预算 {prompt.contextPolicy.maxTokensBudget} tokens</span>
+            ) : <span>Preview with sample content without changing the novel.</span>}
+            <span className="break-all">{prompt.key} · {OUTPUT_TYPE_LABELS[prompt.outputType] ?? prompt.outputType} · Context budget: {prompt.contextPolicy.maxTokensBudget} tokens</span>
           </div>
         </details>
       </header>

@@ -12,9 +12,9 @@ const OPERATIONS: ChapterEditorCursorOperation[] = ["continue", "transition", "d
 
 export default function CursorAIToolbar({ visible, targetLabel, disabled, onRunOperation }: Props) {
   if (!visible) return null;
-  return <div role="toolbar" aria-label="光标 AI 续写" className="space-y-3"
+  return <div role="toolbar" aria-label="AI continuation at cursor" className="space-y-3"
     onMouseDown={event => { if ((event.target as HTMLElement).closest("button")) event.preventDefault(); }}>
-    <p className="text-xs text-muted-foreground">{targetLabel} · 候选确认后插入正文</p>
+    <p className="text-xs text-muted-foreground">{targetLabel} · Accepted candidates are inserted into the manuscript.</p>
     <div className="flex flex-wrap gap-2">{OPERATIONS.map(operation => <Button key={operation} size="sm"
       variant={operation === "continue" ? "default" : "outline"} disabled={disabled} onClick={() => onRunOperation(operation)}>
       {CHAPTER_EDITOR_CURSOR_OPERATION_LABELS[operation]}

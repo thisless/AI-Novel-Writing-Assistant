@@ -62,21 +62,21 @@ interface NovelExistingProjectTakeoverDialogProps {
 const RUN_MODE_OPTIONS: Array<{ value: DirectorRunMode; label: string; description: string }> = [
   {
     value: "auto_to_ready",
-    label: "推进到可开写",
-    description: "AI 会补齐正文生产前需要的资源，再让你选择简易生产或专业生产。",
+    label: "Prepare for writing",
+    description: "AI will prepare the resources needed to write, then let you choose simple or professional production.",
   },
 ];
 
 const STRATEGY_OPTIONS: Array<{ value: DirectorTakeoverStrategy; label: string; description: string }> = [
   {
     value: "continue_existing",
-    label: "继续已有进度",
-    description: "优先跳过已完成资产，只补缺失部分或恢复当前批次。",
+    label: "Continue existing progress",
+    description: "Skip completed assets where possible, fill in missing pieces, or resume the current batch.",
   },
   {
     value: "restart_current_step",
-    label: "重新生成当前步",
-    description: "先清空当前步骤产出，再按该步骤重新生成。",
+    label: "Regenerate current step",
+    description: "Clear the current step's output, then generate it again.",
   },
 ];
 
@@ -97,9 +97,9 @@ export default function NovelExistingProjectTakeoverDialog(props: NovelExistingP
   const entry = useQuery({queryKey: queryKeys.novels.detail(props.novelId), queryFn: () => getNovelDetail(props.novelId), enabled: !!props.novelId, retry: false});
   const book = entry.data?.data;
   const directorHref = book?.id === props.novelId ? getDirectorWorkspaceHref(book) : null;
-  if (directorHref) return <Button asChild variant={props.triggerVariant ?? "outline"}><Link to={directorHref}>打开导演台</Link></Button>;
+  if (directorHref) return <Button asChild variant={props.triggerVariant ?? "outline"}><Link to={directorHref}>Open Auto Director</Link></Button>;
   if (book?.id === props.novelId && book.workspaceSourceRoute === null) return <LegacyProjectTakeoverDialog {...props}/>;
-  return <Button variant={props.triggerVariant ?? "outline"} disabled={entry.isPending || entry.isFetching} onClick={() => void entry.refetch()}>{entry.isPending || entry.isFetching ? "正在读取创作入口…" : "重新读取创作入口"}</Button>;
+  return <Button variant={props.triggerVariant ?? "outline"} disabled={entry.isPending || entry.isFetching} onClick={() => void entry.refetch()}>{entry.isPending || entry.isFetching ? "Loading writing workspace…" : "Reload writing workspace"}</Button>;
 }
 
 function LegacyProjectTakeoverDialog({
@@ -215,7 +215,7 @@ function LegacyProjectTakeoverDialog({
   );
   const progressInspection = buildTakeoverProgressInspection(readiness, contextTaskSnapshot);
   const readinessErrorMessage = readinessQuery.isError
-    ? readinessQuery.error instanceof Error ? readinessQuery.error.message : "读取接管状态失败。"
+    ? readinessQuery.error instanceof Error ? readinessQuery.error.message : "Couldn't load takeover status."
     : null;
 
   const enterCurrentTask = () => {
@@ -320,7 +320,7 @@ function LegacyProjectTakeoverDialog({
     onSuccess: async (response) => {
       const data = response.data;
       if (!data?.taskId) {
-        toast.error("启动自动导演失败，未返回任务信息。");
+        toast.error("Couldn't start Auto Director because no task information was returned.");
         return;
       }
       await queryClient.invalidateQueries({ queryKey: queryKeys.novels.autoDirectorTask(novelId) });
@@ -332,10 +332,10 @@ function LegacyProjectTakeoverDialog({
       setOpen(false);
       toast.success(
         effectiveRunMode === "full_book_autopilot"
-          ? "自动导演接管任务已提交，可在 AI 驾驶舱查看全书执行进度。"
+          ? "The Auto Director takeover task was submitted. View full-book progress in Auto Director."
           : effectiveRunMode === "auto_to_execution"
-          ? `自动导演接管任务已提交，可在 AI 驾驶舱查看 ${buildDirectorAutoExecutionPlanLabel(autoExecutionPlan)} 的执行进度。`
-          : "自动导演接管任务已提交，可在 AI 驾驶舱查看排队和执行进度。",
+          ? `The Auto Director takeover task was submitted. View progress for ${buildDirectorAutoExecutionPlanLabel(autoExecutionPlan)} in Auto Director.`
+          : "The Auto Director takeover task was submitted. View its queue and progress in Auto Director.",
       );
       navigate(buildEditRoute({
         novelId,
@@ -355,14 +355,14 @@ function LegacyProjectTakeoverDialog({
   return (
     <>
       <Button type="button" variant={triggerVariant} size="sm" onClick={() => setOpen(true)}>
-        AI 自动导演接管
+        Start Auto Director takeover
       </Button>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className={AUTO_DIRECTOR_MOBILE_CLASSES.takeoverDialogContent}>
           <DialogHeader className="shrink-0 border-b bg-gradient-to-r from-primary/[0.06] via-primary/[0.025] to-transparent px-4 pb-4 pr-12 pt-5 text-left sm:px-6 sm:pt-6">
-            <DialogTitle>继续自动导演</DialogTitle>
+            <DialogTitle>Continue with Auto Director</DialogTitle>
             <DialogDescription>
-              AI 会先核对已完成的内容，再从最合适的位置继续，不会重复生成已有资产。
+              AI will review completed work and continue from the best point without regenerating existing assets.
             </DialogDescription>
           </DialogHeader>
           <div className={AUTO_DIRECTOR_MOBILE_CLASSES.dialogBody}>
@@ -390,26 +390,26 @@ function LegacyProjectTakeoverDialog({
                 onToggle={(event) => setAdvancedOpen(event.currentTarget.open)}
               >
                 <summary className="cursor-pointer list-none text-sm font-medium text-foreground [&::-webkit-details-marker]:hidden">
-                  需要调整模型、写法或接续位置？
+                  Adjust the model, writing style, or starting point?
                 </summary>
-                <div className="mt-1 text-xs text-muted-foreground">默认方案会保留已有资产并按建议范围继续。</div>
+                <div className="mt-1 text-xs text-muted-foreground">By default, existing assets are preserved and work continues across the recommended range.</div>
                 <div className="mt-5 space-y-6">
               <div className="min-w-0 border-t border-border/70 pt-5">
-                <div className="text-sm font-medium text-foreground">模型设置</div>
+                <div className="text-sm font-medium text-foreground">Model settings</div>
                 <div className="mt-3"><LLMSelector /></div>
               </div>
               <div className="min-w-0 border-t border-border/70 pt-5">
-                <div className="text-sm font-medium text-foreground">自动导演运行方式</div>
+                <div className="text-sm font-medium text-foreground">Auto Director run mode</div>
                 <div className="mt-3 bg-muted/25 p-3">
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                     <div className="space-y-1">
-                      <div className="text-sm font-medium text-foreground">正文后去 AI 检测与修正</div>
+                      <div className="text-sm font-medium text-foreground">Run AI detection and revision after drafting</div>
                       <div className={`text-xs leading-5 text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>
-                        开启后，章节检查会核对写法与 AI 味风险；需要修正的问题按本次创作策略局部修文，普通建议保留为质量提醒。
+                        When enabled, chapter reviews check style and AI-like phrasing. Issues that need correction are revised according to this run's strategy; other suggestions remain as quality reminders.
                       </div>
                     </div>
                     <Switch
-                      aria-label="正文后去 AI 检测与修正"
+                      aria-label="Run AI detection and revision after drafting"
                       checked={postGenerationStyleReviewEnabled}
                       onCheckedChange={setPostGenerationStyleReviewEnabled}
                     />
@@ -455,18 +455,18 @@ function LegacyProjectTakeoverDialog({
                 ) : null}
                 {runMode === "full_book_autopilot" ? (
                   <div className={`mt-3 rounded-md border border-primary/15 bg-primary/5 p-3 text-xs leading-5 text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>
-                    <div className="text-sm font-medium text-foreground">全书自动接管</div>
+                    <div className="text-sm font-medium text-foreground">Full-book Auto Director takeover</div>
                     <div className="mt-1">
-                      系统会以整本书为目标接管当前项目，继续补齐规划、章节执行、审校和修复。只有模型不可用、服务异常、正文保护或不可恢复风险会停下。
+                      Auto Director will take over the project through planning, chapter execution, review, and revision. It stops only if the model is unavailable, a service fails, manuscript protection is triggered, or an unrecoverable risk is detected.
                     </div>
                   </div>
                 ) : null}
               </div>
 
               <div className="min-w-0 border-t border-border/70 pt-5">
-                <div className="text-sm font-medium text-foreground">本次接管使用的写法</div>
+                <div className="text-sm font-medium text-foreground">Writing style for this takeover</div>
                 <div className={`mt-1 text-xs leading-5 text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>
-                  绑定书级默认写法后，接管时建议沿用它。前半段导演只读取轻量摘要，避免干扰结构规划。
+                  If a default style is linked to the novel, it will be used for this takeover. Early planning uses only a concise summary to avoid disrupting story structure.
                 </div>
                 <div className="mt-3 space-y-3">
                   <SelectControl
@@ -474,21 +474,21 @@ function LegacyProjectTakeoverDialog({
                     value={selectedStyleProfileId}
                     onChange={(event) => setSelectedStyleProfileId(event.target.value)}
                   >
-                    <option value="">先只沿用文风关键词</option>
+                    <option value="">Use only the style keywords for now</option>
                     {styleProfiles.map((profile) => (
                       <option key={profile.id} value={profile.id}>{profile.name}</option>
                     ))}
                   </SelectControl>
                   {currentNovelStyleBindings.length > 0 ? (
                     <div className={`bg-muted/25 p-3 text-xs leading-6 text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>
-                      当前书级默认写法：{currentNovelStyleBindings
+                      Novel's default writing style: {currentNovelStyleBindings
                         .map((binding) => binding.styleProfile?.name ?? binding.styleProfileId)
                         .join(" / ")}
                     </div>
                   ) : null}
                   {selectedStyleSummary?.stageSummaryLines.length ? (
                     <div className={`bg-muted/25 p-3 text-xs leading-6 text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>
-                      本阶段仅生效的写法摘要：{selectedStyleSummary.stageSummaryLines.join("；")}
+                      Style summary for this stage only: {selectedStyleSummary.stageSummaryLines.join("; ")}
                     </div>
                   ) : null}
                 </div>
@@ -496,12 +496,12 @@ function LegacyProjectTakeoverDialog({
 
               <div className="min-w-0 border-t border-border/70 pt-5">
                 <div className="flex items-center justify-between gap-3">
-                  <div className="text-sm font-medium text-foreground">接续位置</div>
-                  {readinessQuery.isLoading ? <Badge variant="outline">读取中</Badge> : null}
+                  <div className="text-sm font-medium text-foreground">Starting point</div>
+                  {readinessQuery.isLoading ? <Badge variant="outline">Loading</Badge> : null}
                 </div>
                 {readinessQuery.isError ? (
                   <div className={`mt-3 rounded-lg border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>
-                    {readinessQuery.error instanceof Error ? readinessQuery.error.message : "读取接管状态失败。"}
+                    {readinessQuery.error instanceof Error ? readinessQuery.error.message : "Couldn't load takeover status."}
                   </div>
                 ) : null}
 
@@ -509,27 +509,27 @@ function LegacyProjectTakeoverDialog({
                   <>
                     <div className="mt-3 grid min-w-0 gap-3 sm:grid-cols-2 lg:grid-cols-4">
                       <div className="rounded-lg bg-muted/25 p-3">
-                        <div className="text-xs text-muted-foreground">书级规划</div>
-                        <div className="mt-1 text-sm font-medium text-foreground">{readiness.snapshot.hasStoryMacroPlan ? "已具备" : "未具备"}</div>
+                        <div className="text-xs text-muted-foreground">Novel-level plan</div>
+                        <div className="mt-1 text-sm font-medium text-foreground">{readiness.snapshot.hasStoryMacroPlan ? "Available" : "Not available"}</div>
                       </div>
                       <div className="rounded-lg bg-muted/25 p-3">
-                        <div className="text-xs text-muted-foreground">创作约束</div>
-                        <div className="mt-1 text-sm font-medium text-foreground">{readiness.snapshot.hasBookContract ? "已具备" : "未具备"}</div>
+                        <div className="text-xs text-muted-foreground">Creative brief</div>
+                        <div className="mt-1 text-sm font-medium text-foreground">{readiness.snapshot.hasBookContract ? "Available" : "Not available"}</div>
                       </div>
                       <div className="rounded-lg bg-muted/25 p-3">
-                        <div className="text-xs text-muted-foreground">角色数量</div>
+                        <div className="text-xs text-muted-foreground">Characters</div>
                         <div className="mt-1 text-sm font-medium text-foreground">{readiness.snapshot.characterCount}</div>
                       </div>
                       <div className="rounded-lg bg-muted/25 p-3">
-                        <div className="text-xs text-muted-foreground">卷 / 当前卷章节</div>
+                        <div className="text-xs text-muted-foreground">Volumes / chapters in current volume</div>
                         <div className="mt-1 text-sm font-medium text-foreground">{readiness.snapshot.volumeCount} / {readiness.snapshot.firstVolumeChapterCount}</div>
                       </div>
                     </div>
 
                     {readiness.hasActiveTask ? (
                       <div className="mt-4 rounded-lg border border-amber-500/30 bg-amber-500/10 p-4">
-                        <div className="text-sm font-medium text-foreground">当前已有自动导演任务</div>
-                        <div className="mt-1 text-sm text-muted-foreground">为避免重复接管，请先处理当前自动导演任务。</div>
+                        <div className="text-sm font-medium text-foreground">An Auto Director task is already active</div>
+                        <div className="mt-1 text-sm text-muted-foreground">To avoid taking over the project twice, handle the active task first.</div>
                         <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:justify-end">
                           <Button
                             type="button"
@@ -543,7 +543,7 @@ function LegacyProjectTakeoverDialog({
                               }));
                             }}
                           >
-                            处理当前任务
+                            Open active task
                           </Button>
                         </div>
                       </div>
@@ -567,13 +567,13 @@ function LegacyProjectTakeoverDialog({
                                 <div className="flex items-center justify-between gap-2">
                                   <div className="break-words text-sm font-medium text-foreground [overflow-wrap:anywhere]">{entry.label}</div>
                                   <div className="flex shrink-0 flex-wrap items-center gap-2">
-                                    {entry.recommended ? <Badge>推荐</Badge> : null}
+                                    {entry.recommended ? <Badge>Recommended</Badge> : null}
                                     <Badge variant="outline">{entry.status}</Badge>
                                   </div>
                                 </div>
                                 <div className={`mt-2 text-xs leading-5 text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>{entry.description}</div>
                                 <div className={`mt-3 text-xs leading-5 text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>
-                                  {allowedForScope ? entry.reason : "当前范围不能从这一步开始。章节范围从节奏拆章开始，卷范围从卷战略开始。"}
+                                  {allowedForScope ? entry.reason : "This step isn't available for the selected scope. Chapter ranges start with chapter breakdown; volume ranges start with volume strategy."}
                                 </div>
                               </button>
                             );
@@ -601,36 +601,36 @@ function LegacyProjectTakeoverDialog({
 
                         {selectedEntry ? (
                           <div className="mt-4 min-w-0 bg-muted/25 p-3 sm:p-4">
-                            <div className="text-sm font-medium text-foreground">本次接管预览</div>
+                            <div className="text-sm font-medium text-foreground">Takeover preview</div>
                             <div className={`mt-2 text-sm text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>{selectedPreview?.summary ?? selectedEntry.reason}</div>
                             <div className={`mt-3 text-xs leading-5 text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>{selectedPreview?.effectSummary ?? selectedEntry.description}</div>
                             {selectedPreview ? (
                               <>
                                 <div className="mt-3 flex min-w-0 flex-wrap gap-2">
-                                  <Badge variant="secondary" className="max-w-full whitespace-normal break-words text-left [overflow-wrap:anywhere]">当前页：{selectedEntry.label}</Badge>
-                                  <Badge variant="outline" className="max-w-full whitespace-normal break-words text-left [overflow-wrap:anywhere]">实际接管：{selectedPreview.effectiveStep}</Badge>
-                                  <Badge variant="outline" className="max-w-full whitespace-normal break-words text-left [overflow-wrap:anywhere]">执行阶段：{selectedPreview.effectiveStage}</Badge>
-                                  {selectedPreview.usesCurrentBatch ? <Badge>恢复当前批次</Badge> : null}
+                                  <Badge variant="secondary" className="max-w-full whitespace-normal break-words text-left [overflow-wrap:anywhere]">Current page: {selectedEntry.label}</Badge>
+                                  <Badge variant="outline" className="max-w-full whitespace-normal break-words text-left [overflow-wrap:anywhere]">Starting step: {selectedPreview.effectiveStep}</Badge>
+                                  <Badge variant="outline" className="max-w-full whitespace-normal break-words text-left [overflow-wrap:anywhere]">Execution stage: {selectedPreview.effectiveStage}</Badge>
+                                  {selectedPreview.usesCurrentBatch ? <Badge>Resume current batch</Badge> : null}
                                 </div>
                                 {readiness.activePipelineJob ? (
                                   <div className={`mt-3 text-xs leading-5 text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>
-                                    当前活动批次：{readiness.activePipelineJob.currentItemLabel || `范围 ${readiness.activePipelineJob.startOrder}-${readiness.activePipelineJob.endOrder}`}
+                                    Active batch: {readiness.activePipelineJob.currentItemLabel || `Range ${readiness.activePipelineJob.startOrder}-${readiness.activePipelineJob.endOrder}`}
                                   </div>
                                 ) : null}
                                 {readiness.latestCheckpoint?.checkpointType ? (
                                   <div className={`mt-2 text-xs leading-5 text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>
-                                    最近检查点：{readiness.latestCheckpoint.checkpointType}
-                                    {readiness.latestCheckpoint.chapterOrder ? ` · 第${readiness.latestCheckpoint.chapterOrder}章` : ""}
+                                    Latest checkpoint: {readiness.latestCheckpoint.checkpointType}
+                                    {readiness.latestCheckpoint.chapterOrder ? ` · Chapter ${readiness.latestCheckpoint.chapterOrder}` : ""}
                                   </div>
                                 ) : null}
                                 {readiness.executableRange ? (
                                   <div className={`mt-2 text-xs leading-5 text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>
-                                    当前可执行范围：第 {readiness.executableRange.startOrder}-{readiness.executableRange.endOrder} 章
-                                    {readiness.executableRange.nextChapterOrder ? ` · 下一章第 ${readiness.executableRange.nextChapterOrder} 章` : ""}
+                                    Available range: Chapters {readiness.executableRange.startOrder}–{readiness.executableRange.endOrder}
+                                    {readiness.executableRange.nextChapterOrder ? ` · Next chapter: ${readiness.executableRange.nextChapterOrder}` : ""}
                                   </div>
                                 ) : null}
                                 {selectedPreview.skipSteps.length > 0 ? (
-                                  <div className={`mt-3 text-xs leading-5 text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>会跳过：{selectedPreview.skipSteps.join(" / ")}</div>
+                                  <div className={`mt-3 text-xs leading-5 text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>Will skip: {selectedPreview.skipSteps.join(" / ")}</div>
                                 ) : null}
                                 <div className={`mt-3 space-y-1 text-xs leading-5 text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>
                                   {selectedPreview.impactNotes.map((note) => <div key={note}>• {note}</div>)}
@@ -647,7 +647,7 @@ function LegacyProjectTakeoverDialog({
                             disabled={startMutation.isPending || !selectedEntry || !selectedEntry.available || !selectedEntryAllowedForScope}
                             onClick={() => startMutation.mutate()}
                           >
-                            {startMutation.isPending ? "启动中..." : "按高级设置启动"}
+                            {startMutation.isPending ? "Starting…" : "Start with advanced settings"}
                           </Button>
                         </div>
                       </>

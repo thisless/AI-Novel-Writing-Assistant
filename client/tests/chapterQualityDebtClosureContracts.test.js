@@ -10,7 +10,7 @@ test("simple shelf explains quality debt and routes editing through the shared c
   assert.match(shelfSource, /selectedChapter\.qualityDebt\.reason/);
   assert.match(shelfSource, /formatQualityDebtSource/);
   assert.match(shelfSource, /formatQualityDebtAttempts/);
-  assert.match(shelfSource, /修改并重新审校/);
+  assert.match(shelfSource, /Revise and review again/);
   assert.match(shelfSource, /\/novels\/\$\{id\}\/chapters\/\$\{encodeURIComponent\(selectedChapter\.id\)\}/);
   assert.doesNotMatch(shelfSource, /reviewNovelChapter/);
 });
@@ -20,5 +20,5 @@ test("professional chapter diagnostics use the same stored quality debt and expo
   assert.match(referencePanelSource, /qualityDebt\.reason/);
   assert.match(referencePanelSource, /formatQualityDebtAttempts/);
   assert.match(referencePanelSource, /stage=pipeline&chapterId=/);
-  assert.match(referencePanelSource, /进入质量修复/);
+  assert.match(referencePanelSource, /Open quality repair/);
 });

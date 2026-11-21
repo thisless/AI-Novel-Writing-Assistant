@@ -6,5 +6,5 @@ export function presentOutlineOpenBookError(message:string,document:OutlineDocum
   const nodes=getOutlineNodes(document),titles=Object.fromEntries(nodes.map(node=>[node.nodeId,getOutlineNodeTitle(node)]));
   const referenced=nodes.map(node=>({node,index:message.indexOf(node.nodeId)})).filter(item=>item.index>=0).sort((a,b)=>a.index-b.index);
   const owner=referenced[0]?.node;
-  return {message:localizeOutlineText(message,titles).replace("OUTLINE_OPEN_INVALID:","大纲结构需要调整："),nodeId:owner?.nodeId,nodeTitle:owner ? getOutlineNodeTitle(owner) : undefined};
+  return {message:localizeOutlineText(message,titles).replace("OUTLINE_OPEN_INVALID:","Outline structure needs adjustment: "),nodeId:owner?.nodeId,nodeTitle:owner ? getOutlineNodeTitle(owner) : undefined};
 }

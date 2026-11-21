@@ -7,16 +7,16 @@ export interface PlannedChapter { plan?: VolumeChapterPlan; chapter?: WorkspaceC
 export function beatChapterLabel(chapters: readonly PlannedChapter[]): string {
   const orders = [...new Set(chapters.map(row => row.chapter?.order ?? row.plan?.chapterOrder)
     .filter((order): order is number => typeof order === "number" && Number.isSafeInteger(order) && order > 0))].sort((a, b) => a - b);
-  if (!orders.length) return "待拆章";
+  if (!orders.length) return "No planned chapters";
   const ranges: string[] = [];
   let from = orders[0], to = from;
   for (const order of orders.slice(1)) {
     if (order === to + 1) { to = order; continue; }
-    ranges.push(from === to ? String(from) : `${from}—${to}`);
+    ranges.push(from === to ? String(from) : `${from}–${to}`);
     from = to = order;
   }
-  ranges.push(from === to ? String(from) : `${from}—${to}`);
-  return `第 ${ranges.join("、")} 章`;
+  ranges.push(from === to ? String(from) : `${from}–${to}`);
+  return `Chapters ${ranges.join(", ")}`;
 }
 
 export function chapterSelection(row: PlannedChapter): Selection {

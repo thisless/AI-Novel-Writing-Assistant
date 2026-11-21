@@ -41,16 +41,16 @@ export function startStrategyGenerationAction(params: {
     return;
   }
   const confirmed = window.confirm([
-    "将生成卷战略建议，帮助决定推荐卷数、硬规划卷数和各卷角色定位。",
-    "这一步不会直接生成卷骨架，也不会拆章节。",
+    "Generate a volume strategy recommendation to help decide the suggested number of volumes, fixed planning count, and each volume's role.",
+    "This step won't generate the volume outline or chapter breakdown.",
     params.userPreferredVolumeCount != null
-      ? `本次将固定为 ${params.userPreferredVolumeCount} 卷生成分卷策略。`
+      ? `Generate the volume strategy for a fixed count of ${params.userPreferredVolumeCount} volumes.`
       : params.forceSystemRecommendedVolumeCount
-        ? `本次将按系统建议卷数生成（当前建议 ${params.volumeCountGuidance.systemRecommendedVolumeCount} 卷），不沿用现有草稿卷数。`
+        ? `Use the system-recommended count of ${params.volumeCountGuidance.systemRecommendedVolumeCount} volumes, not the current draft count.`
         : params.volumeCountGuidance.respectedExistingVolumeCount != null
-          ? `本次会优先沿用当前草稿的 ${params.volumeCountGuidance.respectedExistingVolumeCount} 卷结构，同时保持在允许区间 ${params.volumeCountGuidance.allowedVolumeCountRange.min}-${params.volumeCountGuidance.allowedVolumeCountRange.max} 内。`
-          : `当前系统建议 ${params.volumeCountGuidance.systemRecommendedVolumeCount} 卷，结构建议区间 ${params.volumeCountGuidance.decisionVolumeCountRange.min}-${params.volumeCountGuidance.decisionVolumeCountRange.max} 卷。`,
-    params.hasUnsavedVolumeDraft ? "本次会直接使用当前页面未保存草稿作为参考。" : "本次会基于当前工作区状态生成建议。",
+          ? `Prefer the current draft structure of ${params.volumeCountGuidance.respectedExistingVolumeCount} volumes, within the allowed range of ${params.volumeCountGuidance.allowedVolumeCountRange.min}–${params.volumeCountGuidance.allowedVolumeCountRange.max}.`
+          : `The system currently recommends ${params.volumeCountGuidance.systemRecommendedVolumeCount} volumes; the suggested range is ${params.volumeCountGuidance.decisionVolumeCountRange.min}–${params.volumeCountGuidance.decisionVolumeCountRange.max}.`,
+    params.hasUnsavedVolumeDraft ? "The current unsaved page draft will be used as reference." : "The recommendation will use the current workspace state.",
   ].join("\n\n"));
   if (!confirmed) {
     return;
@@ -77,9 +77,9 @@ export function startSkeletonGenerationAction(params: {
     return;
   }
   const confirmed = window.confirm([
-    "将根据当前卷战略建议生成或重生成全书卷骨架。",
-    "这一步会清空已有节奏板和相邻卷再平衡建议，但不会直接删除章节正文。",
-    params.hasUnsavedVolumeDraft ? "本次会直接使用当前页面草稿作为卷骨架上下文。" : "本次会基于当前卷工作区继续推进。",
+    "Generate or regenerate the book's volume outline from the current volume strategy recommendation.",
+    "Existing beat sheets and adjacent-volume rebalancing suggestions will be cleared, but chapter prose won't be deleted.",
+    params.hasUnsavedVolumeDraft ? "The current page draft will be used as context for the volume outline." : "Continue from the current volume workspace.",
   ].join("\n\n"));
   if (!confirmed) {
     return;
@@ -98,11 +98,11 @@ export function startBeatSheetGenerationAction(params: {
 }): void {
   const targetVolume = params.normalizedVolumeDraft.find((volume) => volume.id === params.volumeId);
   if (!targetVolume) {
-    params.setStructuredMessage("当前卷不存在，无法生成节奏板。");
+    params.setStructuredMessage("This volume doesn't exist, so a beat sheet can't be generated.");
     return;
   }
   if (!params.strategyPlan) {
-    params.setStructuredMessage("请先生成卷战略建议，再生成当前卷节奏板。");
+    params.setStructuredMessage("Generate a volume strategy recommendation before generating the current volume's beat sheet.");
     return;
   }
   if (!params.ensureCharacterGuard()) {
@@ -111,9 +111,9 @@ export function startBeatSheetGenerationAction(params: {
   const existingBeatSheet = findBeatSheet(params.beatSheets, params.volumeId);
   if (existingBeatSheet) {
     const confirmed = window.confirm([
-      `将重新生成「${targetVolume.title?.trim() || `第${targetVolume.sortOrder}卷`}」的节奏板。`,
-      "这一步会覆盖当前卷现有节奏段与交付项。",
-      "已有章节列表和章节细化资产不会被直接删除，但如果新节奏区间发生变化，建议随后检查章节列表是否仍然匹配。",
+      `Regenerate the beat sheet for "${targetVolume.title?.trim() || `Volume ${targetVolume.sortOrder}`}".`,
+      "This will replace the current volume's beat sections and deliverables.",
+      "Existing chapter lists and refinement assets won't be deleted, but check whether the chapter list still matches if the new beat ranges change.",
     ].join("\n\n"));
     if (!confirmed) {
       return;
@@ -136,11 +136,11 @@ export function startChapterListGenerationAction(params: {
 }): void {
   const targetVolume = params.normalizedVolumeDraft.find((volume) => volume.id === params.volumeId);
   if (!targetVolume) {
-    params.setStructuredMessage("当前卷不存在，无法生成章节列表。");
+    params.setStructuredMessage("This volume doesn't exist, so a chapter list can't be generated.");
     return;
   }
   if (!findBeatSheet(params.beatSheets, params.volumeId)) {
-    params.setStructuredMessage("当前卷还没有节奏板，默认不能直接拆章节列表。");
+    params.setStructuredMessage("This volume doesn't have a beat sheet yet. Generate one before creating a chapter list.");
     return;
   }
   if (!params.ensureCharacterGuard()) {
@@ -149,7 +149,7 @@ export function startChapterListGenerationAction(params: {
   const generationMode = params.request?.generationMode ?? "full_volume";
   const targetBeatKey = params.request?.targetBeatKey?.trim();
   if (generationMode === "single_beat" && !targetBeatKey) {
-    params.setStructuredMessage("当前节奏段不存在，无法重生该段章节标题。");
+    params.setStructuredMessage("This beat section doesn't exist, so its chapter titles can't be regenerated.");
     return;
   }
   params.generate({
@@ -171,15 +171,15 @@ export function buildChapterListSuccessMessage(params: {
     ? params.document.volumes.find((volume) => volume.id === params.targetVolumeId)
     : undefined;
   const updatedChapterCount = updatedVolume?.chapters.length ?? 0;
-  const syncSuffix = params.autoSyncedToChapterExecution ? "，并连接到章节执行区" : "";
+  const syncSuffix = params.autoSyncedToChapterExecution ? " and connected to chapter execution" : "";
   if (params.generationMode === "single_beat" && params.targetVolumeId && params.targetBeatKey) {
     const targetBeat = findBeatSheet(params.document.beatSheets, params.targetVolumeId)?.beats
       .find((beat) => beat.key === params.targetBeatKey);
     return updatedChapterCount > 0
-      ? `当前卷节奏段「${targetBeat ? `${targetBeat.label}${targetBeat.title ? ` · ${targetBeat.title}` : ""}` : params.targetBeatKey}」已生成并自动保存${syncSuffix}，本卷现有 ${updatedChapterCount} 章。`
-      : `当前卷节奏段「${targetBeat ? `${targetBeat.label}${targetBeat.title ? ` · ${targetBeat.title}` : ""}` : params.targetBeatKey}」已生成并自动保存${syncSuffix}。`;
+      ? `Beat section "${targetBeat ? `${targetBeat.label}${targetBeat.title ? ` · ${targetBeat.title}` : ""}` : params.targetBeatKey}" generated and saved${syncSuffix}. This volume now has ${updatedChapterCount} chapters.`
+      : `Beat section "${targetBeat ? `${targetBeat.label}${targetBeat.title ? ` · ${targetBeat.title}` : ""}` : params.targetBeatKey}" generated and saved${syncSuffix}.`;
   }
   return updatedChapterCount > 0
-    ? `当前卷章节列表已生成并自动保存${syncSuffix}，现已更新为 ${updatedChapterCount} 章，相邻卷再平衡建议也已同步更新。`
-    : `当前卷章节列表已生成并自动保存${syncSuffix}，相邻卷再平衡建议也已同步更新。`;
+    ? `Current volume chapter list generated and saved${syncSuffix}. It now contains ${updatedChapterCount} chapters, and adjacent-volume rebalancing suggestions were also updated.`
+    : `Current volume chapter list generated and saved${syncSuffix}. Adjacent-volume rebalancing suggestions were also updated.`;
 }

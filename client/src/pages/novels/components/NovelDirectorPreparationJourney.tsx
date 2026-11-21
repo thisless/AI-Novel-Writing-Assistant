@@ -42,10 +42,10 @@ function connectorTone(
 }
 
 function statusLabel(status: DirectorPreparationStepStatus): string {
-  if (status === "completed") return "准备完成";
-  if (status === "running") return "AI 正在处理";
-  if (status === "failed") return "需要处理";
-  return "等待推进";
+  if (status === "completed") return "Ready";
+  if (status === "running") return "AI is working";
+  if (status === "failed") return "Needs attention";
+  return "Waiting";
 }
 
 export default function NovelDirectorPreparationJourney({
@@ -58,22 +58,22 @@ export default function NovelDirectorPreparationJourney({
     <div className="space-y-4">
       <OnboardingTip
         storageKey={onboardingStorageKey}
-        title="这段准备不需要逐项审核"
-        description="AI 会把已完成的故事方向转成角色、卷战略、节奏和章节执行资源；页面上的成果可以随时展开查看。"
-        next="已完成的资源可以随时查看；AI 会继续补齐后续内容。"
+        title="You don't need to review each preparation step"
+        description="AI turns the approved story direction into characters, volume strategy, pacing, and chapter resources. You can expand and review the results at any time."
+        next="Review completed resources at any time while AI prepares the next steps."
       />
       <section className="rounded-2xl border border-border/70 bg-background px-4 py-5 shadow-[0_18px_45px_-38px_hsl(var(--foreground)/0.45)] sm:px-6">
         <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <div className="text-sm font-semibold text-foreground">创作资源准备</div>
+            <div className="text-sm font-semibold text-foreground">Preparing creative resources</div>
             <div className="mt-1 text-xs leading-5 text-muted-foreground">
-              AI 正在依次完成整本书的方向、角色和卷章资源，已完成的成果可以直接查看。
+              AI is preparing the story direction, characters, volumes, and chapters. You can review each completed result.
             </div>
           </div>
           <div className="text-xs text-muted-foreground">
             {chapterProgress
-              ? `正文已生成 ${chapterProgress.completed}/${chapterProgress.total} 章`
-              : "创作任务会继续在后台推进"}
+              ? `${chapterProgress.completed}/${chapterProgress.total} chapters drafted`
+              : "Writing will continue in the background"}
           </div>
         </div>
 

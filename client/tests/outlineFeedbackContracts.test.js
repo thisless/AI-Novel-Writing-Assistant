@@ -4,7 +4,7 @@ import { readFile } from "node:fs/promises";
 
 const read = (relative) => readFile(new URL(relative, import.meta.url), "utf8");
 
-test("A3 产品反馈面板使用既有合同，默认关闭，并在未绑定或移动端隐藏", async () => {
+test("A3 chapter feedback panel uses the existing contract, is off by default, and is hidden when unbound or on mobile", async () => {
   const [flags, api, panel, workspace, list, wiki] = await Promise.all([
     read("../src/config/featureFlags.ts"),
     read("../src/api/outlines.ts"),
@@ -29,8 +29,8 @@ test("A3 产品反馈面板使用既有合同，默认关闭，并在未绑定�
   assert.match(panel, /adoptOutlineFeedback/);
   assert.match(panel, /rejectOutlineFeedback/);
   assert.match(panel, /getOutlineFeedbackStatus/);
-  assert.match(panel, /采纳/);
-  assert.match(panel, /拒绝/);
+  assert.match(panel, /Apply/);
+  assert.match(panel, /Reject/);
   assert.match(panel, /pending.*completed.*failed|RUN_STATUS_LABEL/);
 assert.doesNotMatch(panel, /useEffect\([\s\S]{0,200}analyze\.mutate/);
   assert.doesNotMatch(panel, /useEffect\([\s\S]{0,200}adoptOutlineFeedback/);

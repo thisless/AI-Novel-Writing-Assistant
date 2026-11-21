@@ -9,9 +9,9 @@ export default function SettingsMaintenanceSection() {
     return (
       <Card className="min-w-0 overflow-hidden">
         <CardHeader>
-          <CardTitle>系统维护</CardTitle>
+          <CardTitle>System maintenance</CardTitle>
           <CardDescription className={AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}>
-            当前使用网页端。桌面更新和本机旧数据导入仅在桌面版中提供。
+            You are using the web app. Desktop updates and importing local legacy data are available only in the desktop app.
           </CardDescription>
         </CardHeader>
       </Card>
@@ -22,13 +22,13 @@ export default function SettingsMaintenanceSection() {
     <div className="min-w-0 space-y-4">
       <Card className="min-w-0 overflow-hidden">
         <CardHeader>
-          <CardTitle>系统维护</CardTitle>
+          <CardTitle>System maintenance</CardTitle>
           <CardDescription className={AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}>
-            检查桌面更新或导入本机旧数据；这些操作不会影响当前创作配置。
+            Check for desktop updates or import local legacy data. These actions do not affect your current writing settings.
           </CardDescription>
         </CardHeader>
         <CardContent className={`text-sm text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>
-          没有维护需求时，可以直接回到上面的创作配置。
+          If you do not need maintenance, return to the writing settings above.
         </CardContent>
       </Card>
       <DesktopUpdateCard />

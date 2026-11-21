@@ -22,10 +22,10 @@ interface AntiAiRuleStatsProps {
 export default function AntiAiRuleStats(props: AntiAiRuleStatsProps) {
   return (
     <dl className="flex flex-wrap gap-x-8 gap-y-3 border-b border-border/60 pb-5 sm:gap-x-12">
-      <StatTile label="全部规则" value={props.total} />
-      <StatTile label="已启用" value={props.enabled} />
-      <StatTile label="全局默认" value={props.global} />
-      <StatTile label="可自动改写" value={props.autoRewrite} />
+      <StatTile label="Total rules" value={props.total} />
+      <StatTile label="Enabled" value={props.enabled} />
+      <StatTile label="Global defaults" value={props.global} />
+      <StatTile label="Auto-rewrite enabled" value={props.autoRewrite} />
     </dl>
   );
 }

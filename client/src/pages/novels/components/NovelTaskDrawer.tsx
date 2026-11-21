@@ -26,26 +26,26 @@ type DrawerTask = NonNullable<NovelTaskDrawerState["task"]>;
 
 function formatStatus(status: TaskStatus): string {
   if (status === "queued") {
-    return "排队中";
+    return "Queued";
   }
   if (status === "running") {
-    return "运行中";
+    return "In progress";
   }
   if (status === "waiting_approval") {
-    return "等待审核";
+    return "Awaiting review";
   }
   if (status === "succeeded") {
-    return "已完成";
+    return "Completed";
   }
   if (status === "failed") {
-    return "失败";
+    return "Failed";
   }
-  return "已取消";
+  return "Canceled";
 }
 
 function formatTaskStatus(task: DrawerTask): string {
   if (task.pendingManualRecovery) {
-    return "待恢复";
+    return "Needs recovery";
   }
   return formatStatus(task.status);
 }
@@ -71,44 +71,44 @@ function toTaskStatusVariant(task: DrawerTask): "default" | "outline" | "seconda
 }
 
 function formatCheckpoint(checkpoint: NovelWorkflowMilestoneType | null | undefined, scopeLabel?: string | null): string {
-  const resolvedScopeLabel = scopeLabel?.trim() || "前 10 章";
+  const resolvedScopeLabel = scopeLabel?.trim() || "First 10 chapters";
   if (checkpoint === "rewrite_snapshot_created") {
-    return "重写前备份已创建";
+    return "Pre-rewrite backup created";
   }
   if (checkpoint === "candidate_selection_required") {
-    return "等待确认书级方向";
+    return "Waiting for novel direction confirmation";
   }
   if (checkpoint === "book_contract_ready") {
-    return "Book Contract 已就绪";
+    return "Book contract ready";
   }
   if (checkpoint === "character_setup_required") {
-    return "角色准备待审核";
+    return "Character preparation awaiting review";
   }
   if (checkpoint === "volume_strategy_ready") {
-    return "卷战略 / 卷骨架待审核";
+    return "Volume strategy and outline awaiting review";
   }
   if (checkpoint === "production_experience_required") {
-    return "已可开写，等待选择生产方式";
+    return "Ready to write. Choose a production mode.";
   }
   if (checkpoint === "chapter_batch_ready") {
-    return `${resolvedScopeLabel}自动执行已暂停`;
+    return `Automatic execution paused: ${resolvedScopeLabel}`;
   }
   if (checkpoint === "step_review_required") {
-    return "当前步骤待检查";
+    return "Current step awaiting review";
   }
   if (checkpoint === "workflow_completed") {
-    return "主流程完成";
+    return "Main workflow complete";
   }
-  return "暂无";
+  return "Not available";
 }
 
 function formatDate(value: string | null | undefined): string {
   if (!value) {
-    return "暂无";
+    return "Not available";
   }
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) {
-    return "暂无";
+    return "Not available";
   }
   return date.toLocaleString();
 }
@@ -119,32 +119,32 @@ function formatTokenCount(value: number | null | undefined): string {
 
 function formatStepStatus(status: "idle" | "running" | "succeeded" | "failed" | "cancelled"): string {
   if (status === "running") {
-    return "进行中";
+    return "In progress";
   }
   if (status === "succeeded") {
-    return "已完成";
+    return "Completed";
   }
   if (status === "failed") {
-    return "失败";
+    return "Failed";
   }
   if (status === "cancelled") {
-    return "已取消";
+    return "Canceled";
   }
-  return "待处理";
+  return "Pending";
 }
 
 function formatRiskLevel(riskLevel: CharacterResourceProposalSummary["riskLevel"]): string {
   if (riskLevel === "high") {
-    return "高风险";
+    return "High risk";
   }
   if (riskLevel === "medium") {
-    return "需判断";
+    return "Needs review";
   }
-  return "低风险";
+  return "Low risk";
 }
 
 function formatProposalSource(proposal: CharacterResourceProposalSummary): string {
-  return proposal.sourceType === "chapter_background_sync" ? "自动同步发现" : "手动复查发现";
+  return proposal.sourceType === "chapter_background_sync" ? "Found by automatic sync" : "Found during manual review";
 }
 
 function followUpActionVariant(action: AutoDirectorAction): "default" | "outline" {
@@ -153,12 +153,12 @@ function followUpActionVariant(action: AutoDirectorAction): "default" | "outline
 
 function formatFollowUpPriority(priority: "P0" | "P1" | "P2"): string {
   if (priority === "P0") {
-    return "P0 立即处理";
+    return "P0 · Handle now";
   }
   if (priority === "P1") {
-    return "P1 尽快处理";
+    return "P1 · Handle soon";
   }
-  return "P2 稍后处理";
+  return "P2 · Handle later";
 }
 
 function readProposalPayloadText(
@@ -185,7 +185,7 @@ function ResourceProposalCard(props: {
     confirmingProposalId = "",
     rejectingProposalId = "",
   } = props;
-  const resourceName = readProposalPayloadText(proposal, "resourceName") || "关键资源";
+  const resourceName = readProposalPayloadText(proposal, "resourceName") || "Key resource";
   const holderName = readProposalPayloadText(proposal, "holderCharacterName");
   const narrativeImpact = readProposalPayloadText(proposal, "narrativeImpact");
   const isConfirming = confirmingProposalId === proposal.id;
@@ -197,7 +197,7 @@ function ResourceProposalCard(props: {
         <div className="min-w-0 flex-1">
           <div className="text-sm font-medium text-foreground">{resourceName}</div>
           <div className="mt-1 text-xs leading-5 text-muted-foreground">
-            {holderName ? `${holderName}相关资源` : "资源归属需要确认"}
+            {holderName ? `Resource related to ${holderName}` : "Resource owner needs confirmation"}
           </div>
         </div>
         <Badge variant={proposal.riskLevel === "high" ? "destructive" : "secondary"}>
@@ -207,23 +207,23 @@ function ResourceProposalCard(props: {
       <div className="text-sm leading-6 text-muted-foreground">{proposal.summary}</div>
       {narrativeImpact ? (
         <div className="rounded-lg border border-border/70 bg-muted/20 px-3 py-2 text-xs leading-5 text-muted-foreground">
-          确认后影响：{narrativeImpact}
+          Impact after confirmation: {narrativeImpact}
         </div>
       ) : null}
       {proposal.evidence[0] ? (
-        <div className="text-xs leading-5 text-muted-foreground">证据：{proposal.evidence[0]}</div>
+        <div className="text-xs leading-5 text-muted-foreground">Evidence: {proposal.evidence[0]}</div>
       ) : null}
       {proposal.validationNotes[0] ? (
-        <div className="text-xs leading-5 text-muted-foreground">判断原因：{proposal.validationNotes[0]}</div>
+        <div className="text-xs leading-5 text-muted-foreground">Reason: {proposal.validationNotes[0]}</div>
       ) : null}
       <div className="flex flex-wrap items-center gap-2">
         <Badge variant="outline">{formatProposalSource(proposal)}</Badge>
-        {proposal.chapterId ? <Badge variant="outline">来源章节</Badge> : null}
+        {proposal.chapterId ? <Badge variant="outline">Source chapter</Badge> : null}
       </div>
       <div className="flex flex-wrap gap-2">
         {proposal.chapterId ? (
           <Button type="button" size="sm" variant="outline" onClick={() => onOpenSource?.(proposal)}>
-            查看来源
+            View source
           </Button>
         ) : null}
         <Button
@@ -232,7 +232,7 @@ function ResourceProposalCard(props: {
           onClick={() => onConfirm?.(proposal.id)}
           disabled={isConfirming || !onConfirm}
         >
-          {isConfirming ? "确认中..." : "确认并用于后续写作"}
+          {isConfirming ? "Confirming..." : "Confirm and use in future writing"}
         </Button>
         <Button
           type="button"
@@ -241,7 +241,7 @@ function ResourceProposalCard(props: {
           onClick={() => onReject?.(proposal.id)}
           disabled={isRejecting || !onReject}
         >
-          {isRejecting ? "处理中..." : "忽略这条变化"}
+          {isRejecting ? "Processing..." : "Ignore this change"}
         </Button>
       </div>
     </div>
@@ -304,7 +304,7 @@ export default function NovelTaskDrawer({
     && projection?.displayState === "needs_confirmation"
     && projection.latestTask?.checkpointType !== "replan_required"
   )
-    ? "确认并继续"
+    ? "Confirm and continue"
     : primaryAction?.label;
   const runProjectedAction = (action: DirectorBookAutomationAction) => {
     const matchedAction = actions.find((item) => {
@@ -312,19 +312,19 @@ export default function NovelTaskDrawer({
         return true;
       }
       if (action.type === "continue") {
-        return item.label.includes("继续");
+        return item.label.includes("Resume");
       }
       if (action.type === "auto_execute_range") {
-        return item.label.includes("自动执行");
+        return item.label.toLowerCase().includes("automatic execution");
       }
       if (action.type === "confirm_candidate") {
-        return item.label.includes("书级方向");
+        return item.label.includes("novel direction");
       }
       if (action.type === "open_quality_repair") {
-        return item.label.includes("质量修复");
+        return item.label.includes("quality repair");
       }
       if (action.type === "open_chapter") {
-        return item.label.includes("章节执行");
+        return item.label.includes("chapter execution");
       }
       return false;
     });
@@ -346,9 +346,9 @@ export default function NovelTaskDrawer({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="left-auto right-0 top-0 flex h-dvh max-h-dvh w-full max-w-[520px] translate-x-0 translate-y-0 flex-col gap-0 rounded-none border-y-0 border-r-0 border-l bg-background p-0 sm:max-w-[520px]">
         <DialogHeader className="border-b border-border/70 px-5 py-4">
-          <DialogTitle>执行详情</DialogTitle>
+          <DialogTitle>Execution details</DialogTitle>
           <DialogDescription>
-            查看本书 AI 推进记录、快捷处理动作和排查信息。
+            View this novel's AI activity, quick actions, and troubleshooting details.
           </DialogDescription>
         </DialogHeader>
 
@@ -357,8 +357,8 @@ export default function NovelTaskDrawer({
             <AICockpit
               projection={projection}
               mode="focusedNovel"
-              fallbackSummary={dashboardView?.currentAction || displayState?.currentAction || task?.blockingReason || task?.currentItemLabel || "当前没有需要处理的 AI 推进动作。"}
-              fallbackStatusLabel={dashboardView?.statusLabel ?? (task ? formatTaskStatus(task) : "未开启")}
+              fallbackSummary={dashboardView?.currentAction || displayState?.currentAction || task?.blockingReason || task?.currentItemLabel || "No AI actions need attention right now."}
+              fallbackStatusLabel={dashboardView?.statusLabel ?? (task ? formatTaskStatus(task) : "Not started")}
               showDetailsAction={false}
               onAction={(_projection, action) => handleProjectionAction(action)}
             />
@@ -368,12 +368,12 @@ export default function NovelTaskDrawer({
             <section className="space-y-3 rounded-2xl border border-amber-300/60 bg-amber-50/40 p-4 dark:border-amber-700/50 dark:bg-amber-950/15">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div>
-                  <div className="text-sm font-medium text-foreground">资源变更待确认</div>
+                  <div className="text-sm font-medium text-foreground">Resource changes need review</div>
                   <div className="mt-1 text-xs leading-5 text-muted-foreground">
-                    这些判断会影响后续章节能使用哪些关键资源。
+                    These decisions affect which key resources are available in future chapters.
                   </div>
                 </div>
-                <Badge variant="secondary">{resourceProposals.length} 条</Badge>
+                <Badge variant="secondary">{resourceProposals.length} changes</Badge>
               </div>
               <div className="space-y-2">
                 {resourceProposals.slice(0, 4).map((proposal) => (
@@ -390,7 +390,7 @@ export default function NovelTaskDrawer({
               </div>
               {resourceProposals.length > 4 ? (
                 <div className="text-xs text-muted-foreground">
-                  还有 {resourceProposals.length - 4} 条资源变化，可在对应章节继续处理。
+                  {resourceProposals.length - 4} more resource changes can be reviewed in their chapters.
                 </div>
               ) : null}
             </section>
@@ -402,23 +402,23 @@ export default function NovelTaskDrawer({
                 <div className="flex flex-wrap items-center gap-2">
                   <div className="text-base font-semibold text-foreground">{task.title}</div>
                   <Badge variant={toTaskStatusVariant(task)}>{formatTaskStatus(task)}</Badge>
-                  <Badge variant="outline">进度 {progressPercent}%</Badge>
+                  <Badge variant="outline">Progress {progressPercent}%</Badge>
                 </div>
                 <div className="grid gap-3 sm:grid-cols-2">
                   <div className="rounded-xl border bg-background/80 p-3">
-                    <div className="text-xs text-muted-foreground">当前阶段</div>
-                    <div className="mt-1 text-sm font-medium text-foreground">{dashboardView?.stageLabel ?? displayState?.stageLabel ?? task.currentStage ?? "暂无"}</div>
+                    <div className="text-xs text-muted-foreground">Current stage</div>
+                    <div className="mt-1 text-sm font-medium text-foreground">{dashboardView?.stageLabel ?? displayState?.stageLabel ?? task.currentStage ?? "Not available"}</div>
                   </div>
                   <div className="rounded-xl border bg-background/80 p-3">
-                    <div className="text-xs text-muted-foreground">当前动作</div>
-                    <div className="mt-1 text-sm font-medium text-foreground">{dashboardView?.currentAction ?? displayState?.currentAction ?? task.currentItemLabel ?? "暂无"}</div>
+                    <div className="text-xs text-muted-foreground">Current action</div>
+                    <div className="mt-1 text-sm font-medium text-foreground">{dashboardView?.currentAction ?? displayState?.currentAction ?? task.currentItemLabel ?? "Not available"}</div>
                   </div>
                   <div className="rounded-xl border bg-background/80 p-3">
-                    <div className="text-xs text-muted-foreground">最近检查点</div>
+                    <div className="text-xs text-muted-foreground">Latest checkpoint</div>
                     <div className="mt-1 text-sm font-medium text-foreground">{displayState?.checkpointLabel ?? formatCheckpoint(task.checkpointType, task.executionScopeLabel)}</div>
                   </div>
                   <div className="rounded-xl border bg-background/80 p-3">
-                    <div className="text-xs text-muted-foreground">最近心跳</div>
+                    <div className="text-xs text-muted-foreground">Last activity</div>
                     <div className="mt-1 text-sm font-medium text-foreground">{formatDate(task.heartbeatAt)}</div>
                   </div>
                 </div>
@@ -432,10 +432,10 @@ export default function NovelTaskDrawer({
                 ) : null}
                 {task.lastError ? (
                   <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive">
-                    <div className="font-medium">最近错误</div>
+                    <div className="font-medium">Latest error</div>
                     <div className="mt-1">{task.lastError}</div>
                     {task.recoveryHint ? (
-                      <div className="mt-2 text-xs text-destructive/80">恢复建议：{task.recoveryHint}</div>
+                      <div className="mt-2 text-xs text-destructive/80">Suggested recovery: {task.recoveryHint}</div>
                     ) : null}
                   </div>
                 ) : null}
@@ -444,7 +444,7 @@ export default function NovelTaskDrawer({
               {canShowFollowUp && followUp ? (
                 <section className="space-y-3 rounded-2xl border border-primary/20 bg-primary/5 p-4">
                   <div className="flex flex-wrap items-center gap-2">
-                    <div className="text-sm font-medium text-foreground">当前需要处理的动作</div>
+                    <div className="text-sm font-medium text-foreground">Action needed</div>
                     <Badge variant="outline">{followUp.reasonLabel}</Badge>
                     <Badge variant={followUp.priority === "P0" ? "destructive" : "secondary"}>
                       {formatFollowUpPriority(followUp.priority)}
@@ -452,10 +452,10 @@ export default function NovelTaskDrawer({
                   </div>
                   <div className="text-sm leading-6 text-muted-foreground">{followUp.followUpSummary}</div>
                   {followUp.blockingReason ? (
-                    <div className="text-sm text-muted-foreground">阻止动作的原因：{followUp.blockingReason}</div>
+                    <div className="text-sm text-muted-foreground">Why this action is blocked: {followUp.blockingReason}</div>
                   ) : null}
                   {followUp.currentModel ? (
-                    <div className="text-sm text-muted-foreground">当前任务模型：{followUp.currentModel}</div>
+                    <div className="text-sm text-muted-foreground">Model used by task: {followUp.currentModel}</div>
                   ) : null}
                   {runtimeHardBlocked && runtimeBlockedReason ? (
                     <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive">
@@ -481,21 +481,21 @@ export default function NovelTaskDrawer({
 
               {canShowRuntimePolicy && task ? (
                 <section className="space-y-3">
-                  <div className="text-sm font-medium text-foreground">推进方式</div>
+                  <div className="text-sm font-medium text-foreground">Execution policy</div>
                   <TaskCenterRuntimePolicyCard taskId={task.id} snapshot={runtimeSnapshot} />
                 </section>
               ) : null}
 
               {canShowManualImpact && task ? (
                 <section className="space-y-3">
-                  <div className="text-sm font-medium text-foreground">风险与改动影响</div>
+                  <div className="text-sm font-medium text-foreground">Risks and change impact</div>
                   <TaskCenterManualEditImpactCard task={task} />
                 </section>
               ) : null}
 
               {canShowRetryWithOverrideModel && overrideModel && onOverrideModelChange ? (
                 <section className="space-y-3 rounded-2xl border border-border/70 bg-muted/15 p-4">
-                  <div className="text-sm font-medium text-foreground">使用其他模型重试</div>
+                  <div className="text-sm font-medium text-foreground">Retry with another model</div>
                   <LLMSelector
                     value={overrideModel}
                     onChange={onOverrideModelChange}
@@ -511,7 +511,7 @@ export default function NovelTaskDrawer({
                       onClick={onRetryWithOverrideModel}
                       disabled={retryWithOverrideModelPending || !canRetryWithOverrideModel}
                     >
-                      {retryWithOverrideModelPending ? "重试中…" : "使用所选模型重试"}
+                      {retryWithOverrideModelPending ? "Retrying…" : "Retry with selected model"}
                     </Button>
                     {onRetryWithTaskModel ? (
                       <Button
@@ -521,7 +521,7 @@ export default function NovelTaskDrawer({
                         onClick={onRetryWithTaskModel}
                         disabled={retryWithTaskModelPending}
                       >
-                        {retryWithTaskModelPending ? "重试中…" : "用原模型重试"}
+                        {retryWithTaskModelPending ? "Retrying…" : "Retry with original model"}
                       </Button>
                     ) : null}
                   </div>
@@ -529,7 +529,7 @@ export default function NovelTaskDrawer({
               ) : null}
 
               <section className="space-y-3">
-                <div className="text-sm font-medium text-foreground">快捷动作</div>
+                <div className="text-sm font-medium text-foreground">Quick actions</div>
                 {actions.length > 0 ? (
                   <div className="flex flex-wrap gap-2">
                     {actions.map((action) => (
@@ -547,77 +547,77 @@ export default function NovelTaskDrawer({
                   </div>
                 ) : (
                   <div className="rounded-xl border border-dashed px-4 py-5 text-sm text-muted-foreground">
-                    当前没有可直接执行的快捷动作。
+                    No quick actions are available.
                   </div>
                 )}
               </section>
 
               <section className="space-y-3">
-                <div className="text-sm font-medium text-foreground">模型信息</div>
+                <div className="text-sm font-medium text-foreground">Model information</div>
                 <div className="grid gap-3 sm:grid-cols-2">
                   <div className="rounded-xl border bg-background/80 p-3">
-                    <div className="text-xs text-muted-foreground">任务绑定模型</div>
+                    <div className="text-xs text-muted-foreground">Model assigned to task</div>
                     <div className="mt-1 text-sm font-medium text-foreground">
-                      {task.provider ?? "暂无"} / {task.model ?? "暂无"}
+                      {task.provider ?? "Not available"} / {task.model ?? "Not available"}
                     </div>
                   </div>
                   <div className="rounded-xl border bg-background/80 p-3">
-                    <div className="text-xs text-muted-foreground">当前界面模型</div>
+                    <div className="text-xs text-muted-foreground">Model selected in this view</div>
                     <div className="mt-1 text-sm font-medium text-foreground">
                       {currentUiModel.provider} / {currentUiModel.model}
                     </div>
                     <div className="mt-1 text-xs text-muted-foreground">
-                      当前温度：{currentUiModel.temperature}
+                      Temperature: {currentUiModel.temperature}
                     </div>
                   </div>
                 </div>
               </section>
 
               <section className="space-y-3">
-                <div className="text-sm font-medium text-foreground">Token 统计</div>
+                <div className="text-sm font-medium text-foreground">Token usage</div>
                 {tokenUsage ? (
                   <div className="grid gap-3 sm:grid-cols-2">
                     <div className="rounded-xl border bg-background/80 p-3">
-                      <div className="text-xs text-muted-foreground">累计调用次数</div>
+                      <div className="text-xs text-muted-foreground">Total model calls</div>
                       <div className="mt-1 text-sm font-medium text-foreground">{formatTokenCount(tokenUsage.llmCallCount)}</div>
                     </div>
                     <div className="rounded-xl border bg-background/80 p-3">
-                      <div className="text-xs text-muted-foreground">累计总 Tokens</div>
+                      <div className="text-xs text-muted-foreground">Total tokens</div>
                       <div className="mt-1 text-sm font-medium text-foreground">{formatTokenCount(tokenUsage.totalTokens)}</div>
                     </div>
                     <div className="rounded-xl border bg-background/80 p-3">
-                      <div className="text-xs text-muted-foreground">输入 Tokens</div>
+                      <div className="text-xs text-muted-foreground">Input tokens</div>
                       <div className="mt-1 text-sm font-medium text-foreground">{formatTokenCount(tokenUsage.promptTokens)}</div>
                     </div>
                     <div className="rounded-xl border bg-background/80 p-3">
-                      <div className="text-xs text-muted-foreground">输出 Tokens</div>
+                      <div className="text-xs text-muted-foreground">Output tokens</div>
                       <div className="mt-1 text-sm font-medium text-foreground">{formatTokenCount(tokenUsage.completionTokens)}</div>
                       <div className="mt-1 text-xs text-muted-foreground">
-                        最近记录：{formatDate(tokenUsage.lastRecordedAt)}
+                        Last recorded: {formatDate(tokenUsage.lastRecordedAt)}
                       </div>
                     </div>
                   </div>
                 ) : (
                   <div className="rounded-xl border border-dashed px-4 py-5 text-sm text-muted-foreground">
-                    当前任务还没有累计到可展示的 token 用量；一旦模型开始返回 usage，这里会自动刷新。
+                    No token usage is available for this task yet. This panel updates when the model returns usage data.
                   </div>
                 )}
               </section>
 
               <section className="space-y-3">
-                <div className="text-sm font-medium text-foreground">步骤状态</div>
+                <div className="text-sm font-medium text-foreground">Step status</div>
                 <div className="space-y-2">
                   {(displayState?.steps ?? task.steps).map((step) => (
                     <div key={step.key} className="flex items-center justify-between rounded-xl border bg-background/80 px-3 py-2">
                       <div className="text-sm text-foreground">{step.label}</div>
                       <Badge variant="outline">{"isCurrent" in step
                         ? (step.status === "attention"
-                          ? "\u9700\u5904\u7406"
+                          ? "Needs attention"
                           : step.status === "running"
-                            ? "\u8fdb\u884c\u4e2d"
+                            ? "In progress"
                             : step.status === "completed"
-                              ? "\u5df2\u5b8c\u6210"
-                              : "\u5f85\u63a8\u8fdb")
+                              ? "Completed"
+                              : "Pending")
                         : formatStepStatus(step.status)}</Badge>
                     </div>
                   ))}
@@ -625,7 +625,7 @@ export default function NovelTaskDrawer({
               </section>
 
               <section className="space-y-3">
-                <div className="text-sm font-medium text-foreground">里程碑历史</div>
+                <div className="text-sm font-medium text-foreground">Milestone history</div>
                 {milestones.length > 0 ? (
                   <div className="space-y-2">
                     {milestones
@@ -635,20 +635,20 @@ export default function NovelTaskDrawer({
                         <div key={`${milestone.checkpointType}:${milestone.createdAt}`} className="rounded-xl border bg-background/80 p-3">
                           <div className="font-medium text-foreground">{formatCheckpoint(milestone.checkpointType)}</div>
                           <div className="mt-1 text-sm text-muted-foreground">{milestone.summary}</div>
-                          <div className="mt-2 text-xs text-muted-foreground">记录时间：{formatDate(milestone.createdAt)}</div>
+                          <div className="mt-2 text-xs text-muted-foreground">Recorded: {formatDate(milestone.createdAt)}</div>
                         </div>
                       ))}
                   </div>
                 ) : (
                   <div className="rounded-xl border border-dashed px-4 py-5 text-sm text-muted-foreground">
-                    当前还没有可显示的里程碑记录。
+                    No milestones to display yet.
                   </div>
                 )}
               </section>
             </>
           ) : (
             <section className="rounded-2xl border border-dashed px-5 py-8 text-sm text-muted-foreground">
-              当前小说还没有可见的自动导演任务。你可以继续手动创作，或在后台任务中心查看其他任务。
+              This novel has no visible Auto Director tasks. You can continue writing manually or view other tasks in the task center.
             </section>
           )}
         </div>
@@ -656,16 +656,16 @@ export default function NovelTaskDrawer({
         <div className="space-y-2 border-t border-border/70 px-5 py-4">
           {primaryAction ? (
             <Button type="button" className="w-full" onClick={() => handleProjectionAction(primaryAction)}>
-              {primaryActionLabel || "继续处理"}
+              {primaryActionLabel || "Continue"}
             </Button>
           ) : null}
           {task?.sourceRoute ? (
             <Button asChild type="button" variant="outline" className="w-full">
-              <Link to={task.sourceRoute}>打开来源页面</Link>
+              <Link to={task.sourceRoute}>Open source page</Link>
             </Button>
           ) : null}
           <Button type="button" variant={primaryAction ? "ghost" : "outline"} className="w-full" onClick={onOpenFullTaskCenter}>
-            打开后台任务中心
+            Open task center
           </Button>
         </div>
       </DialogContent>

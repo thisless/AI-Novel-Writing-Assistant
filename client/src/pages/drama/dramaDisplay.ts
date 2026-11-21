@@ -1,25 +1,25 @@
 import type { DramaSourceType } from "@/api/drama";
 
 export const DRAMA_TRACK_OPTIONS = [
-  { value: "counterattack", label: "逆袭" },
-  { value: "rebirth_revenge", label: "重生复仇" },
-  { value: "war_god", label: "战神归来" },
-  { value: "live_in_son", label: "赘婿" },
-  { value: "miracle_doctor", label: "神医" },
-  { value: "rich_family", label: "豪门恩怨" },
-  { value: "sweet_love", label: "甜宠" },
-  { value: "hidden_identity", label: "马甲文" },
+  { value: "counterattack", label: "Comeback" },
+  { value: "rebirth_revenge", label: "Rebirth revenge" },
+  { value: "war_god", label: "Returning war hero" },
+  { value: "live_in_son", label: "Live-in son-in-law" },
+  { value: "miracle_doctor", label: "Miracle doctor" },
+  { value: "rich_family", label: "Family power struggle" },
+  { value: "sweet_love", label: "Sweet romance" },
+  { value: "hidden_identity", label: "Secret identity" },
 ] as const;
 
 export const DRAMA_SOURCE_LABELS: Record<DramaSourceType, string> = {
-  novel_import: "小说导入",
-  original: "原创短剧",
-  text_import: "文本导入",
+  novel_import: "Novel import",
+  original: "Original drama",
+  text_import: "Text import",
 };
 
 export function dramaTrackLabel(track?: string | null): string {
   if (!track) {
-    return "未选择赛道";
+    return "No genre selected";
   }
   return DRAMA_TRACK_OPTIONS.find((option) => option.value === track)?.label ?? track;
 }

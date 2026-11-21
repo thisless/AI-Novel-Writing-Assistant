@@ -62,17 +62,17 @@ function firstNonEmptyText(...values: unknown[]): string {
 function formatSourceTypeLabel(sourceType: StyleProfile["sourceType"]): string {
   switch (sourceType) {
     case "manual":
-      return "手动整理";
+      return "Manually curated";
     case "from_text":
-      return "从文本提取";
+      return "Extracted from text";
     case "from_book_analysis":
-      return "拆书生成";
+      return "Generated from book analysis";
     case "from_knowledge_document":
-      return "知识库原文";
+      return "Knowledge document";
     case "from_current_work":
-      return "当前工作提炼";
+      return "Derived from current work";
     default:
-      return "其他来源";
+      return "Other source";
   }
 }
 
@@ -82,7 +82,7 @@ function formatUpdatedAtLabel(value: string): string {
     return value.slice(0, 10);
   }
 
-  return new Intl.DateTimeFormat("zh-CN", {
+  return new Intl.DateTimeFormat("en-US", {
     month: "numeric",
     day: "numeric",
     hour: "2-digit",
@@ -92,19 +92,19 @@ function formatUpdatedAtLabel(value: string): string {
 }
 
 function buildNarrativeSummary(profile: StyleProfile): string {
-  return buildReadableRuleSummary("narrativeRules", profile.narrativeRules, "还没有明确剧情推进摘要。");
+  return buildReadableRuleSummary("narrativeRules", profile.narrativeRules, "No narrative progression summary yet.");
 }
 
 function buildCharacterSummary(profile: StyleProfile): string {
-  return buildReadableRuleSummary("characterRules", profile.characterRules, "还没有明确人物表达摘要。");
+  return buildReadableRuleSummary("characterRules", profile.characterRules, "No character expression summary yet.");
 }
 
 function buildLanguageSummary(profile: StyleProfile): string {
-  return buildReadableRuleSummary("languageRules", profile.languageRules, "还没有明确语言质感摘要。");
+  return buildReadableRuleSummary("languageRules", profile.languageRules, "No language and texture summary yet.");
 }
 
 function buildRhythmSummary(profile: StyleProfile): string {
-  return buildReadableRuleSummary("rhythmRules", profile.rhythmRules, "还没有明确节奏控制摘要。");
+  return buildReadableRuleSummary("rhythmRules", profile.rhythmRules, "No pacing summary yet.");
 }
 
 function buildSourceContentPreview(sourceContent?: string | null): string | null {
@@ -149,7 +149,7 @@ export function buildLandingProfileItems(params: BuildLandingProfileItemsParams)
       const description = firstNonEmptyText(
         profile.description,
         profileSummary?.readingFeel,
-        "未填写读感定位，可在编辑设定中补充。",
+        "Reading experience not specified. Add a description in Edit settings.",
       );
       const recentNovelBinding = recentNovelBindingsByProfileId.get(profile.id);
       const selectedPresetLabel = profile.selectedExtractionPresetKey

@@ -15,16 +15,16 @@ import { useIsMobileViewport } from "@/components/layout/mobile/useIsMobileViewp
 import { outlineFieldLabels } from "./outlineNodes";
 
 const RUN_STATUS_LABEL: Record<OutlineFeedbackRunView["status"], string> = {
-  pending: "等待中",
-  running: "分析中",
-  completed: "已完成",
-  failed: "失败",
+  pending: "Queued",
+  running: "Analyzing",
+  completed: "Completed",
+  failed: "Failed",
 };
 
 const ITEM_STATUS_LABEL = {
-  pending: "待处理",
-  adopted: "已采纳",
-  rejected: "已拒绝",
+  pending: "Pending",
+  adopted: "Applied",
+  rejected: "Rejected",
 } as const;
 
 function defaultSettings(settings?: OutlineFeedbackSettings | null): OutlineFeedbackSettings {
@@ -108,21 +108,21 @@ function OutlineFeedbackPanelBody({ outlineId }: { outlineId: string }) {
   const hasActive = useMemo(() => runs.some((run) => run.status === "pending" || run.status === "running"), [runs]);
 
   return (
-    <section id="outline-feedback-panel" aria-label="章节摘要反馈" className="space-y-4 rounded-md border border-border/60 p-4">
+    <section id="outline-feedback-panel" aria-label="Chapter summary feedback" className="space-y-4 rounded-md border border-border/60 p-4">
       <header className="space-y-1">
-        <h2 className="text-base font-semibold">章节摘要反馈</h2>
+        <h2 className="text-base font-semibold">Chapter summary feedback</h2>
         <p className="text-xs text-muted-foreground">
-          根据已落库的章节摘要提出大纲字段调整，需逐项采纳或拒绝后才会生成新修订。不会自动改写大纲，也不会读取章节正文。
+          Suggest outline field changes based on saved chapter summaries. Apply or reject each suggestion before creating a new revision. The outline is never edited automatically, and chapter text is not read.
         </p>
         {statusQuery.data?.sourceRoute ? (
-          <p className="text-xs text-muted-foreground">已绑定来源：{statusQuery.data.sourceRoute}</p>
+          <p className="text-xs text-muted-foreground">Linked source: {statusQuery.data.sourceRoute}</p>
         ) : null}
       </header>
 
-      {statusQuery.isLoading ? <p className="text-sm text-muted-foreground">正在读取反馈…</p> : null}
+      {statusQuery.isLoading ? <p className="text-sm text-muted-foreground">Loading feedback…</p> : null}
       {statusQuery.isError ? (
         <p role="alert" className="text-sm text-destructive">
-          {statusQuery.error instanceof Error ? statusQuery.error.message : "反馈状态读取失败，请稍后重试。"}
+          {statusQuery.error instanceof Error ? statusQuery.error.message : "Failed to load feedback status. Try again later."}
         </p>
       ) : null}
 
@@ -135,19 +135,19 @@ function OutlineFeedbackPanelBody({ outlineId }: { outlineId: string }) {
               saveSettings.mutate();
             }}
           >
-            <h3 className="text-sm font-medium">触发设置</h3>
+            <h3 className="text-sm font-medium">Trigger settings</h3>
             <div className="flex flex-wrap items-end gap-3">
               <label className="space-y-1 text-xs">
-                <span className="text-muted-foreground">频率</span>
+                <span className="text-muted-foreground">Frequency</span>
                 <select
                   className="block rounded-md border border-input bg-background px-2 py-1.5 text-sm"
                   value={settingsDraft.mode}
                   onChange={(event) => setSettingsDraft((current) => ({ ...current, mode: event.target.value as OutlineFeedbackSettings["mode"] }))}
                 >
-                  <option value="chapter">逐章</option>
-                  <option value="every_n">每 N 章</option>
-                  <option value="volume">卷末章</option>
-                  <option value="off">关闭自动分析</option>
+                  <option value="chapter">Every chapter</option>
+                  <option value="every_n">Every N chapters</option>
+                  <option value="volume">End of each volume</option>
+                  <option value="off">Turn off automatic analysis</option>
                 </select>
               </label>
               {settingsDraft.mode === "every_n" ? (
@@ -164,12 +164,12 @@ function OutlineFeedbackPanelBody({ outlineId }: { outlineId: string }) {
                 </label>
               ) : null}
               <Button type="submit" size="sm" variant="outline" disabled={saveSettings.isPending}>
-                {saveSettings.isPending ? "正在保存…" : "保存设置"}
+                {saveSettings.isPending ? "Saving…" : "Save settings"}
               </Button>
             </div>
             {saveSettings.isError ? (
               <p role="alert" className="text-sm text-destructive">
-                {saveSettings.error instanceof Error ? saveSettings.error.message : "设置保存失败，请重试。"}
+                {saveSettings.error instanceof Error ? saveSettings.error.message : "Failed to save settings. Try again."}
               </p>
             ) : null}
           </form>
@@ -181,52 +181,52 @@ function OutlineFeedbackPanelBody({ outlineId }: { outlineId: string }) {
               analyze.mutate();
             }}
           >
-            <h3 className="text-sm font-medium">手动分析</h3>
+            <h3 className="text-sm font-medium">Manual analysis</h3>
             <div className="flex flex-wrap items-end gap-3">
               <label className="space-y-1 text-xs">
-                <span className="text-muted-foreground">章节 ID</span>
+                <span className="text-muted-foreground">Chapter ID</span>
                 <input
                   className="block w-56 rounded-md border border-input bg-background px-2 py-1.5 text-sm"
                   value={chapterId}
                   onChange={(event) => setChapterId(event.target.value)}
-                  aria-label="要分析的章节 ID"
+                  aria-label="Chapter ID to analyze"
                 />
               </label>
               <label className="space-y-1 text-xs">
-                <span className="text-muted-foreground">请求键</span>
+                <span className="text-muted-foreground">Request key</span>
                 <input
                   className="block w-56 rounded-md border border-input bg-background px-2 py-1.5 text-sm"
                   value={requestKey}
                   onChange={(event) => setRequestKey(event.target.value)}
-                  aria-label="手动分析请求键"
+                  aria-label="Manual analysis request key"
                 />
               </label>
               <Button type="submit" size="sm" disabled={!chapterId.trim() || !requestKey.trim() || analyze.isPending}>
-                {analyze.isPending ? "已提交…" : "开始分析"}
+                {analyze.isPending ? "Submitted…" : "Start analysis"}
               </Button>
             </div>
             {analyze.isError ? (
               <p role="alert" className="text-sm text-destructive">
-                {analyze.error instanceof Error ? analyze.error.message : "分析请求失败，请重试。"}
+                {analyze.error instanceof Error ? analyze.error.message : "Analysis request failed. Try again."}
               </p>
             ) : null}
           </form>
 
           <div className="space-y-3">
             <div className="flex items-center justify-between gap-2">
-              <h3 className="text-sm font-medium">运行与建议</h3>
-              {hasActive ? <p className="text-xs text-muted-foreground">有进行中的分析，列表会自动刷新。</p> : null}
+              <h3 className="text-sm font-medium">Runs and suggestions</h3>
+              {hasActive ? <p className="text-xs text-muted-foreground">Analysis is in progress. This list will refresh automatically.</p> : null}
             </div>
             {runs.length === 0 ? (
-              <p className="text-sm text-muted-foreground">暂无反馈运行。摘要保存后会按设置异步分析，也可手动发起。</p>
+              <p className="text-sm text-muted-foreground">No feedback runs yet. Saved summaries are analyzed asynchronously according to your settings, or you can start an analysis manually.</p>
             ) : (
               <ul className="space-y-4">
                 {runs.map((run) => (
                   <li key={run.id} className="space-y-2 rounded-md border border-border/50 p-3">
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <p className="text-sm">
-                        第 {run.chapterOrder} 章 · {RUN_STATUS_LABEL[run.status]}
-                        {run.attempt > 1 ? ` · 第 ${run.attempt} 次` : ""}
+                        Chapter {run.chapterOrder} · {RUN_STATUS_LABEL[run.status]}
+                        {run.attempt > 1 ? ` · Attempt ${run.attempt}` : ""}
                       </p>
                       {run.status === "failed" || (run.status === "running" && run.attempt >= 1) ? (
                         <Button
@@ -236,7 +236,7 @@ function OutlineFeedbackPanelBody({ outlineId }: { outlineId: string }) {
                           disabled={retry.isPending}
                           onClick={() => retry.mutate(run.id)}
                         >
-                          重试
+                          Retry
                         </Button>
                       ) : null}
                     </div>
@@ -247,7 +247,7 @@ function OutlineFeedbackPanelBody({ outlineId }: { outlineId: string }) {
                           <li key={item.operationId} className="space-y-2 text-sm">
                             <div className="flex flex-wrap items-start justify-between gap-2">
                               <div>
-                                <p className="font-medium">节点 {item.nodeId}</p>
+                                <p className="font-medium">Node {item.nodeId}</p>
                                 <p className="text-xs text-muted-foreground">{ITEM_STATUS_LABEL[item.status]}</p>
                               </div>
                               {item.status === "pending" ? (
@@ -258,7 +258,7 @@ function OutlineFeedbackPanelBody({ outlineId }: { outlineId: string }) {
                                     disabled={decide.isPending}
                                     onClick={() => decide.mutate({ runId: run.id, action: "adopt", operationIds: [item.operationId] })}
                                   >
-                                    采纳
+                                    Apply
                                   </Button>
                                   <Button
                                     type="button"
@@ -267,7 +267,7 @@ function OutlineFeedbackPanelBody({ outlineId }: { outlineId: string }) {
                                     disabled={decide.isPending}
                                     onClick={() => decide.mutate({ runId: run.id, action: "reject", operationIds: [item.operationId] })}
                                   >
-                                    拒绝
+                                    Reject
                                   </Button>
                                 </div>
                               ) : null}
@@ -285,7 +285,7 @@ function OutlineFeedbackPanelBody({ outlineId }: { outlineId: string }) {
                         ))}
                       </ul>
                     ) : run.status === "completed" ? (
-                      <p className="text-xs text-muted-foreground">这次运行没有可采纳的字段建议。</p>
+                      <p className="text-xs text-muted-foreground">This run has no field suggestions to apply.</p>
                     ) : null}
                   </li>
                 ))}
@@ -293,12 +293,12 @@ function OutlineFeedbackPanelBody({ outlineId }: { outlineId: string }) {
             )}
             {decide.isError ? (
               <p role="alert" className="text-sm text-destructive">
-                {decide.error instanceof Error ? decide.error.message : "处理建议失败。若大纲已被其他修订改动，请重新分析。"}
+                {decide.error instanceof Error ? decide.error.message : "Failed to process suggestions. If another revision changed the outline, run the analysis again."}
               </p>
             ) : null}
             {retry.isError ? (
               <p role="alert" className="text-sm text-destructive">
-                {retry.error instanceof Error ? retry.error.message : "重试失败，请稍后再次尝试。"}
+                {retry.error instanceof Error ? retry.error.message : "Retry failed. Try again later."}
               </p>
             ) : null}
           </div>

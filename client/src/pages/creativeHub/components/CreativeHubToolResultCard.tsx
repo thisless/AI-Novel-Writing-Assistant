@@ -32,7 +32,7 @@ function itemLabel(item: Record<string, unknown>): string {
   if (typeof item.id === "string" && item.id.trim()) {
     return item.id.trim();
   }
-  return "未命名条目";
+  return "Untitled item";
 }
 
 function compactText(value: string, max = 140): string {
@@ -46,15 +46,15 @@ function compactText(value: string, max = 140): string {
 function formatNovelProjectStatus(value: unknown): string | null {
   switch (value) {
     case "in_progress":
-      return "在写中";
+      return "In progress";
     case "not_started":
-      return "未开始";
+      return "Not started";
     case "completed":
-      return "已完成";
+      return "Completed";
     case "rework":
-      return "返工中";
+      return "Needs revision";
     case "blocked":
-      return "已阻塞";
+      return "Blocked";
     default:
       return null;
   }
@@ -87,8 +87,8 @@ function renderNovelList(output: Record<string, unknown>, onQuickAction?: (promp
   return (
     <div className="space-y-2">
       <div className="text-xs text-muted-foreground">
-        已发现 {total ?? items.length} 本小说
-        {total != null && total > items.length ? `，当前展示前 ${items.length} 本` : ""}
+        {total ?? items.length} novels found
+        {total != null && total > items.length ? ` · Showing the first ${items.length}` : ""}
       </div>
       <div className="space-y-2">
         {items.map((item) => {
@@ -99,7 +99,7 @@ function renderNovelList(output: Record<string, unknown>, onQuickAction?: (promp
             <div key={`${item.id ?? title}`} className="rounded-md border border-border bg-muted/20 px-3 py-2">
               <div className="text-sm font-medium text-foreground">《{title}》</div>
               <div className="mt-1 text-xs text-muted-foreground">
-                {chapterCount != null ? `${chapterCount} 章` : "章节未知"}
+                {chapterCount != null ? `${chapterCount} chapters` : "Chapter count unknown"}
                 {projectStatus ? ` · ${projectStatus}` : ""}
               </div>
               {onQuickAction ? (
@@ -108,9 +108,9 @@ function renderNovelList(output: Record<string, unknown>, onQuickAction?: (promp
                     type="button"
                     size="sm"
                     variant="outline"
-                    onClick={() => onQuickAction(`把《${title}》设为当前工作区`)}
+                    onClick={() => onQuickAction(`Set "${title}" as the current workspace.`)}
                   >
-                    设为当前工作区
+                    Set as current workspace
                   </Button>
                 </div>
               ) : null}
@@ -127,25 +127,25 @@ function renderWorkspaceCard(
   variant: "created" | "selected",
   onQuickAction?: (prompt: string) => void,
 ) {
-  const title = typeof output.title === "string" && output.title.trim() ? output.title.trim() : "未命名小说";
+  const title = typeof output.title === "string" && output.title.trim() ? output.title.trim() : "Untitled novel";
   const chapterCount = typeof output.chapterCount === "number" ? output.chapterCount : 0;
   const actions = variant === "created"
     ? [
-      { label: "查看当前进度", prompt: "这本书当前写到哪一章" },
-      { label: "开始设计第一章", prompt: "为这本书规划第一章" },
+      { label: "View current progress", prompt: "How far along is this book, and which chapter is currently being written?" },
+      { label: "Plan the first chapter", prompt: "Plan the first chapter of this book." },
     ]
     : [
-      { label: "查看当前进度", prompt: "这本书当前写到哪一章" },
-      { label: "查看前两章", prompt: "前两章都写了什么" },
+      { label: "View current progress", prompt: "How far along is this book, and which chapter is currently being written?" },
+      { label: "Review the first two chapters", prompt: "Summarize what happens in the first two chapters." },
     ];
   return (
     <div className="space-y-2">
       <div className="rounded-md border border-success/30 bg-success/5 px-3 py-3">
         <div className="text-sm font-medium text-foreground">《{title}》</div>
         <div className="mt-1 text-xs text-muted-foreground">
-          {variant === "created" ? "新小说已创建并绑定到当前线程。" : "当前线程已切换到该小说工作区。"}
+          {variant === "created" ? "Novel created and linked to this thread." : "This thread has switched to the novel workspace."}
         </div>
-        <div className="mt-2 text-xs text-muted-foreground">当前章节数：{chapterCount}</div>
+        <div className="mt-2 text-xs text-muted-foreground">Current chapter count: {chapterCount}</div>
       </div>
       {renderActionButtons(actions, onQuickAction)}
     </div>
@@ -155,19 +155,19 @@ function renderWorkspaceCard(
 function renderWorldBindingCard(output: Record<string, unknown>, onQuickAction?: (prompt: string) => void) {
   const novelTitle = typeof output.novelTitle === "string" && output.novelTitle.trim()
     ? output.novelTitle.trim()
-    : "当前小说";
+    : "Current novel";
   const worldName = typeof output.worldName === "string" && output.worldName.trim()
     ? output.worldName.trim()
-    : "未命名世界观";
+    : "Untitled world";
   return (
     <div className="space-y-2">
       <div className="rounded-md border border-info/30 bg-info/5 px-3 py-3">
         <div className="text-sm font-medium text-foreground">《{novelTitle}》</div>
-        <div className="mt-1 text-xs text-muted-foreground">已绑定世界观《{worldName}》。</div>
+        <div className="mt-1 text-xs text-muted-foreground">Linked world: “{worldName}”.</div>
       </div>
       {renderActionButtons([
-        { label: "查看世界观约束", prompt: "查看当前小说的世界观规则" },
-        { label: "检查世界观冲突", prompt: "检查当前小说和世界观是否存在冲突" },
+        { label: "Review world constraints", prompt: "Review the current novel's world rules." },
+        { label: "Check for world conflicts", prompt: "Check whether the current novel conflicts with its world rules." },
       ], onQuickAction)}
     </div>
   );
@@ -191,33 +191,33 @@ function renderProductionAssetCard(
 }
 
 function renderProductionStatusCard(output: Record<string, unknown>, onQuickAction?: (prompt: string) => void) {
-  const title = typeof output.title === "string" && output.title.trim() ? output.title.trim() : "当前小说";
-  const currentStage = typeof output.currentStage === "string" ? output.currentStage.trim() : "未知阶段";
+  const title = typeof output.title === "string" && output.title.trim() ? output.title.trim() : "Current novel";
+  const currentStage = typeof output.currentStage === "string" ? output.currentStage.trim() : "Unknown stage";
   const chapterCount = typeof output.chapterCount === "number" ? output.chapterCount : 0;
   const targetChapterCount = typeof output.targetChapterCount === "number" ? output.targetChapterCount : null;
   const pipelineStatus = typeof output.pipelineStatus === "string" && output.pipelineStatus.trim()
     ? output.pipelineStatus.trim()
-    : "未启动";
+    : "Not started";
   const assetStages = asRecordArray(output.assetStages);
   return (
     <div className="space-y-2">
       <div className="rounded-md border border-info/30 bg-info/5 px-3 py-3">
         <div className="text-sm font-medium text-foreground">《{title}》</div>
-        <div className="mt-1 text-xs text-muted-foreground">当前阶段：{currentStage}</div>
+        <div className="mt-1 text-xs text-muted-foreground">Current stage: {currentStage}</div>
         <div className="mt-1 text-xs text-muted-foreground">
-          章节目录：{targetChapterCount != null ? `${chapterCount}/${targetChapterCount}` : chapterCount} 章
+          Chapter outline: {targetChapterCount != null ? `${chapterCount}/${targetChapterCount}` : chapterCount} chapters
         </div>
-        <div className="mt-1 text-xs text-muted-foreground">整本写作：{pipelineStatus}</div>
+        <div className="mt-1 text-xs text-muted-foreground">Novel production: {pipelineStatus}</div>
         {typeof output.failureSummary === "string" && output.failureSummary.trim() ? (
-          <div className="mt-2 text-xs leading-5 text-muted-foreground">失败摘要：{output.failureSummary.trim()}</div>
+          <div className="mt-2 text-xs leading-5 text-muted-foreground">Failure summary: {output.failureSummary.trim()}</div>
         ) : null}
       </div>
       {assetStages.length > 0 ? (
         <div className="grid gap-2">
           {assetStages.slice(0, 8).map((stage) => (
             <div key={`${stage.key ?? stage.label}`} className="rounded-md border border-border bg-muted/20 px-3 py-2">
-              <div className="text-sm font-medium text-foreground">{String(stage.label ?? stage.key ?? "阶段")}</div>
-              <div className="mt-1 text-xs text-muted-foreground">状态：{String(stage.status ?? "unknown")}</div>
+              <div className="text-sm font-medium text-foreground">{String(stage.label ?? stage.key ?? "Stage")}</div>
+              <div className="mt-1 text-xs text-muted-foreground">Status: {String(stage.status ?? "unknown")}</div>
               {typeof stage.detail === "string" && stage.detail.trim() ? (
                 <div className="mt-1 text-xs text-muted-foreground">{stage.detail.trim()}</div>
               ) : null}
@@ -226,7 +226,7 @@ function renderProductionStatusCard(output: Record<string, unknown>, onQuickActi
         </div>
       ) : null}
       {renderActionButtons([
-        { label: "查看整本进度", prompt: "整本生成到哪一步了" },
+        { label: "View production progress", prompt: "How far along is full-book production?" },
       ], onQuickAction)}
     </div>
   );
@@ -242,21 +242,21 @@ function renderPipelineRunCard(
   const jobId = typeof output.jobId === "string" && output.jobId.trim() ? output.jobId.trim() : null;
   const scope = startOrder != null && endOrder != null
     ? startOrder === endOrder
-      ? `第 ${startOrder} 章`
-      : `第 ${startOrder} 到第 ${endOrder} 章`
-    : "当前章节范围";
-  const title = toolName === "preview_pipeline_run" ? "整本写作预览" : "整本写作任务";
+      ? `Chapter ${startOrder}`
+      : `Chapters ${startOrder}–${endOrder}`
+    : "Current chapter range";
+  const title = toolName === "preview_pipeline_run" ? "Novel production preview" : "Novel production task";
   const description = toolName === "preview_pipeline_run"
-    ? `${scope} 的整本写作预览已完成，当前可进入审批或继续诊断。`
-    : `${scope} 的整本写作任务已启动${jobId ? `（任务 ${jobId}）` : ""}。`;
+    ? `Preview for ${scope} is complete. You can approve it or continue diagnosing.`
+    : `Production task for ${scope} has started${jobId ? ` (Task ${jobId})` : ""}.`;
   const actions = toolName === "preview_pipeline_run"
     ? [
-      { label: "查看整本进度", prompt: "整本生成到哪一步了" },
-      { label: "查看阻塞", prompt: "为什么整本生成没有启动" },
+      { label: "View production progress", prompt: "How far along is full-book production?" },
+      { label: "Review blockers", prompt: "Why hasn't full-book production started?" },
     ]
     : [
-      { label: "查看整本进度", prompt: "整本生成到哪一步了" },
-      { label: "查看任务状态", prompt: "列出当前系统任务状态" },
+      { label: "View production progress", prompt: "How far along is full-book production?" },
+      { label: "Check task status", prompt: "List the current system task statuses." },
     ];
   return renderProductionAssetCard(title, description, actions, onQuickAction);
 }
@@ -268,11 +268,11 @@ function renderDiagnosticCard(output: Record<string, unknown>, onQuickAction?: (
   return (
     <div className="space-y-2">
       {failureSummary ? <div className="text-sm font-medium text-foreground">{failureSummary}</div> : null}
-      {failureDetails ? <div className="text-xs leading-5 text-muted-foreground">详情：{failureDetails}</div> : null}
-      {recoveryHint ? <div className="text-xs leading-5 text-muted-foreground">建议：{recoveryHint}</div> : null}
+      {failureDetails ? <div className="text-xs leading-5 text-muted-foreground">Details: {failureDetails}</div> : null}
+      {recoveryHint ? <div className="text-xs leading-5 text-muted-foreground">Suggestion: {recoveryHint}</div> : null}
       {renderActionButtons([
-        { label: "继续诊断", prompt: "继续解释失败原因和恢复建议" },
-        { label: "查看任务状态", prompt: "列出当前系统任务状态" },
+        { label: "Continue diagnosis", prompt: "Explain the failure and recovery suggestions in more detail." },
+        { label: "Check task status", prompt: "List the current system task statuses." },
       ], onQuickAction)}
     </div>
   );
@@ -294,12 +294,12 @@ function renderListCard(
           <div key={`${item.id ?? itemLabel(item)}`} className="rounded-md border border-border bg-muted/20 px-3 py-2">
             <div className="text-sm font-medium text-foreground">{itemLabel(item)}</div>
             {"status" in item && typeof item.status === "string" ? (
-              <div className="mt-1 text-xs text-muted-foreground">状态：{item.status}</div>
+              <div className="mt-1 text-xs text-muted-foreground">Status: {item.status}</div>
             ) : null}
           </div>
         ))}
       </div>
-      {renderActionButtons([{ label: "继续筛选", prompt: "继续细化这个列表结果" }], onQuickAction)}
+      {renderActionButtons([{ label: "Refine results", prompt: "Refine these results further." }], onQuickAction)}
     </div>
   );
 }
@@ -315,15 +315,15 @@ function renderChapterCard(output: Record<string, unknown>, onQuickAction?: (pro
   return (
     <div className="space-y-2">
       <div className="text-sm font-medium text-foreground">
-        {order != null ? `第${order}章` : "章节内容"}
+        {order != null ? `Chapter ${order}` : "Chapter content"}
         {title ? `《${title}》` : ""}
       </div>
       <div className="rounded-md border border-border bg-muted/20 px-3 py-3 text-sm leading-6 text-muted-foreground">
-        {content || "当前没有可显示的章节内容。"}
+        {content || "No chapter content is available."}
       </div>
       {renderActionButtons([
-        { label: "继续总结", prompt: "总结这一段内容的关键剧情" },
-        { label: "检查冲突", prompt: "检查这一章是否和世界观或前文冲突" },
+        { label: "Continue summarizing", prompt: "Summarize the key plot points in this passage." },
+        { label: "Check for conflicts", prompt: "Check this chapter for conflicts with the world or earlier chapters." },
       ], onQuickAction)}
     </div>
   );
@@ -340,7 +340,7 @@ export default function CreativeHubToolResultCard({
   const [expanded, setExpanded] = useState(false);
   const detailsId = useId();
   const payload = asRecord(output);
-  const summaryText = compactText(summary, 160) || "工具已返回结果。";
+  const summaryText = compactText(summary, 160) || "The tool returned a result.";
   const cardContent = (() => {
     if (toolName === "list_novels") {
       return renderNovelList(payload, onQuickAction);
@@ -355,12 +355,12 @@ export default function CreativeHubToolResultCard({
       return renderWorldBindingCard(payload, onQuickAction);
     }
     if (toolName === "generate_world_for_novel") {
-      const worldName = typeof payload.worldName === "string" && payload.worldName.trim() ? payload.worldName.trim() : "未命名世界观";
+      const worldName = typeof payload.worldName === "string" && payload.worldName.trim() ? payload.worldName.trim() : "Untitled world";
       return renderProductionAssetCard(
-        "世界观已生成",
-        `已生成世界观《${worldName}》。`,
+        "World generated",
+        `Generated world: “${worldName}”.`,
         [
-          { label: "查看生产进度", prompt: "整本生成到哪一步了" },
+          { label: "View production progress", prompt: "How far along is full-book production?" },
         ],
         onQuickAction,
       );
@@ -368,34 +368,34 @@ export default function CreativeHubToolResultCard({
     if (toolName === "generate_novel_characters") {
       const characterCount = typeof payload.characterCount === "number" ? payload.characterCount : 0;
       return renderProductionAssetCard(
-        "核心角色已生成",
-        `已生成 ${characterCount} 个核心角色。`,
+        "Core characters generated",
+        `${characterCount} core characters generated.`,
         [
-          { label: "查看角色状态", prompt: "查看当前小说角色状态" },
+          { label: "Review character status", prompt: "Review the current status of the novel's characters." },
         ],
         onQuickAction,
       );
     }
     if (toolName === "generate_story_bible") {
       return renderProductionAssetCard(
-        "小说圣经已生成",
+        "Story bible generated",
         typeof payload.mainPromise === "string" && payload.mainPromise.trim()
           ? payload.mainPromise.trim()
-          : "当前小说圣经已生成。",
+          : "The story bible has been generated.",
         [
-          { label: "查看整本进度", prompt: "整本生成到哪一步了" },
+          { label: "View production progress", prompt: "How far along is full-book production?" },
         ],
         onQuickAction,
       );
     }
     if (toolName === "generate_novel_outline") {
       return renderProductionAssetCard(
-        "发展走向已生成",
+        "Story direction generated",
         typeof payload.outline === "string" && payload.outline.trim()
           ? payload.outline.trim()
-          : "当前小说发展走向已生成。",
+          : "The novel's story direction has been generated.",
         [
-          { label: "查看整本进度", prompt: "整本生成到哪一步了" },
+          { label: "View production progress", prompt: "How far along is full-book production?" },
         ],
         onQuickAction,
       );
@@ -403,10 +403,10 @@ export default function CreativeHubToolResultCard({
     if (toolName === "generate_structured_outline") {
       const targetChapterCount = typeof payload.targetChapterCount === "number" ? payload.targetChapterCount : 0;
       return renderProductionAssetCard(
-        "结构化大纲已生成",
-        targetChapterCount > 0 ? `已生成 ${targetChapterCount} 章结构化大纲。` : "当前小说结构化大纲已生成。",
+        "Structured outline generated",
+        targetChapterCount > 0 ? `Structured outline generated for ${targetChapterCount} chapters.` : "The novel's structured outline has been generated.",
         [
-          { label: "查看整本进度", prompt: "整本生成到哪一步了" },
+          { label: "View production progress", prompt: "How far along is full-book production?" },
         ],
         onQuickAction,
       );
@@ -414,11 +414,11 @@ export default function CreativeHubToolResultCard({
     if (toolName === "sync_chapters_from_structured_outline") {
       const chapterCount = typeof payload.chapterCount === "number" ? payload.chapterCount : 0;
       return renderProductionAssetCard(
-        "章节目录已同步",
-        chapterCount > 0 ? `已同步 ${chapterCount} 个章节目录。` : "已同步章节目录。",
+        "Chapter outline synced",
+        chapterCount > 0 ? `Synced ${chapterCount} chapters.` : "Chapter outline synced.",
         [
-          { label: "查看整本进度", prompt: "整本生成到哪一步了" },
-          { label: "查看任务状态", prompt: "列出当前系统任务状态" },
+          { label: "View production progress", prompt: "How far along is full-book production?" },
+          { label: "Check task status", prompt: "List the current system task statuses." },
         ],
         onQuickAction,
       );
@@ -448,7 +448,7 @@ export default function CreativeHubToolResultCard({
       || toolName === "list_writing_formulas"
       || toolName === "list_base_characters"
     ) {
-      return renderListCard(payload, "当前没有可展示的结果。", onQuickAction);
+      return renderListCard(payload, "No results to display.", onQuickAction);
     }
     if (
       toolName === "get_chapter_content"
@@ -469,7 +469,7 @@ export default function CreativeHubToolResultCard({
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex flex-wrap items-center gap-2">
           <div className="text-sm font-medium text-foreground">{summaryText}</div>
-          <Badge variant={success ? "secondary" : "destructive"}>{success ? "已解析结果" : "执行失败"}</Badge>
+          <Badge variant={success ? "secondary" : "destructive"}>{success ? "Result processed" : "Failed"}</Badge>
         </div>
         <Button
           type="button"
@@ -479,20 +479,20 @@ export default function CreativeHubToolResultCard({
           aria-expanded={expanded}
           aria-controls={detailsId}
         >
-          {expanded ? "收起详情" : "展开详情"}
+          {expanded ? "Hide details" : "Show details"}
         </Button>
       </div>
       {expanded ? (
         <div id={detailsId} className="mt-3 space-y-3">
           {!success && errorCode ? (
             <div className="rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-xs text-muted-foreground">
-              错误代码：{errorCode}
+              Error code: {errorCode}
             </div>
           ) : null}
           {cardContent}
         </div>
       ) : (
-        <div className="mt-2 text-xs text-muted-foreground">详细执行结果默认收起，可按需查看。</div>
+        <div className="mt-2 text-xs text-muted-foreground">Detailed results are collapsed by default. Expand them if needed.</div>
       )}
     </div>
   );

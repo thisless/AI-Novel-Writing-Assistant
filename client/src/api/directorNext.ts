@@ -123,7 +123,7 @@ export async function getDirectorSummary(novelId: string): Promise<ApiResponse<D
     const httpError = error as ApiHttpError;
     const details = httpError.details as { error?: string } | undefined;
     if (httpError.status === 404 && details?.error === "这本小说没有创作记录。") {
-      return { success: true, data: null, message: "当前没有进行中的创作。" };
+      return { success: true, data: null, message: "There is no active creation process." };
     }
     throw error;
   }

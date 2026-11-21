@@ -49,14 +49,14 @@ export function PromptRunBar(props: PromptRunBarProps) {
     onRunTest,
     onSave,
     officialVersionDisabled,
-    officialVersionLabel = "官方版本",
+    officialVersionLabel = "Official version",
     previewDisabled,
     prompt,
     resetDisabled,
     saveDisabled,
     saveError,
-    saveLabel = "保存覆盖",
-    savePendingLabel = "保存中...",
+    saveLabel = "Save changes",
+    savePendingLabel = "Saving...",
     testLlm,
     onTestLlmChange,
     testRunDisabled,
@@ -77,9 +77,9 @@ export function PromptRunBar(props: PromptRunBarProps) {
           <div aria-live="polite">
             <p className="text-xs text-muted-foreground">{props.scopeHint}</p>
             <p className={cn("mt-1 text-sm", saveError ? "text-destructive" : dirtyCount > 0 ? "text-warning" : "text-muted-foreground")}>
-              {saveError ? "保存失败" : isSavePending ? "保存中…" : dirtyCount > 0 ? `${dirtyCount} 项修改待保存` : isSaveSuccess ? "保存成功" : "无未保存修改"}
-              {estimatedTokens !== null ? <span className="ml-3 text-xs text-muted-foreground" title={`上下文预算 ${maxBudget ?? "未限制"}`}>
-                预览约 {estimatedTokens} tokens</span> : null}
+              {saveError ? "Save failed" : isSavePending ? "Saving…" : dirtyCount > 0 ? `${dirtyCount} unsaved changes` : isSaveSuccess ? "Saved" : "No unsaved changes"}
+              {estimatedTokens !== null ? <span className="ml-3 text-xs text-muted-foreground" title={`Context budget: ${maxBudget ?? "unlimited"}`}>
+                Preview: ~{estimatedTokens} tokens</span> : null}
             </p>
           </div>
           {saveError ? <div className="text-xs text-destructive">{saveError}</div> : null}
@@ -104,7 +104,7 @@ export function PromptRunBar(props: PromptRunBarProps) {
             className="text-muted-foreground"
           >
             <Eye className="mr-2 h-4 w-4" />
-            {isPreviewPending ? "预览中..." : "预览提示词"}
+            {isPreviewPending ? "Preparing preview..." : "Preview prompt"}
           </Button> : null}
           <Button
             type="button"
@@ -114,7 +114,7 @@ export function PromptRunBar(props: PromptRunBarProps) {
             className="text-foreground shadow-none"
           >
             <FlaskConical className="mr-2 h-4 w-4" />
-            {isTestRunPending ? "试写中..." : writingLab ? "试写效果" : "测试效果"}
+            {isTestRunPending ? "Generating sample..." : writingLab ? "Try a sample" : "Test prompt"}
           </Button>
           <Button
             type="button"
@@ -133,22 +133,22 @@ export function PromptRunBar(props: PromptRunBarProps) {
             className="text-muted-foreground hover:bg-info/10 hover:text-info"
           >
             <RotateCcw className="mr-2 h-4 w-4" />
-            放弃修改
+            Discard changes
           </Button>
         </div>
       </div>
       <Dialog open={testDialogOpen} onOpenChange={setTestDialogOpen}>
         <AppDialogContent
-          title={writingLab ? "试写效果" : "测试效果"}
+          title={writingLab ? "Try a sample" : "Test prompt"}
           description={props.usesSample
-            ? "使用示例内容和当前草稿测试效果，不会改动小说正文。"
-            : "使用所选小说、章节和当前草稿测试效果，不会改动章节正文。"}
+            ? "Test the current draft with sample content. The novel text will not be changed."
+            : "Test the current draft with the selected novel and chapter. The chapter text will not be changed."}
           className="prompt-workbench-theme max-w-2xl"
           bodyClassName="bg-card"
           footer={(
             <>
               <Button type="button" variant="ghost" onClick={() => setTestDialogOpen(false)}>
-                取消
+                Cancel
               </Button>
               <Button
                 type="button"
@@ -157,7 +157,7 @@ export function PromptRunBar(props: PromptRunBarProps) {
                 className="bg-primary text-primary-foreground hover:bg-primary/90"
               >
                 <FlaskConical className="mr-2 h-4 w-4" />
-                {isTestRunPending ? "试写中..." : writingLab ? "开始试写" : "开始测试"}
+                {isTestRunPending ? "Generating sample..." : writingLab ? "Generate sample" : "Run test"}
               </Button>
             </>
           )}
@@ -173,8 +173,8 @@ export function PromptRunBar(props: PromptRunBarProps) {
             </div>
             <div className="rounded-md bg-warning/10 px-3 py-2 text-xs leading-relaxed text-warning">
               {writingLab
-                ? "试写会调用真实模型并消耗额度，结果仅用于比较模板效果，不会保存为章节正文。"
-                : "测试产出会调用真实模型并消耗额度；结果只用于调试，不会保存为章节正文。"}
+                ? "Generating a sample uses a live model and consumes credits. The result is only for comparing templates and will not be saved as chapter text."
+                : "Running a test uses a live model and consumes credits. The result is for debugging only and will not be saved as chapter text."}
             </div>
           </div>
         </AppDialogContent>

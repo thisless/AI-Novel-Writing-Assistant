@@ -233,7 +233,7 @@ export default function WritingFormulaPage() {
     setActiveWorkspaceDialog("editor");
     setEditorFocusIntent("editor");
     if (incomingSource === "book-analysis") {
-      setMessage(`写法“${incomingProfile.name}”来自拆书结果，你可以继续检查规则、试写，或绑定到目标。`);
+      setMessage(`Style profile “${incomingProfile.name}” came from book analysis. Review its rules, try a sample, or bind it to a target.`);
     }
     setSearchParams(nextSearchParams, { replace: true });
   }, [incomingProfileId, incomingSource, profiles, searchParams, setSearchParams]);
@@ -296,7 +296,7 @@ export default function WritingFormulaPage() {
     },
     onExtractionTaskQueued: (task) => {
       setCreateDialogOpen(false);
-      setMessage(`写法提取任务“${task.title}”已提交。系统会在后台自动提取并保存，完成后会自动打开结果。`);
+      setMessage(`Style extraction task “${task.title}” was submitted. The system will extract and save the profile in the background, then open the result when it is ready.`);
     },
     onFlowMessage: setMessage,
   });
@@ -311,11 +311,11 @@ export default function WritingFormulaPage() {
   const reextractFeaturesMutation = useMutation({
     mutationFn: async () => {
       if (!selectedProfileId || !editor.sourceContent.trim()) {
-        throw new Error("请先准备原文样本。");
+        throw new Error("Add a source text sample first.");
       }
 
       return extractStyleFeaturesFromText({
-        name: editor.name.trim() || selectedProfile?.name || "文本提取写法",
+        name: editor.name.trim() || selectedProfile?.name || "Text-extracted style",
         category: editor.category || undefined,
         sourceText: editor.sourceContent,
         provider: llm.provider,
@@ -342,8 +342,8 @@ export default function WritingFormulaPage() {
       }));
       setMessage(
         extractedFeatures.length > 0
-          ? `已重新提取 ${extractedFeatures.length} 条特征，请确认后保存。`
-          : "这次仍然没有生成可用特征，建议检查原文样本是否足够完整。",
+          ? `Re-extracted ${extractedFeatures.length} features. Review them before saving.`
+          : "No usable features were generated. Check that the source text sample is complete enough.",
       );
     },
   });
@@ -371,7 +371,7 @@ export default function WritingFormulaPage() {
       });
     },
     onSuccess: async () => {
-      setMessage("写法资产保存完成。");
+      setMessage("Style profile saved.");
       await refreshStyleData();
     },
   });
@@ -379,7 +379,7 @@ export default function WritingFormulaPage() {
   const deleteProfileMutation = useMutation({
     mutationFn: (id: string) => deleteStyleProfile(id),
     onSuccess: async (_response, deletedProfileId) => {
-      setMessage("这套写法已删除。");
+      setMessage("Style profile deleted.");
       if (deletedProfileId === selectedProfileId) {
         setSelectedProfileId("");
         setActiveWorkspaceDialog(null);
@@ -409,7 +409,7 @@ export default function WritingFormulaPage() {
       });
     },
     onSuccess: async () => {
-      setMessage("这套写法会参与目标对象的生成。");
+      setMessage("This style profile will be applied when generating content for the target.");
       await refreshStyleData();
     },
   });
@@ -424,7 +424,7 @@ export default function WritingFormulaPage() {
   const testWriteMutation = useMutation({
     mutationFn: () => {
       if (!selectedProfileId) {
-        throw new Error("请先选择写法资产。");
+        throw new Error("Select a style profile first.");
       }
 
       return testWriteWithStyleProfile(selectedProfileId, {
@@ -444,7 +444,7 @@ export default function WritingFormulaPage() {
   const detectionMutation = useMutation({
     mutationFn: async () => {
       if (!selectedProfileId) {
-        throw new Error("请先选择写法资产。");
+        throw new Error("Select a style profile first.");
       }
 
       const sourceContent = detectInput;
@@ -463,7 +463,7 @@ export default function WritingFormulaPage() {
   const rewriteMutation = useMutation({
     mutationFn: async () => {
       if (!selectedProfileId) {
-        throw new Error("请先选择写法资产。");
+        throw new Error("Select a style profile first.");
       }
 
       const sourceContent = detectInput;
@@ -478,7 +478,7 @@ export default function WritingFormulaPage() {
     },
     onSuccess: (response) => {
       setRewritePreview(response.data?.content ?? "");
-      setMessage(response.data?.content === response.sourceContent ? "保留原稿，可查看写法建议。" : "比较修订预览，确认需要的修改。");
+      setMessage(response.data?.content === response.sourceContent ? "Original text retained. Review the style suggestions." : "Compare the revision preview and confirm any changes you want.");
     },
   });
 
@@ -497,10 +497,10 @@ export default function WritingFormulaPage() {
     <div className="writing-formula-theme flex h-full min-h-0 flex-col gap-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="space-y-2">
-          <h1 className="text-2xl font-semibold tracking-tight text-foreground">写法引擎</h1>
-          <p className="text-sm leading-6 text-muted-foreground">保存喜欢的叙事风格，让后续正文保持一致的语言、节奏与人物表达。</p>
+          <h1 className="text-2xl font-semibold tracking-tight text-foreground">Style Engine</h1>
+          <p className="text-sm leading-6 text-muted-foreground">Save a narrative style you like to keep language, pacing, and character expression consistent in future prose.</p>
         </div>
-        <OpenInCreativeHubButton bindings={{ styleProfileId: selectedProfileId || null }} label="带去创作中枢" variant="ghost" />
+        <OpenInCreativeHubButton bindings={{ styleProfileId: selectedProfileId || null }} label="Open in Creative Hub" variant="ghost" />
       </div>
 
       {message ? <div role="status" className="rounded-lg bg-muted/30 px-4 py-3 text-sm">{message}</div> : null}
@@ -523,8 +523,8 @@ export default function WritingFormulaPage() {
         onUseProfileForClean={(profileId) => openWorkspaceDialog("clean", profileId)}
         onDeleteProfile={(profileId) => {
           const profile = profiles.find((item) => item.id === profileId);
-          const profileName = profile?.name ?? "这套写法";
-          const confirmed = window.confirm(`确认删除“${profileName}”吗？删除后无法恢复。`);
+          const profileName = profile?.name ?? "this style profile";
+          const confirmed = window.confirm(`Delete “${profileName}”? This action cannot be undone.`);
           if (!confirmed) {
             return;
           }
@@ -534,7 +534,7 @@ export default function WritingFormulaPage() {
         profileItems={landingProfileItems}
         selectedProfileId={selectedProfileId}
         loading={profilesQuery.isLoading}
-        error={profilesQuery.isError ? "写法资产加载失败，请重新加载。" : undefined}
+        error={profilesQuery.isError ? "Could not load style profiles. Try again." : undefined}
         onRetry={() => { void profilesQuery.refetch(); }}
       />
 
@@ -575,9 +575,9 @@ export default function WritingFormulaPage() {
       >
         <DialogContent ref={editorDialogRef} className="writing-formula-theme !flex h-[88vh] w-[min(1180px,96vw)] max-w-none flex-col gap-0 overflow-hidden p-0">
           <DialogHeader className="border-b px-6 py-5 pr-14">
-            <DialogTitle>编辑当前写法</DialogTitle>
+            <DialogTitle>Edit style profile</DialogTitle>
             <DialogDescription>
-              调整写法说明、规则与反 AI 约束，保存后用于后续生成和检查。
+              Update the style description, rules, and anti-AI constraints. Changes apply to future generation and review.
             </DialogDescription>
           </DialogHeader>
 
@@ -624,9 +624,9 @@ export default function WritingFormulaPage() {
       >
         <DialogContent className="writing-formula-theme !flex h-[84vh] w-[min(1080px,94vw)] max-w-none flex-col gap-0 overflow-hidden p-0">
           <DialogHeader className="border-b px-6 py-5 pr-14">
-            <DialogTitle>当前写法的应用与测试</DialogTitle>
+            <DialogTitle>Apply and test style profile</DialogTitle>
             <DialogDescription>
-              将这套写法绑定到作品或章节，先试写一段正文，比较效果。
+              Bind this style profile to a novel or chapter, or generate a sample passage to compare results.
             </DialogDescription>
           </DialogHeader>
 
@@ -657,9 +657,9 @@ export default function WritingFormulaPage() {
       >
         <DialogContent className="writing-formula-theme !flex h-[84vh] w-[min(980px,92vw)] max-w-none flex-col gap-0 overflow-hidden p-0">
           <DialogHeader className="border-b px-6 py-5 pr-14">
-            <DialogTitle>去 AI 味</DialogTitle>
+            <DialogTitle>Reduce AI-like writing</DialogTitle>
             <DialogDescription>
-              粘贴正文，查看表达问题并比较局部修订预览；采用前请核对人物口吻与设定。
+              Paste prose to review style issues and compare a focused revision. Check character voices and story details before applying it.
             </DialogDescription>
           </DialogHeader>
 

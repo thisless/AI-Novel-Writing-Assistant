@@ -47,7 +47,7 @@ test("mobile route metadata covers every registered page", () => {
   assert.equal(MOBILE_ROUTE_PATTERNS.length, routedPaths.length);
 
   for (const path of routedPaths) {
-    assert.notEqual(getMobilePageTitle(path), "更多功能");
+    assert.notEqual(getMobilePageTitle(path), "More");
     assert.match(getMobileNavGroupForPath(path), /^(home|novels|creation|tasks|more)$/);
     assert.match(getMobileRouteClassName(path), /^mobile-route-[a-z0-9-]+$/);
   }
@@ -57,11 +57,11 @@ test("mobile primary nav keeps core beginner actions visible", () => {
   assert.deepEqual(
     getMobilePrimaryNavItems().map((item) => [item.key, item.to, item.label]),
     [
-      ["home", "/", "首页"],
-      ["novels", "/novels", "小说"],
-      ["creation", "/creative-hub", "创作"],
-      ["tasks", "/tasks", "任务"],
-      ["more", "", "更多"],
+      ["home", "/", "Home"],
+      ["novels", "/novels", "Novels"],
+      ["creation", "/creative-hub", "Create"],
+      ["tasks", "/tasks", "Tasks"],
+      ["more", "", "More"],
     ],
   );
 });

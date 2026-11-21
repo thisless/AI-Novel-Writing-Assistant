@@ -37,8 +37,8 @@ export default function WritingFormulaAdvancedWorkspace(props: WritingFormulaAdv
     <div className="mx-auto flex h-full min-h-0 max-w-[1120px] flex-col gap-4 overflow-y-auto xl:pr-1">
       <div className="rounded-lg bg-muted/30 px-4 py-3 text-sm leading-7 text-muted-foreground">
         {props.selectedProfile
-          ? `为「${props.selectedProfile.name}」补充读感定位、生成规则和表达边界。`
-          : "请从写法列表选择一套写法，或创建新的写法资产。"}
+          ? `Add reading-experience guidance, generation rules, and style boundaries for “${props.selectedProfile.name}.”`
+          : "Select a style profile from the list or create a new one."}
       </div>
 
       <WritingFormulaEditorPanel

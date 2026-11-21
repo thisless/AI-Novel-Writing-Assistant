@@ -3,7 +3,7 @@ import type {VolumePlanDocument} from "@ai-novel/shared/types/novel";
 export type AppearanceBoundary = number | null | "latest";
 export type AppearanceRow = CharacterAppearanceChapter | (Omit<CharacterAppearanceChapter,"chapterId"> & {chapterId:null;planId:string});
 export type AppearanceDestination = {kind:"chapter";id:string} | {kind:"plan";id:string};
-export const appearanceLabels = {present: "实际出场", mention: "仅被提及", flashback: "回忆出场", dream: "梦境出场"};
+export const appearanceLabels = {present: "Appeared", mention: "Mentioned", flashback: "Flashback", dream: "Dream"};
 
 export function appearanceDestination(row: AppearanceRow): AppearanceDestination {
   return row.chapterId === null ? {kind:"plan",id:row.planId} : {kind:"chapter",id:row.chapterId};

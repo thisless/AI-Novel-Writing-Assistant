@@ -27,21 +27,21 @@ test("simple creation shelf exposes issue governance without professional conver
   assert.match(shelfSource, /SimpleCreationIssueGovernancePanel/);
   assert.match(panelSource, /getNovelDirectorIssuePolicy/);
   assert.match(panelSource, /recentIssues/);
-  assert.match(panelSource, /AI 问题处理/);
-  assert.match(panelSource, /问题管理/);
+  assert.match(panelSource, /AI issue handling/);
+  assert.match(panelSource, /Manage issues/);
   assert.match(panelSource, /NovelDirectorIssuePolicyCard/);
   assert.doesNotMatch(panelSource, /convertNovelToProfessional/);
 });
 
 test("simple creation shelf provides a preview shortcut for the current chapter", () => {
-  assert.match(shelfSource, /进入预览模式/);
+  assert.match(shelfSource, /Preview/);
   assert.match(shelfSource, /\/novels\/\$\{id\}\/preview/);
   assert.match(shelfSource, /chapterId=\$\{encodeURIComponent\(selectedChapter\.id\)\}/);
 });
 
 test("simple creation shelf switches to professional mode without an irreversible conversion dialog", () => {
   assert.match(shelfSource, /setNovelCreationExperience\(id, "professional"\)/);
-  assert.match(shelfSource, /专业模式/);
+  assert.match(shelfSource, /Professional mode/);
   assert.doesNotMatch(shelfSource, /此操作不能切回简易创作/);
 });
 
@@ -51,10 +51,10 @@ test("all issue actions remain editable and changed rules show a safety warning"
   assert.match(novelPolicySource, /const CONFIGURABLE_ISSUES = DIRECTOR_ISSUE_CATALOG;/);
   assert.doesNotMatch(novelPolicySource, /DIRECTOR_ISSUE_CATALOG\.filter/);
   for (const source of [globalPolicySource, novelPolicySource]) {
-    assert.match(source, /你修改了/);
+    assert.match(source, /You changed/);
     assert.match(source, /hasChanges(?: \|\| retryChanged)? \? \(/);
     assert.match(source, /role="status"/);
-    assert.match(source, /安全保护/);
+    assert.match(source, /Safety/);
   }
 });
 
@@ -62,10 +62,10 @@ test("issue management exposes the two production presets with a single retry ce
   for (const source of [globalPolicySource, novelPolicySource]) {
     assert.match(source, /DIRECTOR_ISSUE_POLICY_PRESETS/);
     assert.match(source, /maxAutomaticRetries/);
-    assert.match(source, /最多 1 次/);
+    assert.match(source, /Up to 1 retry/);
   }
-  assert.match(issuePolicySource, /优先完成整本书/);
-  assert.match(issuePolicySource, /质量优先/);
+  assert.match(issuePolicySource, /Finish the whole book/);
+  assert.match(issuePolicySource, /Quality first/);
   assert.match(novelPolicySource, /hasCompleteActionMap/);
-  assert.match(novelPolicySource, /!hasCompleteActionMap \? <option value="">继承全局<\/option> : null/);
+  assert.match(novelPolicySource, /!hasCompleteActionMap \? <option value="">Inherit global setting<\/option> : null/);
 });

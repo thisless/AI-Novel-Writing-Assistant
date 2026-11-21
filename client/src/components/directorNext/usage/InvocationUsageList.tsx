@@ -14,19 +14,19 @@ export function InvocationUsageList({ runId, active = false }: {
     const summary = query.data?.pages[0]?.data?.recordedSummary;
     const items = query.data?.pages.flatMap(p => p.data?.items ?? []) ?? [];
     return <section className="border-t border-border/60 py-4">
- <button type="button" className="text-sm font-semibold" aria-expanded={open} onClick={() => setOpen(v => !v)}>{open ? "▾" : "▸"} 调用用量</button>
+ <button type="button" className="text-sm font-semibold" aria-expanded={open} onClick={() => setOpen(v => !v)}>{open ? "▾" : "▸"} AI usage</button>
  {open ? <div className="mt-3 space-y-3 text-xs">
- {query.isPending ? <p className="text-muted-foreground">正在读取调用用量…</p> : query.isError ? <p className="text-muted-foreground">调用用量暂不可读取。<button className="ml-2 underline" onClick={() => void query.refetch()}>重新读取</button></p> : <>
- {summary ? <><p>缓存命中 Tokens {formatCacheTokens(summary.inputCache.cacheHitTokens, "completed", summary.inputCache.cacheUsageStatus)}</p>
- <p>缓存未命中 Tokens {formatCacheTokens(summary.inputCache.cacheMissTokens, "completed", summary.inputCache.cacheUsageStatus)}</p>
- <p className="text-muted-foreground">已记录 {summary.recordedCallCount} 次调用{summary.unknownCallCount + summary.invalidCallCount + summary.partialCallCount > 0 ? "，部分调用未提供完整统计。" : "。"}历史调用未记录缓存用量。</p></> : null}
- {!items.length ? <p className="text-muted-foreground">本次创作没有调用用量记录。</p> : <ul className="divide-y divide-border/50">{items.map(item => <li key={item.invocationId} className="space-y-1 py-3">
- <p>{new Date(item.startedAt).toLocaleString()} · {item.stage ?? "创作"}</p>
- <p className="break-words text-muted-foreground">{item.provider ?? "厂商未记录"} · {item.model ?? "模型未记录"} · {item.status === "completed" ? "调用完成" : item.status === "partial" ? "部分返回" : "调用失败"}</p>
- <p>缓存命中 Tokens {formatCacheTokens(item.inputCache.cacheHitTokens, "completed", item.inputCache.cacheUsageStatus)}</p>
- <p>缓存未命中 Tokens {formatCacheTokens(item.inputCache.cacheMissTokens, "completed", item.inputCache.cacheUsageStatus)}</p>
+ {query.isPending ? <p className="text-muted-foreground">Loading AI usage…</p> : query.isError ? <p className="text-muted-foreground">AI usage is unavailable. <button className="ml-2 underline" onClick={() => void query.refetch()}>Reload</button></p> : <>
+ {summary ? <><p>Cache-hit tokens {formatCacheTokens(summary.inputCache.cacheHitTokens, "completed", summary.inputCache.cacheUsageStatus)}</p>
+ <p>Cache-miss tokens {formatCacheTokens(summary.inputCache.cacheMissTokens, "completed", summary.inputCache.cacheUsageStatus)}</p>
+ <p className="text-muted-foreground">{summary.recordedCallCount} calls recorded{summary.unknownCallCount + summary.invalidCallCount + summary.partialCallCount > 0 ? "; some calls have incomplete statistics." : "."} Historical calls don't include cache usage.</p></> : null}
+ {!items.length ? <p className="text-muted-foreground">No AI usage has been recorded for this run.</p> : <ul className="divide-y divide-border/50">{items.map(item => <li key={item.invocationId} className="space-y-1 py-3">
+ <p>{new Date(item.startedAt).toLocaleString()} · {item.stage ?? "Writing"}</p>
+ <p className="break-words text-muted-foreground">{item.provider ?? "Unknown provider"} · {item.model ?? "Unknown model"} · {item.status === "completed" ? "Completed" : item.status === "partial" ? "Partial response" : "Failed"}</p>
+ <p>Cache-hit tokens {formatCacheTokens(item.inputCache.cacheHitTokens, "completed", item.inputCache.cacheUsageStatus)}</p>
+ <p>Cache-miss tokens {formatCacheTokens(item.inputCache.cacheMissTokens, "completed", item.inputCache.cacheUsageStatus)}</p>
  </li>)}</ul>}
- {query.hasNextPage ? <Button variant="ghost" size="sm" disabled={query.isFetchingNextPage} onClick={() => void query.fetchNextPage()}>查看更多调用</Button> : null}
+ {query.hasNextPage ? <Button variant="ghost" size="sm" disabled={query.isFetchingNextPage} onClick={() => void query.fetchNextPage()}>Load more calls</Button> : null}
  </>}
  </div> : null}</section>;
 }

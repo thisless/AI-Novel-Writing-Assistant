@@ -58,9 +58,9 @@ export default function TakeoverDiagnosisPanel({
           <div className="flex flex-wrap items-center gap-2">
             <div className="flex items-center gap-2 text-sm font-medium text-foreground">
               <CircleCheck className="h-4 w-4 text-primary" />
-              建议的接续方式
+              Recommended continuation
             </div>
-            {isLoadingReadiness ? <Badge variant="outline">正在读取进度</Badge> : null}
+            {isLoadingReadiness ? <Badge variant="outline">Loading progress</Badge> : null}
           </div>
           {readinessErrorMessage ? (
             <div className={`rounded-lg border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>
@@ -101,7 +101,7 @@ export default function TakeoverDiagnosisPanel({
               className={AUTO_DIRECTOR_MOBILE_CLASSES.fullWidthAction}
               onClick={onEnterCurrentTask}
             >
-              进入当前任务
+              Open current task
             </Button>
           ) : (
             <>
@@ -131,12 +131,12 @@ export default function TakeoverDiagnosisPanel({
                 disabled={startDisabled}
                 onClick={onStart}
               >
-                {isStarting ? "启动中..." : <><ArrowRight className="h-4 w-4" /> {quickActionLabel}</>}
+                {isStarting ? "Starting..." : <><ArrowRight className="h-4 w-4" /> {quickActionLabel}</>}
               </Button>
             </>
           )}
           <div className={`border-t border-border/70 pt-2 text-xs leading-5 text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>
-            默认保留已有资产，仅在高级设置选择重跑时才会重建对应步骤。
+            Existing assets are preserved by default. Steps are rebuilt only when you choose to rerun them in Advanced settings.
           </div>
         </div>
       </div>

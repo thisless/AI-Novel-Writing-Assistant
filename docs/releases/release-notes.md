@@ -6,11 +6,11 @@
 
 ### 2026-11-16 · v0.8.7
 
-桌面版本 `v0.8.7`：大纲「交互完善」提案在依赖写错、章节未标明所属卷或误改卷章节列表时，会给出可读中文提示并拒绝采纳，不再出现笼统的服务器错误；采纳失败不会留下半截结果。
+Desktop version `v0.8.7`: Outline refinement proposals now show clear guidance and are rejected if dependencies are invalid, a chapter has no volume assigned, or a volume's chapter list is changed incorrectly. This replaces generic server errors and prevents failed proposals from leaving partial results.
 
 #### 修复
 
-- 大纲「交互完善」提案：依赖写错成节点编号、新增章节未标明所属卷、或误改卷的章节列表时，会给出可读的中文提示并拒绝采纳，不再出现笼统的服务器错误；采纳失败不会留下半截结果。
+- Outline refinement proposals now show clear guidance and are rejected if dependencies are invalid, a new chapter has no volume assigned, or a volume's chapter list is changed incorrectly. This replaces generic server errors and prevents failed proposals from leaving partial results.
 
 ### 2026-11-15 · v0.8.6
 

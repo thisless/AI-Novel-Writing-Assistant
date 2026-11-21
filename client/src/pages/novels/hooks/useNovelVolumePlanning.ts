@@ -200,7 +200,7 @@ export function useNovelVolumePlanning({
     if (hasCharacters) {
       return true;
     }
-    return window.confirm("当前小说还没有角色。继续生成会降低后续一致性，是否继续？");
+    return window.confirm("This novel has no characters yet. Continuing may reduce consistency later. Continue anyway?");
   };
 
   const startStrategyGeneration = () => {
@@ -216,7 +216,7 @@ export function useNovelVolumePlanning({
 
   const startStrategyCritique = () => {
     if (!strategyPlan) {
-      setVolumeGenerationMessage("请先生成卷战略建议。");
+      setVolumeGenerationMessage("Generate a volume strategy recommendation first.");
       return;
     }
     startStrategyCritiqueAction({
@@ -265,22 +265,22 @@ export function useNovelVolumePlanning({
     const targetVolume = normalizedVolumeDraft.find((volume) => volume.id === volumeId);
     const targetChapter = targetVolume?.chapters.find((chapter) => chapter.id === chapterId);
     if (!targetVolume || !targetChapter) {
-      setStructuredMessage("当前章节不存在，无法生成细化信息。");
+      setStructuredMessage("This chapter doesn't exist, so it can't be refined.");
       return;
     }
     if (!findBeatSheet(beatSheets, volumeId)) {
-      setStructuredMessage("请先生成当前卷节奏板，再细化章节。");
+      setStructuredMessage("Generate the current volume's beat sheet before refining chapters.");
       return;
     }
     if (!ensureCharacterGuard()) {
       return;
     }
     const confirmed = window.confirm([
-      `将基于当前内容为第${targetChapter.chapterOrder}章《${targetChapter.title}》AI 修正${detailModeLabel(detailMode)}。`,
+      `AI will use the current content to refine ${detailModeLabel(detailMode)} for Chapter ${targetChapter.chapterOrder}: "${targetChapter.title}".`,
       hasChapterDetailDraft(targetChapter, detailMode)
-        ? "会优先沿用当前已填写结果，只修正空缺、模糊和不够可执行的部分。"
-        : "当前这块还是空白，AI 会先补出首版，再按现有标题和摘要收束。",
-      "不会改动本章标题和摘要，也不会影响其他章节。",
+        ? "Existing details will be preserved where possible; only missing, unclear, or impractical parts will be revised."
+        : "This section is blank. AI will draft an initial version and refine it using the current title and summary.",
+      "The chapter title and summary won't change, and other chapters won't be affected.",
     ].join("\n\n"));
     if (!confirmed) {
       return;
@@ -326,15 +326,15 @@ export function useNovelVolumePlanning({
     const targetVolume = normalizedVolumeDraft.find((volume) => volume.id === volumeId);
     const batch = resolveChapterDetailBatch(targetVolume, request);
     if (!targetVolume) {
-      setStructuredMessage("当前卷不存在，无法生成章节细化。");
+      setStructuredMessage("This volume doesn't exist, so chapter details can't be generated.");
       return;
     }
     if (batch.targets.length === 0) {
-      setStructuredMessage(typeof request === "string" ? "当前章节不存在，无法整套生成章节细化。" : "当前范围内没有可细化章节。");
+      setStructuredMessage(typeof request === "string" ? "This chapter doesn't exist, so its full set of details can't be generated." : "There are no chapters to refine in the selected range.");
       return;
     }
     if (!findBeatSheet(beatSheets, volumeId)) {
-      setStructuredMessage(batch.targets.length > 1 ? "请先生成当前卷节奏板，再做批量章节细化。" : "请先生成当前卷节奏板，再做单章整套细化。");
+      setStructuredMessage(batch.targets.length > 1 ? "Generate the current volume's beat sheet before refining chapters in a batch." : "Generate the current volume's beat sheet before refining this chapter.");
       return;
     }
     if (!ensureCharacterGuard()) {
@@ -354,7 +354,7 @@ export function useNovelVolumePlanning({
     }
     runChapterDetailBundleGeneration(
       chapterDetailFailure.targetVolumeId,
-      `从第${chapterDetailFailure.chapterOrder}章继续`,
+      `Continue from Chapter ${chapterDetailFailure.chapterOrder}`,
       chapterDetailFailure.targets,
     );
   };
@@ -448,12 +448,12 @@ export function useNovelVolumePlanning({
   const applyCustomVolumeCount = () => {
     const resolved = resolveCustomVolumeCountInput(customVolumeCountInput, volumeCountGuidance);
     if (!resolved.value) {
-      setVolumeGenerationMessage(resolved.message ?? "请先输入有效的固定卷数。");
+      setVolumeGenerationMessage(resolved.message ?? "Enter a valid fixed number of volumes.");
       return;
     }
     setUserPreferredVolumeCount(resolved.value);
     setForceSystemRecommendedVolumeCount(false);
-    setVolumeGenerationMessage(`当前已固定为 ${resolved.value} 卷。下次生成卷战略时会严格采用这个卷数。`);
+    setVolumeGenerationMessage(`The volume count is fixed at ${resolved.value}. The next volume strategy will use this count.`);
   };
 
   const restoreSystemRecommendedVolumeCount = () => {
@@ -461,7 +461,7 @@ export function useNovelVolumePlanning({
     setCustomVolumeCountEnabled(false);
     setCustomVolumeCountInput(String(volumeCountGuidance.systemRecommendedVolumeCount));
     setForceSystemRecommendedVolumeCount(true);
-    setVolumeGenerationMessage(`已恢复系统建议卷数。下次生成卷战略时会优先采用系统建议 ${volumeCountGuidance.systemRecommendedVolumeCount} 卷。`);
+    setVolumeGenerationMessage(`Restored the system-recommended volume count. The next volume strategy will prioritize the recommendation of ${volumeCountGuidance.systemRecommendedVolumeCount} volumes.`);
   };
 
   const generationNotice = buildGenerationNotice(strategyPlan);

@@ -12,20 +12,20 @@ export function getDirectionGenerationDisabledReasons(input: {
 }): string[] {
   const reasons: string[] = [];
   if (!input.idea.trim()) {
-    reasons.push("请返回第 1 步填写单书构想。");
+    reasons.push("Return to Step 1 and enter an idea for this book.");
   }
   if (input.versionsLoading) {
-    reasons.push("正在读取可用导演版本，请稍候。");
+    reasons.push("Loading available director versions. Please wait.");
   } else if (input.versionsError) {
-    reasons.push("可用导演版本读取失败，请重试。");
+    reasons.push("Failed to load available director versions. Please try again.");
   } else if (!input.availableVersions.includes(input.directorVersion)) {
-    reasons.push("所选导演版本不可用，请选择可用版本。");
+    reasons.push("The selected director version is unavailable. Choose an available version.");
   }
   if (input.isGenerating) {
-    reasons.push("正在生成整书方向，请等待本次生成完成。");
+    reasons.push("Generating the book direction. Please wait for this to finish.");
   }
   if (input.requireCreativeCarryoverAdopted && !input.creativeCarryoverAdopted) {
-    reasons.push("请打开创作方案并采用推荐方案。");
+    reasons.push("Open the creative plan and apply the recommended option.");
   }
   return reasons;
 }

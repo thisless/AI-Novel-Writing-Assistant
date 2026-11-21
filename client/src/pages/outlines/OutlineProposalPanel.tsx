@@ -21,26 +21,26 @@ import {
 } from "./outlineNodes";
 
 const operationKindLabels = {
-  add_node: "新增",
-  update_fields: "修改",
-  remove_node: "移除",
-  move_node: "移动",
+  add_node: "Add",
+  update_fields: "Update",
+  remove_node: "Remove",
+  move_node: "Move",
 } as const;
 
 const nodeTypeLabels = {
-  volume: "卷",
-  chapter: "章节",
-  character: "人物",
-  payoff: "伏笔或钩子",
-  fact: "固定设定",
+  volume: "volume",
+  chapter: "chapter",
+  character: "character",
+  payoff: "foreshadowing or hook",
+  fact: "fixed fact",
 } as const;
 
 const initialGroupLabels = {
-  volumes: "卷",
-  chapters: "章节",
-  characters: "人物",
-  payoffs: "伏笔与钩子",
-  facts: "固定设定",
+  volumes: "Volumes",
+  chapters: "Chapters",
+  characters: "Characters",
+  payoffs: "Foreshadowing and hooks",
+  facts: "Fixed facts",
 } as const;
 
 interface OutlineProposalPanelProps {
@@ -54,10 +54,10 @@ interface OutlineProposalPanelProps {
 function operationTitle(operation: OutlineProposalOperation, document: OutlineDocument): string {
   const targetTitle = operation.nodeId ? findOutlineNodeTitle(document, operation.nodeId) : "";
   if (operation.kind === "add_node") {
-    const title = operation.fields?.title ?? operation.fields?.name ?? "新节点";
-    return `新增${operation.nodeType ? nodeTypeLabels[operation.nodeType] : "节点"}「${String(title)}」`;
+    const title = operation.fields?.title ?? operation.fields?.name ?? "New node";
+    return `Add ${operation.nodeType ? nodeTypeLabels[operation.nodeType] : "node"} “${String(title)}”`;
   }
-  return `${operationKindLabels[operation.kind]}「${targetTitle || "节点"}」`;
+  return `${operationKindLabels[operation.kind]} “${targetTitle || "node"}”`;
 }
 
 function FieldChanges({ operation, document, titles }: { operation: OutlineProposalOperation; document: OutlineDocument; titles: Record<string, string> }) {
@@ -66,13 +66,13 @@ function FieldChanges({ operation, document, titles }: { operation: OutlinePropo
   if (operation.kind === "move_node") {
     return (
       <dl className="outline-comparison text-xs">
-        <div><dt className="text-muted-foreground">原所属卷</dt><dd className="mt-1 whitespace-pre-wrap">{targetRecord?.volumeNodeId ? findOutlineNodeTitle(document, String(targetRecord.volumeNodeId)) : "（空）"}</dd></div>
-        <div><dt className="text-muted-foreground">调整后所属卷</dt><dd className="mt-1 whitespace-pre-wrap">{operation.parentNodeId ? findOutlineNodeTitle(document, operation.parentNodeId) : "（空）"}</dd></div>
+        <div><dt className="text-muted-foreground">Previous volume</dt><dd className="mt-1 whitespace-pre-wrap">{targetRecord?.volumeNodeId ? findOutlineNodeTitle(document, String(targetRecord.volumeNodeId)) : "Empty"}</dd></div>
+        <div><dt className="text-muted-foreground">New volume</dt><dd className="mt-1 whitespace-pre-wrap">{operation.parentNodeId ? findOutlineNodeTitle(document, operation.parentNodeId) : "Empty"}</dd></div>
       </dl>
     );
   }
   if (operation.kind === "remove_node") {
-    return <p className="text-xs text-muted-foreground">采纳后，这个节点及其字段将从新修订中移除。</p>;
+    return <p className="text-xs text-muted-foreground">Applying this change removes the node and its fields from the new revision.</p>;
   }
   const fields = Object.entries(operation.fields ?? {});
   if (!fields.length) return null;
@@ -82,8 +82,8 @@ function FieldChanges({ operation, document, titles }: { operation: OutlinePropo
         <div key={field} className="text-xs">
           <p className="font-medium text-muted-foreground">{outlineFieldLabels[field] ?? field}</p>
           <dl className="outline-comparison mt-1">
-            <div className="bg-muted/40 p-2"><dt className="text-muted-foreground">调整前</dt><dd className="mt-1 whitespace-pre-wrap break-words">{formatOutlineValue(targetRecord?.[field], field, document)}</dd></div>
-            <div className="bg-muted/40 p-2"><dt className="text-muted-foreground">调整后</dt><dd className="mt-1 whitespace-pre-wrap break-words">{formatOutlineValue(after, field, document, titles)}</dd></div>
+            <div className="bg-muted/40 p-2"><dt className="text-muted-foreground">Before</dt><dd className="mt-1 whitespace-pre-wrap break-words">{formatOutlineValue(targetRecord?.[field], field, document)}</dd></div>
+            <div className="bg-muted/40 p-2"><dt className="text-muted-foreground">After</dt><dd className="mt-1 whitespace-pre-wrap break-words">{formatOutlineValue(after, field, document, titles)}</dd></div>
           </dl>
         </div>
       ))}
@@ -106,7 +106,7 @@ function InitialProposalPreview({ payload }: { payload: OutlineInitialProposalPa
               <li key={item.clientRef}>
                 <p className="text-sm font-medium">{item.title}</p>
                 <p className="mt-0.5 whitespace-pre-wrap text-xs text-muted-foreground">{item.summary}</p>
-                {item.reason ? <p className="mt-1 text-xs text-muted-foreground">建议理由：{item.reason}</p> : null}
+                {item.reason ? <p className="mt-1 text-xs text-muted-foreground">Reason: {item.reason}</p> : null}
               </li>
             ))}
           </ul>
@@ -151,24 +151,24 @@ export function OutlineProposalPanel({ proposal, document: currentDocument, isAp
 
   const dependencyName = (operationId: string) => {
     const dependency = operations.find(operation => operation.operationId === operationId);
-    return dependency ? operationTitle(dependency, document) : "相关修改";
+    return dependency ? operationTitle(dependency, document) : "Related change";
   };
 
-  if (revisions.isLoading || base.isLoading) return <p className="text-sm text-muted-foreground">正在读取提案基准修订…</p>;
-  if (revisions.isError || base.isError || !base.data) return <p role="alert" className="text-sm text-destructive">提案基准修订读取失败，请重新生成建议。</p>;
+  if (revisions.isLoading || base.isLoading) return <p className="text-sm text-muted-foreground">Loading the proposal's base revision…</p>;
+  if (revisions.isError || base.isError || !base.data) return <p role="alert" className="text-sm text-destructive">Failed to load the proposal's base revision. Generate suggestions again.</p>;
 
   return (
     <section className="space-y-4 border-t border-border/50 pt-4">
       <div>
-        <h3 className="font-medium">待确认的建议</h3>
-        <p className="mt-1 text-xs text-muted-foreground">基于修订 v{proposal.baseVersion}。勾选需要的操作，依赖项必须一起采纳。</p>
+        <h3 className="font-medium">Suggestions for review</h3>
+        <p className="mt-1 text-xs text-muted-foreground">Based on revision v{proposal.baseVersion}. Select the changes you want; dependent changes must be applied together.</p>
       </div>
 
       {"operations" in payload ? (
         <>
           <div className="flex items-center justify-between gap-2 text-xs">
-            <span className="text-muted-foreground">已选择 {selectedIds.length} / {operations.length} 项</span>
-            <Button type="button" size="sm" variant="ghost" onClick={() => setSelectedIds(allOperationIds)}>全选</Button>
+            <span className="text-muted-foreground">Selected {selectedIds.length} of {operations.length}</span>
+            <Button type="button" size="sm" variant="ghost" onClick={() => setSelectedIds(allOperationIds)}>Select all</Button>
           </div>
           <ul className="space-y-3">
             {operations.map(operation => {
@@ -184,46 +184,46 @@ export function OutlineProposalPanel({ proposal, document: currentDocument, isAp
                     />
                     <span className="text-sm font-medium">{operationTitle(operation, document)}</span>
                   </label>
-                  <p className="text-xs text-muted-foreground">建议理由：{displayText(operation.reason)}</p>
+                  <p className="text-xs text-muted-foreground">Reason: {displayText(operation.reason)}</p>
                   {operation.dependsOn.length ? (
                     <p className="text-xs text-muted-foreground">
-                      前置依赖：{operation.dependsOn.map(dependencyName).join("、")}
+                      Depends on: {operation.dependsOn.map(dependencyName).join(", ")}
                     </p>
                   ) : null}
                   {ownMissing ? (
                     <p role="alert" className="text-xs text-destructive">
-                      还需同时勾选：{ownMissing.dependencyIds.map(dependencyName).join("、")}
+                      Also select: {ownMissing.dependencyIds.map(dependencyName).join(", ")}
                     </p>
                   ) : null}
                   <FieldChanges operation={operation} document={document} titles={titles} />
                   {operation.affectedNodeIds.length ? (
-                    <p className="text-xs text-muted-foreground">影响范围：{operation.affectedNodeIds.map(id => titles[id] ?? findOutlineNodeTitle(document, id)).join("、")}</p>
+                    <p className="text-xs text-muted-foreground">Affected items: {operation.affectedNodeIds.map(id => titles[id] ?? findOutlineNodeTitle(document, id)).join(", ")}</p>
                   ) : null}
-                  {operation.risks.length ? <p className="text-xs text-amber-700 dark:text-amber-400">需要注意：{displayText(operation.risks.join("；"))}</p> : null}
+                  {operation.risks.length ? <p className="text-xs text-amber-700 dark:text-amber-400">Note: {displayText(operation.risks.join("; "))}</p> : null}
                 </li>
               );
             })}
           </ul>
-          {!selectedIds.length ? <p role="alert" className="text-xs text-destructive">至少选择一项操作后才能部分采纳。</p> : null}
-          {missingDependencies.length ? <p role="alert" className="text-xs text-destructive">当前组合缺少前置操作，请按提示补齐，或改为采纳全部。</p> : null}
-          {allMissingDependencies.length ? <p role="alert" className="text-xs text-destructive">提案包含未知的依赖操作，请放弃后重新生成建议。</p> : null}
+          {!selectedIds.length ? <p role="alert" className="text-xs text-destructive">Select at least one change to apply part of a proposal.</p> : null}
+          {missingDependencies.length ? <p role="alert" className="text-xs text-destructive">This selection is missing required changes. Add them or apply all changes.</p> : null}
+          {allMissingDependencies.length ? <p role="alert" className="text-xs text-destructive">The proposal contains unknown dependencies. Discard it and generate suggestions again.</p> : null}
         </>
       ) : <InitialProposalPreview payload={payload} />}
 
       <div className="space-y-2">
         {"operations" in payload ? (
           <Button className="w-full" onClick={() => onApply(allOperationIds)} disabled={isApplying || allMissingDependencies.length > 0}>
-            采纳全部
+            Apply all
           </Button>
         ) : (
-          <Button className="w-full" onClick={() => onApply([])} disabled={isApplying}>采纳这份大纲</Button>
+          <Button className="w-full" onClick={() => onApply([])} disabled={isApplying}>Apply this outline</Button>
         )}
         {"operations" in payload ? (
           <Button className="w-full" variant="secondary" onClick={() => onApply(selectedIds)} disabled={isApplying || !selectedIsComplete}>
-            采纳所选（{selectedIds.length}）
+            Apply selected ({selectedIds.length})
           </Button>
         ) : null}
-        <Button className="w-full" variant="ghost" onClick={onDiscard} disabled={isApplying}>放弃</Button>
+        <Button className="w-full" variant="ghost" onClick={onDiscard} disabled={isApplying}>Discard</Button>
       </div>
     </section>
   );

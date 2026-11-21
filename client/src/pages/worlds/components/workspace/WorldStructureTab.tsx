@@ -18,11 +18,11 @@ import WorldFactionsSection from "./structure/WorldFactionsSection";
 import WorldRelationsSection from "./structure/WorldRelationsSection";
 
 const SECTION_OPTIONS: Array<{ value: WorldStructureSectionKey; label: string }> = [
-  { value: "profile", label: "世界概要" },
-  { value: "rules", label: "规则中心" },
-  { value: "factions", label: "阵营与势力" },
-  { value: "locations", label: "地点与地形" },
-  { value: "relations", label: "关系网络" },
+  { value: "profile", label: "World overview" },
+  { value: "rules", label: "Rules" },
+  { value: "factions", label: "Factions and powers" },
+  { value: "locations", label: "Locations and terrain" },
+  { value: "relations", label: "Relationships" },
 ];
 
 function updateArrayItem<T>(items: T[], index: number, nextItem: T): T[] {
@@ -82,9 +82,9 @@ export default function WorldStructureTab(props: {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>高级字段维护</CardTitle>
+          <CardTitle>Advanced structure editor</CardTitle>
         </CardHeader>
-        <CardContent className="text-sm text-muted-foreground">正在加载高级结构数据...</CardContent>
+        <CardContent className="text-sm text-muted-foreground">Loading structured world data…</CardContent>
       </Card>
     );
   }
@@ -92,7 +92,7 @@ export default function WorldStructureTab(props: {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>高级字段维护</CardTitle>
+        <CardTitle>Advanced structure editor</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="rounded-md border p-3 space-y-3">
@@ -120,7 +120,7 @@ export default function WorldStructureTab(props: {
               }}
               disabled={backfillPending}
             >
-              {backfillPending ? "提取中..." : hasStructuredData ? "重新从现有设定提取" : "从现有设定提取结构"}
+              {backfillPending ? "Extracting…" : hasStructuredData ? "Re-extract from existing settings" : "Extract structure from existing settings"}
             </Button>
             <Button
               variant="outline"
@@ -133,16 +133,16 @@ export default function WorldStructureTab(props: {
               }}
               disabled={generatePending}
             >
-              {generatePending ? "补全中..." : "AI 补全当前区块"}
+              {generatePending ? "Generating…" : "Complete this section with AI"}
             </Button>
             <Button onClick={() => void onSave(draftStructure, draftBindingSupport)} disabled={savePending}>
-              {savePending ? "保存中..." : "保存结构"}
+              {savePending ? "Saving…" : "Save structure"}
             </Button>
           </div>
         </div>
 
         <div className={activeSection === "profile" ? "rounded-md border p-3 space-y-3" : "hidden"}>
-          <div className="font-medium">世界概要</div>
+          <div className="font-medium">World overview</div>
           <Input
             value={draftStructure.profile.identity}
             onChange={(event) =>
@@ -152,7 +152,7 @@ export default function WorldStructureTab(props: {
                   : prev,
               )
             }
-            placeholder="世界身份 / 类型气质"
+            placeholder="World identity / genre and tone"
           />
           <Input
             value={draftStructure.profile.tone}
@@ -163,7 +163,7 @@ export default function WorldStructureTab(props: {
                   : prev,
               )
             }
-            placeholder="整体调性"
+            placeholder="Overall tone"
           />
           <textarea
             className="min-h-[100px] w-full rounded-md border bg-background p-2 text-sm"
@@ -175,7 +175,7 @@ export default function WorldStructureTab(props: {
                   : prev,
               )
             }
-            placeholder="世界摘要"
+            placeholder="World summary"
           />
           <textarea
             className="min-h-[80px] w-full rounded-md border bg-background p-2 text-sm"
@@ -187,10 +187,10 @@ export default function WorldStructureTab(props: {
                   : prev,
               )
             }
-            placeholder="核心冲突"
+            placeholder="Core conflict"
           />
           <Input
-            value={draftStructure.profile.themes.join("、")}
+            value={draftStructure.profile.themes.join(", ")}
             onChange={(event) =>
               setDraftStructure((prev) =>
                 prev
@@ -204,13 +204,13 @@ export default function WorldStructureTab(props: {
                   : prev,
               )
             }
-            placeholder="主题关键词，使用顿号或逗号分隔"
+            placeholder="Theme keywords, separated by commas"
           />
         </div>
 
         <div className={activeSection === "rules" ? "rounded-md border p-3 space-y-3" : "hidden"}>
           <div className="flex items-center justify-between">
-            <div className="font-medium">规则中心</div>
+            <div className="font-medium">Rules</div>
             <Button
               size="sm"
               variant="outline"
@@ -238,7 +238,7 @@ export default function WorldStructureTab(props: {
                 )
               }
             >
-              新增规则
+              Add rule
             </Button>
           </div>
           <textarea
@@ -251,7 +251,7 @@ export default function WorldStructureTab(props: {
                   : prev,
               )
             }
-            placeholder="世界级规则总结"
+            placeholder="Summary of world-level rules"
           />
           {draftStructure.rules.axioms.map((rule, index) => (
             <div key={rule.id || index} className="rounded-md border p-3 space-y-2">
@@ -274,7 +274,7 @@ export default function WorldStructureTab(props: {
                         : prev,
                     )
                   }
-                  placeholder="规则名称"
+                  placeholder="Rule name"
                 />
                 <Input
                   value={rule.cost}
@@ -294,7 +294,7 @@ export default function WorldStructureTab(props: {
                         : prev,
                     )
                   }
-                  placeholder="代价"
+                  placeholder="Cost"
                 />
               </div>
               <textarea
@@ -316,7 +316,7 @@ export default function WorldStructureTab(props: {
                       : prev,
                   )
                 }
-                placeholder="规则说明"
+                placeholder="Rule description"
               />
               <div className="grid gap-2 md:grid-cols-2">
                 <Input
@@ -337,7 +337,7 @@ export default function WorldStructureTab(props: {
                         : prev,
                     )
                   }
-                  placeholder="边界条件"
+                  placeholder="Boundary conditions"
                 />
                 <Input
                   value={rule.enforcement}
@@ -357,7 +357,7 @@ export default function WorldStructureTab(props: {
                         : prev,
                     )
                   }
-                  placeholder="约束/执行后果"
+                  placeholder="Constraint / consequence"
                 />
               </div>
             </div>
@@ -375,7 +375,7 @@ export default function WorldStructureTab(props: {
 
         <div className={activeSection === "locations" ? "rounded-md border p-3 space-y-3" : "hidden"}>
           <div className="flex items-center justify-between">
-            <div className="font-medium">地点与地形</div>
+            <div className="font-medium">Locations and terrain</div>
             <Button
               size="sm"
               variant="outline"
@@ -403,7 +403,7 @@ export default function WorldStructureTab(props: {
                 )
               }
             >
-              新增地点
+              Add location
             </Button>
           </div>
           {draftStructure.locations.map((location, index) => (
@@ -424,7 +424,7 @@ export default function WorldStructureTab(props: {
                         : prev,
                     )
                   }
-                  placeholder="地点名称"
+                  placeholder="Location name"
                 />
                 <Input
                   value={location.terrain}
@@ -441,7 +441,7 @@ export default function WorldStructureTab(props: {
                         : prev,
                     )
                   }
-                  placeholder="地形 / 地貌"
+                  placeholder="Terrain / landform"
                 />
               </div>
               <textarea
@@ -460,7 +460,7 @@ export default function WorldStructureTab(props: {
                       : prev,
                   )
                 }
-                placeholder="地点概述"
+                placeholder="Location overview"
               />
               <div className="grid gap-2 md:grid-cols-2">
                 <Input
@@ -478,7 +478,7 @@ export default function WorldStructureTab(props: {
                         : prev,
                     )
                   }
-                  placeholder="叙事功能"
+                  placeholder="Narrative function"
                 />
                 <Input
                   value={location.risk}
@@ -495,7 +495,7 @@ export default function WorldStructureTab(props: {
                         : prev,
                     )
                   }
-                  placeholder="风险"
+                  placeholder="Risk"
                 />
               </div>
               <div className="grid gap-2 md:grid-cols-2">
@@ -514,7 +514,7 @@ export default function WorldStructureTab(props: {
                         : prev,
                     )
                   }
-                  placeholder="进入限制"
+                  placeholder="Entry restrictions"
                 />
                 <Input
                   value={location.exitCost}
@@ -531,7 +531,7 @@ export default function WorldStructureTab(props: {
                         : prev,
                     )
                   }
-                  placeholder="离开代价"
+                  placeholder="Cost of leaving"
                 />
               </div>
             </div>

@@ -37,36 +37,36 @@ export default function NovelUsagePage() {
   };
   return <div className="mx-auto max-w-7xl space-y-6 pb-10">
     <header className="flex flex-wrap items-start justify-between gap-4 border-b border-border/60 pb-5">
-      <div><h1 className="text-2xl font-semibold">AI 用量与调用日志</h1><p className="mt-2 text-sm text-muted-foreground">{data?.novel.title ?? "本书"} · 查看各次创作的输入、输出与缓存用量。</p></div>
-      <div className="flex flex-wrap gap-2"><Button asChild variant="ghost"><Link to={`/lab/director/${encodeURIComponent(novelId)}`}>返回小说导演台</Link></Button><Button asChild variant="ghost"><Link to="/novels">返回书架</Link></Button></div>
+      <div><h1 className="text-2xl font-semibold">AI Usage and Invocation Log</h1><p className="mt-2 text-sm text-muted-foreground">{data?.novel.title ?? "This novel"} · View input, output, and cached usage for each generation.</p></div>
+      <div className="flex flex-wrap gap-2"><Button asChild variant="ghost"><Link to={`/lab/director/${encodeURIComponent(novelId)}`}>Back to Director</Link></Button><Button asChild variant="ghost"><Link to="/novels">Back to Library</Link></Button></div>
     </header>
-    {query.isError ? <div role="alert" className="flex flex-wrap items-center gap-3 text-sm"><p>{query.error instanceof Error ? query.error.message : "本书 AI 用量读取失败。"}</p><Button size="sm" variant="outline" onClick={() => void query.refetch()}>重新读取</Button>{Object.keys(filters).length ? <Button size="sm" variant="ghost" onClick={() => setParams({}, {replace: true})}>清除筛选</Button> : null}</div> : null}
-    {query.isPending ? <p className="py-10 text-sm text-muted-foreground">正在读取本书 AI 用量…</p> : data ? <>
+    {query.isError ? <div role="alert" className="flex flex-wrap items-center gap-3 text-sm"><p>{query.error instanceof Error ? query.error.message : "Failed to load AI usage for this novel."}</p><Button size="sm" variant="outline" onClick={() => void query.refetch()}>Retry</Button>{Object.keys(filters).length ? <Button size="sm" variant="ghost" onClick={() => setParams({}, {replace: true})}>Clear filters</Button> : null}</div> : null}
+    {query.isPending ? <p className="py-10 text-sm text-muted-foreground">Loading AI usage…</p> : data ? <>
       <UsageOverview data={data} />
       <UsageTiming data={data} onJump={jump} />
-      {focused.isError ? <p role="alert" className="text-sm text-destructive">所选调用读取失败，请重新选择。</p> : null}
-      {focusedItem ? <p className="text-xs text-muted-foreground">所选调用显示在日志中，可能位于筛选或分页范围之外。<button className="ml-2 text-primary" onClick={() => { const next = new URLSearchParams(params); next.delete("invocation"); setParams(next, { replace: true }); }}>取消定位</button></p> : null}
-      <section aria-label="调用日志" className="space-y-4">
-        <div className="flex flex-wrap items-center justify-between gap-3"><h2 className="font-semibold">调用日志</h2><div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
-          <label className="flex items-center gap-2"><input type="checkbox" checked={autoRefresh} onChange={event => setAutoRefresh(event.target.checked)} />自动刷新</label>
-          <Button size="sm" variant="ghost" disabled={query.isFetching} onClick={() => void queryClient.resetQueries({queryKey, exact: true})}>刷新日志</Button>
+      {focused.isError ? <p role="alert" className="text-sm text-destructive">Failed to load the selected invocation. Please select it again.</p> : null}
+      {focusedItem ? <p className="text-xs text-muted-foreground">The selected invocation is shown in the log and may be outside the current filter or page. <button className="ml-2 text-primary" onClick={() => { const next = new URLSearchParams(params); next.delete("invocation"); setParams(next, { replace: true }); }}>Clear selection</button></p> : null}
+      <section aria-label="Invocation log" className="space-y-4">
+        <div className="flex flex-wrap items-center justify-between gap-3"><h2 className="font-semibold">Invocation log</h2><div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+          <label className="flex items-center gap-2"><input type="checkbox" checked={autoRefresh} onChange={event => setAutoRefresh(event.target.checked)} />Auto-refresh</label>
+          <Button size="sm" variant="ghost" disabled={query.isFetching} onClick={() => void queryClient.resetQueries({queryKey, exact: true})}>Refresh log</Button>
         </div></div>
         <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
-          <Filter label="章节" value={filters.chapterId} onChange={value => setFilter("chapterId", value)} options={data.facets.chapters.map(ch => ({value: ch.id, label: `第 ${ch.order} 章 · ${ch.title}`}))} />
-          <Filter label="创作步骤" value={filters.stage} onChange={value => setFilter("stage", value)} options={data.facets.stages.map(stage => ({value: stage, label: usageStageLabel(stage)}))} />
-          <Filter label="厂商" value={filters.provider} onChange={value => setFilter("provider", value)} options={data.facets.providers.map(provider => ({value: provider, label: provider}))} />
-          <Filter label="模型" value={filters.model} onChange={value => setFilter("model", value)} options={data.facets.models.map(model => ({value: model, label: model}))} />
-          <Filter label="调用状态" value={filters.status} onChange={value => setFilter("status", value)} options={["completed", "partial", "failed"].map(status => ({value: status, label: usageStatusLabel(status)}))} />
+          <Filter label="Chapter" value={filters.chapterId} onChange={value => setFilter("chapterId", value)} options={data.facets.chapters.map(ch => ({value: ch.id, label: `Chapter ${ch.order} · ${ch.title}`}))} />
+          <Filter label="Stage" value={filters.stage} onChange={value => setFilter("stage", value)} options={data.facets.stages.map(stage => ({value: stage, label: usageStageLabel(stage)}))} />
+          <Filter label="Provider" value={filters.provider} onChange={value => setFilter("provider", value)} options={data.facets.providers.map(provider => ({value: provider, label: provider}))} />
+          <Filter label="Model" value={filters.model} onChange={value => setFilter("model", value)} options={data.facets.models.map(model => ({value: model, label: model}))} />
+          <Filter label="Status" value={filters.status} onChange={value => setFilter("status", value)} options={["completed", "partial", "failed"].map(status => ({value: status, label: usageStatusLabel(status)}))} />
         </div>
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-muted-foreground"><p>当前筛选 {data.filteredSummary.recordedCallCount.toLocaleString()} 次调用 · 已报告 {formatUsageTokens(data.filteredSummary.totalTokens)} Tokens</p>{Object.keys(filters).length ? <Button size="sm" variant="ghost" onClick={() => setParams({}, {replace: true})}>清除筛选</Button> : null}</div>
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-muted-foreground"><p>Current filter: {data.filteredSummary.recordedCallCount.toLocaleString("en-US")} calls · Reported {formatUsageTokens(data.filteredSummary.totalTokens)} tokens</p>{Object.keys(filters).length ? <Button size="sm" variant="ghost" onClick={() => setParams({}, {replace: true})}>Clear filters</Button> : null}</div>
         <UsageLogTable items={items} novelId={novelId} focusedId={focusedId} onJump={jump} />
-        {query.hasNextPage ? <Button variant="outline" disabled={query.isFetchingNextPage} onClick={() => void query.fetchNextPage()}>{query.isFetchingNextPage ? "正在读取…" : "查看更多调用"}</Button> : null}
-        {autoRefresh ? <p className="text-xs text-muted-foreground">最新记录每 15 秒刷新；展开历史分页后，点击“刷新日志”返回最新记录。</p> : null}
+        {query.hasNextPage ? <Button variant="outline" disabled={query.isFetchingNextPage} onClick={() => void query.fetchNextPage()}>{query.isFetchingNextPage ? "Loading…" : "Load more invocations"}</Button> : null}
+        {autoRefresh ? <p className="text-xs text-muted-foreground">The latest records refresh every 15 seconds. After loading older pages, select “Refresh log” to return to the latest records.</p> : null}
       </section>
     </> : null}
   </div>;
 }
 
 function Filter({label, value, options, onChange}: {label: string; value?: string; options: {value: string; label: string}[]; onChange: (value: string) => void}) {
-  return <label className="min-w-0 space-y-1 text-xs text-muted-foreground"><span>{label}</span><select className="h-9 w-full rounded-md border border-input bg-background px-2 text-sm text-foreground" value={value ?? ""} onChange={event => onChange(event.target.value)}><option value="">全部{label}</option>{options.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}</select></label>;
+  return <label className="min-w-0 space-y-1 text-xs text-muted-foreground"><span>{label}</span><select className="h-9 w-full rounded-md border border-input bg-background px-2 text-sm text-foreground" value={value ?? ""} onChange={event => onChange(event.target.value)}><option value="">All {label}</option>{options.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}</select></label>;
 }

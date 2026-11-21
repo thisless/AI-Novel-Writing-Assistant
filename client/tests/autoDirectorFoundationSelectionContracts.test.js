@@ -11,16 +11,16 @@ test("auto-director idea stage uses shared tree dialogs for optional creation fo
   const source = read("src/pages/novels/autoDirector/StageIdea.tsx");
 
   assert.match(source, /CreationFoundationPickerDialog/);
-  assert.match(source, /创作偏好（可选）/);
-  assert.match(source, /故事类型/);
-  assert.match(source, /推进方式/);
+  assert.match(source, /Writing preferences \(optional\)/);
+  assert.match(source, /Choose a genre/);
+  assert.match(source, /Choose a primary story progression/);
   assert.doesNotMatch(source, /<select/);
 });
 
 test("changing a creation foundation invalidates persisted and local candidates", () => {
   const source = read("src/pages/novels/autoDirector/useAutoDirectorCreateController.ts");
 
-  assert.match(source, /旧方向需要重新适配/);
+  assert.match(source, /requires adapting and regenerating the existing direction/);
   assert.match(source, /productionFoundation: null/);
   assert.match(source, /batches: \[\]/);
   assert.match(source, /setBatches\(\[\]\)/);
@@ -30,8 +30,8 @@ test("changing a creation foundation invalidates persisted and local candidates"
 test("candidate cards disclose whether foundations came from the user or AI", () => {
   const source = read("src/pages/novels/components/NovelAutoDirectorCandidateBatches.tsx");
 
-  assert.match(source, /你的选择/);
-  assert.match(source, /AI 补充/);
+  assert.match(source, /Your choice/);
+  assert.match(source, /AI recommendation/);
   assert.match(source, /candidate\.productionFoundation\.genre\.source/);
 });
 

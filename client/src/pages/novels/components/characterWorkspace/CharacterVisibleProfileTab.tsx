@@ -53,9 +53,9 @@ export default function CharacterVisibleProfileTab(props: CharacterVisibleProfil
       <section className="rounded-xl border border-border/70 bg-muted/10 p-4">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
           <div>
-            <div className="text-sm font-medium">外显资料生成</div>
+            <div className="text-sm font-medium">Generate visible character details</div>
             <div className="mt-1 text-xs leading-5 text-muted-foreground">
-              补齐外貌、体态、声音和登场记忆点，让角色在正文中更容易被读者识别。
+              Add appearance, build, voice, and memorable introductory details to help readers recognize the character in the story.
             </div>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -65,7 +65,7 @@ export default function CharacterVisibleProfileTab(props: CharacterVisibleProfil
               onClick={() => onGenerateVisibleProfile(visibleProfileGuidance)}
               disabled={isGeneratingVisibleProfile || !selectedCharacterId}
             >
-              {isGeneratingVisibleProfile ? "生成中..." : "AI 补全外显资料"}
+              {isGeneratingVisibleProfile ? "Generating..." : "Complete details with AI"}
             </AiButton>
             <AiButton
               size="sm"
@@ -73,13 +73,13 @@ export default function CharacterVisibleProfileTab(props: CharacterVisibleProfil
               onClick={() => onGenerateBatchVisibleProfiles(visibleProfileGuidance)}
               disabled={isGeneratingBatchVisibleProfiles || characters.length === 0}
             >
-              {isGeneratingBatchVisibleProfiles ? "生成中..." : "批量补全角色外显资料"}
+              {isGeneratingBatchVisibleProfiles ? "Generating..." : "Complete details for all characters"}
             </AiButton>
           </div>
         </div>
         <textarea
           className="mt-3 min-h-[72px] w-full rounded-md border bg-background p-2 text-sm"
-          placeholder="补全倾向（可选）：例如更有压迫感、带一点病弱感、声音更温和、不要写成传统美人"
+          placeholder="Guidance (optional): e.g., more intimidating, slightly frail, gentler voice, avoid a conventional beauty"
           value={visibleProfileGuidance}
           onChange={(event) => setVisibleProfileGuidance(event.target.value)}
         />
@@ -87,7 +87,7 @@ export default function CharacterVisibleProfileTab(props: CharacterVisibleProfil
 
       {isGeneratingVisibleProfile ? (
         <div className="rounded-lg border border-primary/30 bg-primary/5 p-3 text-sm text-muted-foreground">
-          正在为“{selectedCharacter.name}”整理外貌、体态、声音和登场记忆点。
+          Preparing appearance, build, voice, and memorable introductory details for “{selectedCharacter.name}.”
         </div>
       ) : null}
 
@@ -97,11 +97,11 @@ export default function CharacterVisibleProfileTab(props: CharacterVisibleProfil
             <div>
               <div className="text-sm font-medium">
                 {applicableVisibleProfileCount > 0
-                  ? `已为“${visibleProfileSuggestion.characterName}”生成 ${applicableVisibleProfileCount} 项可写入外显资料`
-                  : `“${visibleProfileSuggestion.characterName}”当前没有可写入的外显资料`}
+                  ? `Generated ${applicableVisibleProfileCount} details for “${visibleProfileSuggestion.characterName}”`
+                  : `No details to add for “${visibleProfileSuggestion.characterName}”`}
               </div>
               <div className="mt-1 text-xs text-muted-foreground">
-                请先看下面差异，确认后点击保存到角色卡。
+                Review the changes below, then save them to the character profile.
               </div>
             </div>
             <Button
@@ -109,13 +109,13 @@ export default function CharacterVisibleProfileTab(props: CharacterVisibleProfil
               onClick={onApplyVisibleProfile}
               disabled={isApplyingVisibleProfile || applicableVisibleProfileCount === 0}
             >
-              {isApplyingVisibleProfile ? "保存中..." : "保存到角色卡"}
+              {isApplyingVisibleProfile ? "Saving..." : "Save to character profile"}
             </Button>
           </div>
           {visibleProfileSuggestion.warnings.length > 0 ? (
             <div className="mt-3 rounded-md border border-amber-200 bg-amber-50 p-2 text-xs leading-5 text-amber-900">
               {visibleProfileSuggestion.warnings.map((warning) => (
-                <div key={warning}>提醒：{warning}</div>
+                <div key={warning}>Note: {warning}</div>
               ))}
             </div>
           ) : null}
@@ -126,8 +126,8 @@ export default function CharacterVisibleProfileTab(props: CharacterVisibleProfil
               return (
                 <div key={field.key} className="rounded-md border bg-background/80 p-2 text-xs leading-5">
                   <div className="font-medium">{field.label}</div>
-                  <div className="text-muted-foreground">当前：{selectedCharacter[field.key] || "待补全"}</div>
-                  <div>建议：{nextValue || skippedReason || "暂不写入"}</div>
+                  <div className="text-muted-foreground">Current: {selectedCharacter[field.key] || "Not specified"}</div>
+                  <div>Suggested: {nextValue || skippedReason || "No change"}</div>
                 </div>
               );
             })}
@@ -137,20 +137,20 @@ export default function CharacterVisibleProfileTab(props: CharacterVisibleProfil
 
       {!isGeneratingVisibleProfile && !hasVisibleProfileSuggestionForSelected ? (
         <div className="rounded-lg border border-dashed p-3 text-xs text-muted-foreground">
-          点击“AI 补全外显资料”后，会先在这里显示即将保存的差异；确认后再保存到角色卡。
+          After selecting “Complete details with AI,” review the proposed changes here before saving them to the character profile.
         </div>
       ) : null}
 
       {batchVisibleProfileResult ? (
         <section className="rounded-lg border border-border/70 p-3">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <div className="text-sm font-medium">批量建议：{batchApplicableCount} 个角色可写入</div>
+            <div className="text-sm font-medium">Batch suggestions: {batchApplicableCount} characters with details to add</div>
             <Button
               size="sm"
               onClick={onApplyBatchVisibleProfiles}
               disabled={isApplyingBatchVisibleProfiles || batchApplicableCount === 0}
             >
-              {isApplyingBatchVisibleProfiles ? "写入中..." : "写入批量结果"}
+              {isApplyingBatchVisibleProfiles ? "Applying..." : "Apply batch results"}
             </Button>
           </div>
           <div className="mt-2 max-h-64 space-y-2 overflow-auto pr-1">
@@ -158,7 +158,7 @@ export default function CharacterVisibleProfileTab(props: CharacterVisibleProfil
               <div key={result.characterId} className="rounded-md border bg-muted/10 p-2 text-xs leading-5">
                 <div className="font-medium">{result.characterName}</div>
                 <div className="text-muted-foreground">
-                  {result.hasApplicableChanges ? `可写入 ${Object.keys(result.fields).length} 项` : "没有可写入项"}
+                  {result.hasApplicableChanges ? `${Object.keys(result.fields).length} details to add` : "No details to add"}
                 </div>
                 <div>{VISIBLE_PROFILE_FIELDS.map((field) => result.fields[field.key]).filter(Boolean).join(" / ")}</div>
               </div>
@@ -176,7 +176,7 @@ export default function CharacterVisibleProfileTab(props: CharacterVisibleProfil
         {VISIBLE_PROFILE_FIELDS.map((field) => (
           <div key={field.key} className="rounded-lg border border-border/70 bg-muted/15 p-3">
             <div className="text-xs font-medium text-muted-foreground">{field.label}</div>
-            <div className="mt-1 text-sm leading-6">{selectedCharacter[field.key] || "待补全"}</div>
+            <div className="mt-1 text-sm leading-6">{selectedCharacter[field.key] || "Not specified"}</div>
           </div>
         ))}
       </section>

@@ -52,109 +52,109 @@ const FIELD_ORDER: Record<RuleSection, string[]> = {
 
 const FIELD_LABELS: Record<RuleSection, Record<string, string>> = {
   narrativeRules: {
-    summary: "整体推进感",
-    progressionMode: "推进方式",
-    sceneUnitPattern: "场景单位",
-    multiPov: "多视角",
-    looping: "循环回钩",
-    endingStyle: "收尾方式",
-    povSwitchStyle: "视角切换",
+    summary: "Overall progression",
+    progressionMode: "Progression mode",
+    sceneUnitPattern: "Scene unit",
+    multiPov: "Multiple POVs",
+    looping: "Recurring hooks",
+    endingStyle: "Ending style",
+    povSwitchStyle: "POV switching",
   },
   characterRules: {
-    summary: "人物表达总述",
-    dialogueStyle: "对白风格",
-    emotionExpression: "情绪外显",
-    defenseMechanisms: "防御机制",
-    allowSelfReflection: "自省表达",
-    facePriority: "体面优先",
+    summary: "Character expression summary",
+    dialogueStyle: "Dialogue style",
+    emotionExpression: "Emotional expression",
+    defenseMechanisms: "Defense mechanisms",
+    allowSelfReflection: "Self-reflection",
+    facePriority: "Saving face",
   },
   languageRules: {
-    summary: "语言质感总述",
-    register: "语言基调",
-    roughness: "粗粝度",
-    sentenceVariation: "句式变化",
-    allowIncompleteSentences: "不完整句",
-    allowSwearing: "粗口口语",
-    allowUselessDetails: "生活杂音",
+    summary: "Language and texture summary",
+    register: "Language register",
+    roughness: "Roughness",
+    sentenceVariation: "Sentence variation",
+    allowIncompleteSentences: "Incomplete sentences",
+    allowSwearing: "Profanity and colloquialisms",
+    allowUselessDetails: "Everyday details",
   },
   rhythmRules: {
-    summary: "节奏控制总述",
-    pace: "推进速度",
-    paragraphDensity: "段落密度",
-    allowFragmentedFlow: "碎片化推进",
-    actionOverExplanation: "动作优先",
+    summary: "Pacing summary",
+    pace: "Progression speed",
+    paragraphDensity: "Paragraph density",
+    allowFragmentedFlow: "Fragmented progression",
+    actionOverExplanation: "Action over explanation",
   },
 };
 
 const FIELD_VALUE_MAPS: Record<string, Record<string, string>> = {
   progressionMode: {
-    time_sequence: "按时间顺推",
-    goal_driven: "目标驱动推进",
-    mystery_escalation: "悬疑逐层加压",
-    relationship_push_pull: "关系拉扯推进",
-    multi_thread: "多线交织推进",
-    scene_immersion: "场景沉浸推进",
-    fact_driven: "事实驱动推进",
-    contrast_driven: "反差驱动推进",
+    time_sequence: "Chronological progression",
+    goal_driven: "Goal-driven progression",
+    mystery_escalation: "Escalating mystery",
+    relationship_push_pull: "Relationship push and pull",
+    multi_thread: "Interwoven storylines",
+    scene_immersion: "Immersive scenes",
+    fact_driven: "Fact-driven progression",
+    contrast_driven: "Contrast-driven progression",
   },
   endingStyle: {
-    unresolved: "不收束核心困境",
-    hook: "结尾抛钩子",
-    suspense: "悬念式收尾",
-    emotional_hook: "情绪钩子收尾",
-    cross_hook: "交叉线钩子收尾",
-    soft_open: "柔开放收尾",
-    pressure_continue: "压力延续式收尾",
-    bitter_aftertaste: "苦涩余味收尾",
+    unresolved: "Leave the central dilemma unresolved",
+    hook: "End with a hook",
+    suspense: "End on suspense",
+    emotional_hook: "End with an emotional hook",
+    cross_hook: "End with a cross-thread hook",
+    soft_open: "End on a gentle opening",
+    pressure_continue: "Carry pressure forward",
+    bitter_aftertaste: "Leave a bitter aftertaste",
   },
   povSwitchStyle: {
-    controlled: "受控切换",
+    controlled: "Controlled switching",
   },
   emotionExpression: {
-    behavior_only: "只通过动作外露",
-    dialogue_and_action: "对白和动作共同外露",
-    reaction_only: "主要通过反应外露",
-    subtext: "通过言外之意外露",
-    mixed: "对白、动作和反应混合外露",
-    light_behavior: "以轻动作轻反应外露",
-    suppressed: "压住不直说",
-    deadpan: "冷反应式外露",
+    behavior_only: "Expressed through actions only",
+    dialogue_and_action: "Expressed through dialogue and actions",
+    reaction_only: "Expressed mainly through reactions",
+    subtext: "Expressed through subtext",
+    mixed: "Expressed through dialogue, actions, and reactions",
+    light_behavior: "Expressed through subtle actions and reactions",
+    suppressed: "Suppressed rather than stated directly",
+    deadpan: "Expressed through deadpan reactions",
   },
   dialogueStyle: {
-    short_colloquial: "短句口语式",
-    direct: "直接硬朗",
-    restrained: "克制收着说",
-    subtext_heavy: "言外之意重",
-    distinct_by_role: "按角色明显拉开口吻差异",
-    daily_natural: "日常自然口吻",
-    informational: "信息型克制对白",
-    deadpan_colloquial: "冷面口语式",
+    short_colloquial: "Short, colloquial lines",
+    direct: "Direct and blunt",
+    restrained: "Restrained",
+    subtext_heavy: "Rich in subtext",
+    distinct_by_role: "Distinct voices by character",
+    daily_natural: "Natural and conversational",
+    informational: "Restrained, information-focused dialogue",
+    deadpan_colloquial: "Deadpan and colloquial",
   },
   register: {
-    colloquial: "口语化",
-    direct: "直接明快",
-    restrained: "克制收束",
-    natural: "自然日常",
-    flexible: "随角色灵活变化",
-    professional: "专业克制",
+    colloquial: "Colloquial",
+    direct: "Direct and clear",
+    restrained: "Restrained",
+    natural: "Natural and conversational",
+    flexible: "Varies by character",
+    professional: "Professional and restrained",
   },
   sentenceVariation: {
-    high: "变化大",
-    medium: "变化适中",
-    medium_high: "变化偏大",
+    high: "High variation",
+    medium: "Moderate variation",
+    medium_high: "Moderately high variation",
   },
   pace: {
-    medium_fast: "中快",
-    fast: "快",
-    medium: "中速",
-    medium_slow: "中慢",
-    balanced: "均衡",
-    slow: "慢",
+    medium_fast: "Moderately fast",
+    fast: "Fast",
+    medium: "Moderate",
+    medium_slow: "Moderately slow",
+    balanced: "Balanced",
+    slow: "Slow",
   },
   paragraphDensity: {
-    high: "高密度",
-    medium: "中密度",
-    medium_high: "中高密度",
+    high: "High density",
+    medium: "Moderate density",
+    medium_high: "Moderately high density",
   },
 };
 
@@ -172,33 +172,33 @@ function humanizeUnknownToken(value: string): string {
 
 function formatBooleanValue(key: string, value: boolean): string {
   if (key === "multiPov") {
-    return value ? "允许多视角切换" : "尽量保持单视角";
+    return value ? "Allow POV changes" : "Prefer a single POV";
   }
   if (key === "looping") {
-    return value ? "允许循环回钩" : "尽量直线推进";
+    return value ? "Allow recurring hooks" : "Prefer linear progression";
   }
   if (key === "allowSelfReflection") {
-    return value ? "允许明确自省" : "尽量少做直白自省";
+    return value ? "Allow explicit self-reflection" : "Avoid direct self-reflection";
   }
   if (key === "facePriority") {
-    return value ? "优先保住体面" : "不强求体面";
+    return value ? "Prioritize saving face" : "Do not force characters to save face";
   }
   if (key === "allowIncompleteSentences") {
-    return value ? "允许不完整句" : "句子尽量完整";
+    return value ? "Allow sentence fragments" : "Prefer complete sentences";
   }
   if (key === "allowSwearing") {
-    return value ? "允许带一点粗口或脏字" : "尽量避免粗口";
+    return value ? "Allow some profanity" : "Avoid profanity";
   }
   if (key === "allowUselessDetails") {
-    return value ? "允许保留生活杂音" : "尽量减少无关杂音";
+    return value ? "Allow everyday details" : "Reduce irrelevant details";
   }
   if (key === "allowFragmentedFlow") {
-    return value ? "允许碎片化推进" : "尽量保持完整推进";
+    return value ? "Allow fragmented progression" : "Prefer complete progression";
   }
   if (key === "actionOverExplanation") {
-    return value ? "动作先于解释" : "解释比动作更重要";
+    return value ? "Prioritize action over explanation" : "Prioritize explanation over action";
   }
-  return value ? "是" : "否";
+  return value ? "Yes" : "No";
 }
 
 function formatArrayValue(value: unknown[]): string {

@@ -47,26 +47,26 @@ export default function WorldLibraryQuickPick({
   return (
     <div className="rounded-md border p-3 text-sm space-y-3">
       <div className="space-y-1">
-        <div className="font-medium">素材库前置引入</div>
+        <div className="font-medium">Add assets from the library</div>
         <div className="text-xs text-muted-foreground">
-          旧版 V2 会在正式生成前就允许从属性库选素材。这里保留这个思路，但接到当前蓝图结构里。
+          The previous version allowed selecting assets before generation. This keeps that workflow and connects it to the current blueprint.
         </div>
       </div>
 
       <input
         className="w-full rounded-md border p-2 text-sm"
-        placeholder="搜索素材库条目，可按名称或关键词过滤"
+        placeholder="Search library items by name or keyword"
         value={keyword}
         onChange={(event) => setKeyword(event.target.value)}
       />
 
       <div className="space-y-2">
         {libraryQuery.isLoading ? (
-          <div className="text-xs text-muted-foreground">正在加载素材库…</div>
+          <div className="text-xs text-muted-foreground">Loading library…</div>
         ) : null}
         {!libraryQuery.isLoading && libraryItems.length === 0 ? (
           <div className="text-xs text-muted-foreground">
-            没有匹配的素材库条目。
+            No matching library items.
           </div>
         ) : null}
 
@@ -87,10 +87,10 @@ export default function WorldLibraryQuickPick({
                   ) : null}
                 </div>
                 <div className="text-xs text-muted-foreground whitespace-pre-wrap">
-                  {item.description?.trim() || "暂无描述"}
+                  {item.description?.trim() || "No description"}
                 </div>
                 <div className="text-xs text-muted-foreground">
-                  使用次数：{item.usageCount}
+                  Uses: {item.usageCount}
                 </div>
               </div>
               <Button
@@ -99,7 +99,7 @@ export default function WorldLibraryQuickPick({
                 disabled={added}
                 onClick={() => onAdd(item)}
               >
-                {added ? "已加入蓝图" : "加入蓝图"}
+                {added ? "Added to blueprint" : "Add to blueprint"}
               </Button>
             </div>
           );

@@ -158,7 +158,7 @@ export function useWritingFormulaCreateFlow({
       }
       handledTerminalTaskIdRef.current = pendingExtractionTaskId;
       setPendingExtractionTaskId("");
-      onFlowMessage("写法提取任务不存在或已被清理，请重新提交。");
+      onFlowMessage("Style extraction task not found or has been cleared. Submit it again.");
       return;
     }
 
@@ -174,14 +174,14 @@ export function useWritingFormulaCreateFlow({
 
     if (task.status === "succeeded") {
       const profileId = readCreatedProfileId(task);
-      const profileName = readCreatedProfileName(task) || form.extractName.trim() || "新写法";
+      const profileName = readCreatedProfileName(task) || form.extractName.trim() || "New style profile";
       if (!profileId) {
-        onFlowMessage("写法提取任务已完成，但没有拿到自动保存结果。");
+        onFlowMessage("Style extraction completed, but the automatically saved profile could not be retrieved.");
         return;
       }
       resetCreateFlow();
       void refreshStyleData().then(() => {
-        onAutoSavedProfileReady(profileId, `写法“${profileName}”已自动保存，已经为你打开当前写法编辑。`);
+        onAutoSavedProfileReady(profileId, `Style profile “${profileName}” was saved automatically. Its editor is now open.`);
       });
       return;
     }
@@ -189,8 +189,8 @@ export function useWritingFormulaCreateFlow({
     const failureMessage = task.failureSummary
       ?? task.lastError
       ?? (task.status === "cancelled"
-        ? "写法提取任务已取消。"
-        : "写法提取任务失败，请稍后重试。");
+        ? "Style extraction task cancelled."
+        : "Style extraction failed. Try again later.");
     onFlowMessage(failureMessage);
   }, [
     extractionTaskQuery.data,
@@ -211,7 +211,7 @@ export function useWritingFormulaCreateFlow({
       }
       resetCreateFlow();
       await refreshStyleData();
-      onImmediateProfileCreated(profile, `写法“${profile.name}”已经创建，可以继续补规则、试写或绑定到目标。`);
+      onImmediateProfileCreated(profile, `Style profile “${profile.name}” created. Add rules, try a sample, or bind it to a target.`);
     },
   });
 
@@ -231,7 +231,7 @@ export function useWritingFormulaCreateFlow({
       }
       resetCreateFlow();
       await refreshStyleData();
-      onImmediateProfileCreated(profile, `写法“${profile.name}”已经生成，可以继续补规则、试写或绑定到目标。`);
+      onImmediateProfileCreated(profile, `Style profile “${profile.name}” generated. Add rules, try a sample, or bind it to a target.`);
     },
   });
 
@@ -244,7 +244,7 @@ export function useWritingFormulaCreateFlow({
       }
       resetCreateFlow();
       await refreshStyleData();
-      onImmediateProfileCreated(profile, `模板写法“${profile.name}”已经创建，可以继续补规则、试写或绑定到目标。`);
+      onImmediateProfileCreated(profile, `Template-based style profile “${profile.name}” created. Add rules, try a sample, or bind it to a target.`);
     },
   });
 
@@ -261,7 +261,7 @@ export function useWritingFormulaCreateFlow({
     onSuccess: (response) => {
       const task = response.data;
       if (!task) {
-        onFlowMessage("写法提取任务提交成功，但没有拿到任务详情。");
+        onFlowMessage("Style extraction task submitted, but its details could not be retrieved.");
         return;
       }
       handledTerminalTaskIdRef.current = "";
@@ -284,7 +284,7 @@ export function useWritingFormulaCreateFlow({
     onSuccess: (response) => {
       const task = response.data;
       if (!task) {
-        onFlowMessage("写法提取任务提交成功，但没有拿到任务详情。");
+        onFlowMessage("Style extraction task submitted, but its details could not be retrieved.");
         return;
       }
       handledTerminalTaskIdRef.current = "";
@@ -308,7 +308,7 @@ export function useWritingFormulaCreateFlow({
       }
       resetCreateFlow();
       await refreshStyleData();
-      onImmediateProfileCreated(profile, `写法“${profile.name}”来自拆书结果，你可以继续检查规则、试写，或绑定到目标。`);
+      onImmediateProfileCreated(profile, `Style profile “${profile.name}” came from book analysis. Review its rules, try a sample, or bind it to a target.`);
     },
   });
 

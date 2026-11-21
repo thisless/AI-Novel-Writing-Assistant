@@ -119,20 +119,20 @@ const planningRows=projectAppearanceRows([],{volumes:[{chapters:Array.from({leng
 export const planningOnly=renderToStaticMarkup(<AppearanceList rows={planningRows} boundary="latest" onSelect={()=>{}}/>);`,resolveDir:clientDir,loader:'tsx'},bundle:true,platform:'node',format:'esm',packages:'external',
       alias:{'@':path.join(clientDir,'src')},define:{'import.meta.env':'{}'},outfile:output});
     const {reading,latest,unknownBoundary,planningOnly} = await import(pathToFileURL(output).href);
-    assert.match(reading,/<figure[^>]*aria-label="角色出场示意图"/);
-    assert.match(reading,/aria-label="第 1 章 · 开门：计划出场"/);
-    assert.match(reading,/aria-label="第 1 章 · 开门：实际出场：递来药箱"/);
-    assert.match(reading,/aria-label="第 1 章 · 开门：回忆出场：幼时授课"/);
-    assert.match(reading,/aria-label="第 2 章 · 旧章：未核对，不能判断是否缺席"/);
+    assert.match(reading,/<figure[^>]*aria-label="Character appearance timeline"/);
+    assert.match(reading,/aria-label="Chapter 1 · 开门: Planned appearance"/);
+    assert.match(reading,/aria-label="Chapter 1 · 开门: Appeared: 递来药箱"/);
+    assert.match(reading,/aria-label="Chapter 1 · 开门: Flashback: 幼时授课"/);
+    assert.match(reading,/aria-label="Chapter 2 · 旧章: Unverified; absence cannot be determined"/);
     assert.doesNotMatch(reading,/未来秘密|后文梦境秘密|未来原文/);
-    assert.match(latest,/aria-label="第 3 章 · 未来秘密：梦境出场：后文梦境秘密"/);
+    assert.match(latest,/aria-label="Chapter 3 · 未来秘密: Dream: 后文梦境秘密"/);
     assert.doesNotMatch(unknownBoundary,/<figure|开门|旧章|未来秘密/);
-    assert.match(planningOnly,/<figure[^>]*aria-label="角色出场示意图"/);
-    assert.match(planningOnly,/27 章的角色出场安排待生成/);
-    assert.match(planningOnly,/待正文生成/);
-    assert.match(planningOnly,/aria-label="第 1 章 · 规划章1：出场安排待生成，查看章节规划"/);
-    assert.match(planningOnly,/aria-label="第 1 章 · 规划章1：待写正文"/);
-    assert.match(planningOnly,/查看后一段章节/);
+    assert.match(planningOnly,/<figure[^>]*aria-label="Character appearance timeline"/);
+    assert.match(planningOnly,/appearance schedules are still pending for 27 chapters/);
+    assert.match(planningOnly,/Awaiting prose/);
+    assert.match(planningOnly,/aria-label="Chapter 1 · 规划章1: Appearance schedule pending; view chapter plan"/);
+    assert.match(planningOnly,/aria-label="Chapter 1 · 规划章1: Awaiting manuscript"/);
+    assert.match(planningOnly,/View next chapters/);
   } finally {fs.rmSync(output,{force:true});}
 });
 
@@ -160,20 +160,20 @@ export const initialSchedule=renderToStaticMarkup(<CastTimelineChart book={sched
 export const empty=renderToStaticMarkup(<CastTimelineChart book={{...book,materials:{characters:[]}}} chapters={[]} onSelect={()=>{}}/>);`,
       resolveDir:clientDir,loader:'tsx'},bundle:true,platform:'node',format:'esm',packages:'external',alias:{'@':path.join(clientDir,'src')},define:{'import.meta.env':'{}'},outfile:output});
     const {chart,planningOnly,initialSchedule,empty}=await import(pathToFileURL(output).href);
-    assert.match(chart,/aria-label="全员角色出场甘特图"/);
-    assert.match(chart,/2 位角色 · 3 章/);
-    assert.match(chart,/aria-label="青禾 · 第 1 章 · 药铺：计划出场；实际出场：开门"/);
-    assert.match(chart,/aria-label="阿宁 · 第 1 章 · 药铺：暂无明确出场安排；仅被提及：听说回城；梦境出场：梦中递箱"/);
-    assert.match(chart,/aria-label="阿宁 · 第 2 章 · 旧章：暂无明确出场安排；未核对，不能判断是否缺席"/);
+    assert.match(chart,/aria-label="Cast appearance timeline"/);
+    assert.match(chart,/2 characters · 3 chapters/);
+    assert.match(chart,/aria-label="青禾 · Chapter 1 · 药铺: Planned appearance; Appeared: 开门"/);
+    assert.match(chart,/aria-label="阿宁 · Chapter 1 · 药铺: No planned appearance; Mentioned: 听说回城; Dream: 梦中递箱"/);
+    assert.match(chart,/aria-label="阿宁 · Chapter 2 · 旧章: No planned appearance; Unverified; absence cannot be determined"/);
     assert.equal((chart.match(/data-appearance-kind="present"/g)||[]).length,1);
     assert.equal((chart.match(/data-appearance-kind="dream"/g)||[]).length,1);
-    assert.match(chart,/aria-label="青禾 · 第 3 章 · 待写章：出场安排待生成；待写正文"/);
-    assert.match(planningOnly,/2 位角色 · 1 章/);
+    assert.match(chart,/aria-label="青禾 · Chapter 3 · 待写章: Appearance schedule pending; Awaiting manuscript"/);
+    assert.match(planningOnly,/2 characters · 1 chapter/);
     assert.doesNotMatch(planningOnly,/data-appearance-kind="present"/);
-    assert.match(initialSchedule,/aria-label="青禾 · 第 1 章 · 初排章：计划出场；待写正文"/);
-    assert.match(initialSchedule,/aria-label="阿宁 · 第 1 章 · 初排章：未安排现场出场；待写正文"/);
-    assert.match(initialSchedule,/aria-label="青禾 · 第 2 章 · 空安排章：未安排现场出场；待写正文"/);
+    assert.match(initialSchedule,/aria-label="青禾 · Chapter 1 · 初排章: Planned appearance; Awaiting manuscript"/);
+    assert.match(initialSchedule,/aria-label="阿宁 · Chapter 1 · 初排章: No planned on-page appearance; Awaiting manuscript"/);
+    assert.match(initialSchedule,/aria-label="青禾 · Chapter 2 · 空安排章: No planned on-page appearance; Awaiting manuscript"/);
     assert.doesNotMatch(initialSchedule,/data-appearance-kind="present"|章尚待生成角色出场安排/);
-    assert.match(empty,/本书暂无角色/);
+    assert.match(empty,/This novel has no characters yet/);
   } finally {fs.rmSync(output,{force:true});}
 });

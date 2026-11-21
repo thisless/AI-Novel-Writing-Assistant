@@ -26,20 +26,20 @@ const question={id:'q1',worldId:'world',question:'谁签发通行证？',answer:
   integratedSummary:JSON.stringify({version:1,summary:'通行规则已补入手册',answerHash:'a'.repeat(64)})};
 test('saved answers and integration summaries remain readable after drafts are cleared',()=>{
   const result=render(question);
-  assert.match(result.html,/商会签发/);assert.match(result.html,/通行规则已补入手册/);assert.match(result.html,/已整合/);
-  assert.deepEqual(result.submitted,{});assert.match(result.html,/disabled=""[^>]*>提交并整合回答/);
+  assert.match(result.html,/商会签发/);assert.match(result.html,/通行规则已补入手册/);assert.match(result.html,/Integrated/);
+  assert.deepEqual(result.submitted,{});assert.match(result.html,/disabled=""[^>]*>Submit and integrate answers/);
 });
 test('legacy saved answers remain available for explicit structured integration',()=>{
   const result=render({...question,integratedSummary:'Q:旧问题\nA:商会签发'});
-  assert.deepEqual(result.submitted,{q1:'商会签发'});assert.match(result.html,/回答已保存，可提交整合/);
-  assert.doesNotMatch(result.html,/disabled=""[^>]*>提交并整合回答/);
+  assert.deepEqual(result.submitted,{q1:'商会签发'});assert.match(result.html,/Answer saved\. Submit it to update the world handbook/);
+  assert.doesNotMatch(result.html,/disabled=""[^>]*>Submit and integrate answers/);
 });
 test('editing a saved answer submits the new draft and clearing it does not restore the previous answer',()=>{
   assert.deepEqual(render(question,{q1:'居民议会签发'}).submitted,{q1:'居民议会签发'});
-  assert.match(render(question,{q1:'居民议会签发'}).html,/待整合/);
+  assert.match(render(question,{q1:'居民议会签发'}).html,/Ready to integrate/);
   assert.deepEqual(render(question,{q1:''}).submitted,{});
 });
 test('an in-flight submission displays the answer while preventing another submission',()=>{
   const result=render(question,{q1:'新回答'},true);
-  assert.match(result.html,/新回答/);assert.match(result.html,/disabled=""[^>]*>整合中/);
+  assert.match(result.html,/新回答/);assert.match(result.html,/disabled=""[^>]*>Integrating/);
 });

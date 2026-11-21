@@ -35,7 +35,7 @@ export function renderCards() {
     const {renderCards}=await import(pathToFileURL(output).href);
     for(const markup of renderCards()) {
       assert.match(markup,/href="\/lab\/director\/book"/);
-      assert.match(markup,/打开导演台/);
+      assert.match(markup,/Open Auto Director/);
       assert.doesNotMatch(markup,/旧推进阶段|旧推进动作|旧导演运行中|100%|继续导演/);
     }
   } finally {if(fs.existsSync(output))fs.unlinkSync(output);}

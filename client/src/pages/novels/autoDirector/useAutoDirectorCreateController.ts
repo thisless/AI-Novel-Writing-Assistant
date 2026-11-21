@@ -299,7 +299,7 @@ export function useAutoDirectorCreateController(input: UseAutoDirectorCreateCont
       setIdeaInspirations(response.data?.ideas ?? []);
     },
     onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "生成起始想法失败，请稍后重试。");
+      toast.error(error instanceof Error ? error.message : "Failed to generate a starting idea. Please try again.");
     },
   });
 
@@ -309,7 +309,7 @@ export function useAutoDirectorCreateController(input: UseAutoDirectorCreateCont
       setIdeaConstellationOptions(response.data?.options ?? []);
     },
     onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "生成开书素材失败，请稍后重试。");
+      toast.error(error instanceof Error ? error.message : "Failed to generate book-starting materials. Please try again.");
     },
   });
 
@@ -319,7 +319,7 @@ export function useAutoDirectorCreateController(input: UseAutoDirectorCreateCont
       selectedOptions,
     }),
     onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "整理故事想法失败，请稍后重试。");
+      toast.error(error instanceof Error ? error.message : "Failed to organize the story idea. Please try again.");
     },
   });
 
@@ -397,7 +397,7 @@ export function useAutoDirectorCreateController(input: UseAutoDirectorCreateCont
   const ensureWorkflowTask = async () => {
     const nextIdea = requestIdea;
     if (!nextIdea) {
-      throw new Error("请先补充起始想法，再继续生成或确认书级方向。");
+      throw new Error("Add a starting idea before generating or confirming the book direction.");
     }
     if (workflowTaskId) {
       return workflowTaskId;
@@ -450,7 +450,7 @@ export function useAutoDirectorCreateController(input: UseAutoDirectorCreateCont
 
   const buildCandidateRequestPayload = (currentWorkflowTaskId: string) => {
     if (!requestIdea) {
-      throw new Error("请先补充起始想法，再继续生成或确认书级方向。");
+      throw new Error("Add a starting idea before generating or confirming the book direction.");
     }
     return {...buildAutoDirectorRequestPayload(
       directorBasicForm,
@@ -491,7 +491,7 @@ export function useAutoDirectorCreateController(input: UseAutoDirectorCreateCont
     mutationFn: async (payload: { candidate: DirectorCandidate; workflowTaskId?: string }) => {
       const currentWorkflowTaskId = payload.workflowTaskId || await ensureWorkflowTask();
       if (!requestIdea) {
-        throw new Error("请先补充起始想法，再继续生成或确认书级方向。");
+        throw new Error("Add a starting idea before generating or confirming the book direction.");
       }
       const autoExecutionPlan = buildAutoExecutionPlanForRunMode();
       const response = await confirmDirectorCandidate({
@@ -520,8 +520,8 @@ export function useAutoDirectorCreateController(input: UseAutoDirectorCreateCont
     onSuccess: async ({ command, workflowTaskId: nextWorkflowTaskId }) => {
       if (!command) {
         setDialogMode("execution_failed");
-        setExecutionError("确认方案失败，未返回导演命令。");
-        toast.error("确认方案失败，未返回导演命令。");
+        setExecutionError("Failed to confirm the plan: no director command was returned.");
+        toast.error("Failed to confirm the plan: no director command was returned.");
         return;
       }
       if (nextWorkflowTaskId) {
@@ -537,11 +537,11 @@ export function useAutoDirectorCreateController(input: UseAutoDirectorCreateCont
           queryKey: queryKeys.tasks.detail("novel_workflow", nextWorkflowTaskId),
         });
       }
-      toast.success("系统收到书级方向，会创建小说项目并继续推进规划。");
+      toast.success("Book direction received. A novel project will be created and planning will continue.");
     },
     onError: async (error, payload) => {
       setDialogMode("execution_failed");
-      setExecutionError(error instanceof Error ? error.message : "导演任务执行失败。");
+      setExecutionError(error instanceof Error ? error.message : "Director task failed.");
       setExecutionRequested(false);
       if (payload.workflowTaskId) {
         await queryClient.invalidateQueries({
@@ -558,7 +558,7 @@ export function useAutoDirectorCreateController(input: UseAutoDirectorCreateCont
     mutationFn: async () => {
       const taskId = directorTask?.id || workflowTaskId;
       if (!taskId) {
-        throw new Error("当前没有可继续的自动导演任务。");
+        throw new Error("There is no Auto Director task to continue.");
       }
       if (usesOpeningRetry(directorTask, directorVersion)) return retryOriginalDirectorOpening(taskId);
       return continueNovelWorkflow(taskId, { continuationMode: "resume" });
@@ -588,10 +588,10 @@ export function useAutoDirectorCreateController(input: UseAutoDirectorCreateCont
       await Promise.allSettled(invalidations);
       setDialogMode("execution_progress");
       setExecutionError("");
-      toast.success("已确认，AI 会继续推进。");
+      toast.success("Confirmed. AI will continue.");
     },
     onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "继续自动导演失败。");
+      toast.error(error instanceof Error ? error.message : "Failed to continue Auto Director.");
     },
   });
 
@@ -627,7 +627,7 @@ export function useAutoDirectorCreateController(input: UseAutoDirectorCreateCont
     const shouldInvalidateCandidates = batches.length > 0;
     if (
       shouldInvalidateCandidates
-      && !window.confirm("修改故事类型、推进方式或战力体系后，旧方向需要重新适配并重新生成。确认修改吗？")
+      && !window.confirm("Changing the story type, progression style, or power system requires adapting and regenerating the existing direction. Continue?")
     ) {
       return false;
     }
@@ -674,11 +674,11 @@ export function useAutoDirectorCreateController(input: UseAutoDirectorCreateCont
         setDialogMode("candidate_selection");
         setExecutionRequested(false);
         setExecutionError("");
-        toast.success("创作偏好已更新，请按新选择重新生成方向。");
+        toast.success("Creative preferences updated. Regenerate the direction using your new choices.");
       }
       return true;
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "更新创作偏好失败，请稍后重试。");
+      toast.error(error instanceof Error ? error.message : "Failed to update creative preferences. Please try again.");
       return false;
     } finally {
       setIsUpdatingFoundation(false);
@@ -708,7 +708,7 @@ export function useAutoDirectorCreateController(input: UseAutoDirectorCreateCont
       });
     } catch (error) {
       confirmSubmitLockedRef.current = false;
-      const message = error instanceof Error ? error.message : "创建导演主任务失败。";
+      const message = error instanceof Error ? error.message : "Failed to create the main director task.";
       setDialogMode("candidate_selection");
       setExecutionRequested(false);
       setExecutionError(message);

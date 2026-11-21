@@ -66,9 +66,9 @@ export function subscribeLlmLiveStream(input: {
         if (stopped || attempt.signal.aborted) {
           void response.body?.cancel().catch(() => undefined);
           if (stopped) break;
-          throw new Error("实况连接已中断");
+          throw new Error("Live connection was interrupted.");
         }
-        if (!response.ok || !response.body) throw new Error("实况连接失败");
+        if (!response.ok || !response.body) throw new Error("Live connection failed.");
         input.onConnectionState("connected");
         reader = response.body.getReader();
         const decoder = new TextDecoder();

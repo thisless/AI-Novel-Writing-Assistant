@@ -33,21 +33,21 @@ export interface BuildNovelCoverDraftInput {
 }
 
 const NARRATIVE_POV_LABELS: Record<NovelBasicFormState["narrativePov"], string> = {
-  first_person: "第一人称",
-  third_person: "第三人称",
-  mixed: "混合视角",
+  first_person: "First person",
+  third_person: "Third person",
+  mixed: "Mixed perspective",
 };
 
 const PACE_PREFERENCE_LABELS: Record<NovelBasicFormState["pacePreference"], string> = {
-  slow: "慢节奏",
-  balanced: "均衡",
-  fast: "快节奏",
+  slow: "Slow-paced",
+  balanced: "Balanced",
+  fast: "Fast-paced",
 };
 
 const EMOTION_INTENSITY_LABELS: Record<NovelBasicFormState["emotionIntensity"], string> = {
-  low: "低情绪浓度",
-  medium: "中情绪浓度",
-  high: "高情绪浓度",
+  low: "Low emotional intensity",
+  medium: "Medium emotional intensity",
+  high: "High emotional intensity",
 };
 
 function normalizeOptionalText(value: string | null | undefined): string | null {
@@ -76,7 +76,7 @@ export function buildNovelCoverDraftContext(
   const commercialTags = normalizeCommercialTags(input.basicForm.commercialTagsText);
 
   return {
-    title: normalizeOptionalText(input.basicForm.title) ?? "这本小说",
+    title: normalizeOptionalText(input.basicForm.title) ?? "Untitled novel",
     penName: normalizeOptionalText(input.basicForm.penName),
     description: normalizeOptionalText(input.basicForm.description),
     targetAudience: normalizeOptionalText(input.basicForm.targetAudience),

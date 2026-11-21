@@ -39,7 +39,7 @@ import {
 import { resolveCreativeHubWorkspacePresentation } from "./presentation/creativeHubWorkspaceViewModel";
 
 const RUNTIME_DETAILS_COLLAPSED_STORAGE_KEY = "creative-hub.runtime-details-collapsed";
-const DEFAULT_THREAD_TITLE = "\u65b0\u5bf9\u8bdd";
+const DEFAULT_THREAD_TITLE = "New conversation";
 const pendingAutoCreateThreadKeys = new Set<string>();
 
 export default function CreativeHubPage() {
@@ -151,7 +151,7 @@ export default function CreativeHubPage() {
       }
     },
     onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "创作线程创建失败，请重试。");
+      toast.error(error instanceof Error ? error.message : "Failed to create a creative thread. Try again.");
     },
   });
 
@@ -342,7 +342,7 @@ export default function CreativeHubPage() {
       await updateCreativeHubThread(threadId, { archived });
       await queryClient.invalidateQueries({ queryKey: queryKeys.creativeHub.threads });
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "线程归档操作失败，请重试。");
+      toast.error(error instanceof Error ? error.message : "Failed to archive thread. Try again.");
     } finally {
       threadActionInFlightRef.current = false;
       setThreadActionPendingId("");
@@ -374,7 +374,7 @@ export default function CreativeHubPage() {
         }, { replace: true });
       }
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "小说工作区切换失败，请重试。");
+      toast.error(error instanceof Error ? error.message : "Failed to switch novel workspace. Try again.");
     } finally {
       bindingInFlightRef.current = false;
       setBindingPending(false);
@@ -414,7 +414,7 @@ export default function CreativeHubPage() {
       }
       await queryClient.invalidateQueries({ queryKey: queryKeys.creativeHub.threads });
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "创作线程删除失败，请重试。");
+      toast.error(error instanceof Error ? error.message : "Failed to delete creative thread. Try again.");
     } finally {
       threadActionInFlightRef.current = false;
       setThreadActionPendingId("");
@@ -443,7 +443,7 @@ export default function CreativeHubPage() {
         runtimeState.setInterrupt(undefined);
       }
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "待确认操作提交失败，请重试。");
+      toast.error(error instanceof Error ? error.message : "Failed to submit approval decision. Try again.");
     } finally {
       approvalInFlightRef.current = false;
       setApprovalPending(false);
@@ -547,7 +547,7 @@ export default function CreativeHubPage() {
       await queryClient.invalidateQueries({ queryKey: queryKeys.creativeHub.history(activeThreadId) });
     }).catch((error: unknown) => {
       if (activeThreadIdRef.current === activeThreadId) {
-        toast.error(error instanceof Error ? error.message : "世界观绑定同步失败，请重新加载当前线程后重试。");
+        toast.error(error instanceof Error ? error.message : "Failed to sync world links. Reload the current thread and try again.");
       }
     });
   }, [activeThreadId, productionStatus?.worldId, queryClient, rawThreadBindings]);
@@ -556,17 +556,17 @@ export default function CreativeHubPage() {
     <div className="space-y-4">
       <WorkspaceHeader
         icon={MessagesSquare}
-        context="当前小说与创作线程"
-        title="创作中枢"
-        description="绑定一本小说后，可查询创作状态、诊断阻塞，并获得可操作的下一步建议。"
+        context="Novel and creative thread"
+        title="Creative Hub"
+        description="Link a novel to check its status, diagnose blockers, and get actionable next steps."
         meta={(
           <>
-            <span>小说：{workspacePresentation.objectTitle}</span>
-            <span>阶段：{workspacePresentation.stageLabel}</span>
-            <span>线程：{currentThread?.title ?? "正在准备"}</span>
-            <span>状态：{workspacePresentation.threadStatusLabel}</span>
+            <span>Novel: {workspacePresentation.objectTitle}</span>
+            <span>Stage: {workspacePresentation.stageLabel}</span>
+            <span>Thread: {currentThread?.title ?? "Preparing"}</span>
+            <span>Status: {workspacePresentation.threadStatusLabel}</span>
             {currentBindings.knowledgeDocumentIds?.length ? (
-              <span>已绑定知识资料：{currentBindings.knowledgeDocumentIds.length} 份</span>
+              <span>Linked knowledge documents: {currentBindings.knowledgeDocumentIds.length}</span>
             ) : null}
           </>
         )}
@@ -577,23 +577,23 @@ export default function CreativeHubPage() {
             disabled={threadNavigationDisabled}
             onClick={() => void requestThreadCreation({ title: DEFAULT_THREAD_TITLE, resourceBindings: {} })}
           >
-            {createThreadMutation.isPending ? "正在创建..." : "新建创作线程"}
+            {createThreadMutation.isPending ? "Creating..." : "New creative thread"}
           </Button>
         )}
       />
 
-      <section className="rounded-lg bg-info/5 p-4" aria-label="创作中枢后续开发说明">
+      <section className="rounded-lg bg-info/5 p-4" aria-label="About future Creative Hub development">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <h2 className="text-sm font-semibold text-foreground">关于创作中枢的后续开发</h2>
+            <h2 className="text-sm font-semibold text-foreground">About future Creative Hub development</h2>
             <p className="mt-1 max-w-3xl text-sm leading-6 text-muted-foreground">
-              创作中枢用于查询小说状态、诊断问题和查看下一步建议，后续可能不会继续深入开发。更完整的 Agent 创作能力，会在专门的 Agent 应用中继续推进。
+              Creative Hub helps you check novel status, diagnose issues, and review next-step suggestions. It may not receive further major development; more complete agent-based writing capabilities will be developed in a dedicated Agent application.
             </p>
-            <p className="mt-2 text-xs text-muted-foreground">可以通过右侧入口了解独立应用；两个应用各自保存小说资料和运行记录。</p>
+            <p className="mt-2 text-xs text-muted-foreground">Learn about the standalone application using the link. Each application stores its own novel resources and activity.</p>
           </div>
           <Button asChild size="sm" variant="outline" className="shrink-0">
             <a href="https://github.com/ExplosiveCoderflome/ani-book-agent" target="_blank" rel="noreferrer">
-              了解 Agent 应用
+              Explore the Agent application
               <ExternalLink className="ml-1.5 h-3.5 w-3.5" aria-hidden="true" />
             </a>
           </Button>
@@ -606,8 +606,8 @@ export default function CreativeHubPage() {
         <WorkspaceStateNotice
           loading
           tone="info"
-          title="正在准备当前创作现场"
-          description="系统正在读取线程和小说状态，完成后会给出唯一推荐下一步。"
+          title="Preparing your workspace"
+          description="Loading thread and novel status. A recommended next step will appear when loading is complete."
         />
       ) : (
         <WorkspaceNextAction
@@ -626,7 +626,7 @@ export default function CreativeHubPage() {
               {workspacePresentation.recommendation.action.startsWith("retry_") ? (
                 <RefreshCw className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />
               ) : null}
-              {recommendationPending ? "正在重试..." : workspacePresentation.recommendation.actionLabel}
+              {recommendationPending ? "Retrying..." : workspacePresentation.recommendation.actionLabel}
             </Button>
           )}
         />
@@ -670,7 +670,7 @@ export default function CreativeHubPage() {
             defaultRuntimeDetailsCollapsed={defaultRuntimeDetailsCollapsed}
             actionDisabled={workspaceActionDisabled}
             novelsLoading={novelsQuery.isLoading}
-            novelsErrorMessage={novelsQuery.error instanceof Error ? novelsQuery.error.message : novelsQuery.error ? "小说列表加载失败。" : ""}
+            novelsErrorMessage={novelsQuery.error instanceof Error ? novelsQuery.error.message : novelsQuery.error ? "Failed to load novels." : ""}
             novelsRetrying={novelsQuery.isFetching}
             onToggleRuntimeDetailsDefault={() => {
               setDefaultRuntimeDetailsCollapsed((value) => !value);
@@ -686,7 +686,7 @@ export default function CreativeHubPage() {
             threads={threads}
             activeThreadId={activeThreadId}
             loading={threadsQuery.isLoading}
-            errorMessage={threadsQuery.error instanceof Error ? threadsQuery.error.message : threadsQuery.error ? "创作线程加载失败。" : ""}
+            errorMessage={threadsQuery.error instanceof Error ? threadsQuery.error.message : threadsQuery.error ? "Failed to load creative threads." : ""}
             retryPending={threadsQuery.isFetching}
             actionPending={createThreadMutation.isPending}
             actionDisabled={threadNavigationDisabled}

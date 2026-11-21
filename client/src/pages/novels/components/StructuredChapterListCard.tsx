@@ -47,12 +47,12 @@ interface StructuredChapterListCardProps {
 function renderChapterDetailStatusBadge(chapter: StructuredChapter) {
   const status = getChapterExecutionDetailStatus(chapter);
   if (status === "complete") {
-    return <Badge variant="secondary">已细化</Badge>;
+    return <Badge variant="secondary">Refined</Badge>;
   }
   if (status === "partial") {
-    return <Badge>细化中</Badge>;
+    return <Badge>Refining</Badge>;
   }
-  return <Badge variant="outline">待细化</Badge>;
+  return <Badge variant="outline">Needs refinement</Badge>;
 }
 
 function isBeatGroupComplete(group: {
@@ -136,18 +136,18 @@ export default function StructuredChapterListCard(props: StructuredChapterListCa
     const isGeneratingGroup = isGeneratingCurrentVolume
       && (generatingChapterListMode === "full_volume" || generatingChapterListBeatKey === group.key);
     if (isGeneratingGroup) {
-      return <Badge>生成中</Badge>;
+      return <Badge>Generating</Badge>;
     }
     if (group.hasDraftContent) {
-      return <Badge variant="secondary">已有正文锁定</Badge>;
+      return <Badge variant="secondary">Locked by existing draft</Badge>;
     }
     if (group.chapters.length === 0) {
-      return <Badge variant="outline">待生成</Badge>;
+      return <Badge variant="outline">Not generated</Badge>;
     }
     if (group.expectedCount > 0 && group.chapters.length !== group.expectedCount) {
-      return <Badge variant="outline">需重试</Badge>;
+      return <Badge variant="outline">Retry needed</Badge>;
     }
-    return <Badge variant="secondary">已生成</Badge>;
+    return <Badge variant="secondary">Generated</Badge>;
   }
 
   return (
@@ -156,11 +156,11 @@ export default function StructuredChapterListCard(props: StructuredChapterListCa
         <div className="space-y-3">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
             <div>
-              <CardTitle className="text-base leading-none">节奏 / 章节导航</CardTitle>
+              <CardTitle className="text-base leading-none">Beat / chapter navigation</CardTitle>
               <div className="mt-1 text-sm text-muted-foreground">
                 {selectedBeat
-                  ? `当前聚焦「${formatBeatDisplayLabel(selectedBeat)}」。点击组头切换节奏，点击章节直接在右侧继续细化。`
-                  : "按节奏分组显示章节。点击组头可聚焦该节奏，点击章节直接在右侧继续细化。"}
+                  ? `Focused on "${formatBeatDisplayLabel(selectedBeat)}". Select a group heading to switch beats, or a chapter to refine it on the right.`
+                  : "Chapters are grouped by beat. Select a group heading to focus on a beat, or a chapter to refine it on the right."}
               </div>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -176,14 +176,14 @@ export default function StructuredChapterListCard(props: StructuredChapterListCa
                 }}
                 disabled={isGeneratingChapterList || locked || !nextChapterListGroup}
               >
-                {isGeneratingNextChapterListGroup ? "生成中..." : nextChapterListGroup ? "生成下一段章节" : "全部节奏段已生成"}
+                {isGeneratingNextChapterListGroup ? "Generating..." : nextChapterListGroup ? "Generate next beat's chapters" : "All beats generated"}
               </AiButton>
               <AiButton
                 variant="outline"
                 onClick={() => onGenerateChapterList(selectedVolume.id, { generationMode: "full_volume" })}
                 disabled={isGeneratingChapterList || locked}
               >
-                {isGeneratingFullVolume ? "整卷生成中..." : "高级：生成本卷全部章节标题"}
+                {isGeneratingFullVolume ? "Generating entire volume..." : "Advanced: Generate all chapter titles"}
               </AiButton>
             </div>
           </div>
@@ -197,28 +197,28 @@ export default function StructuredChapterListCard(props: StructuredChapterListCa
                 selectedBeatKey === "all" ? "border-primary/50 bg-primary/5 text-foreground" : "border-border/70 hover:border-primary/30",
               )}
             >
-              全部节奏
+              All beats
             </button>
-            <Badge variant="outline">显示 {visibleChapters.length}/{selectedVolumeChapters.length} 章</Badge>
-            <Badge variant="outline">{visibleRefinedChapterCount}/{Math.max(visibleChapters.length, 1)} 已细化</Badge>
+            <Badge variant="outline">Showing {visibleChapters.length}/{selectedVolumeChapters.length} chapters</Badge>
+            <Badge variant="outline">{visibleRefinedChapterCount}/{Math.max(visibleChapters.length, 1)} refined</Badge>
           </div>
         </div>
       </CardHeader>
       <CardContent className="space-y-3 pt-0">
         {isGeneratingCurrentVolume ? (
           <div className="space-y-2 text-sm" role="status" aria-live="polite">
-            <div>{chapterListProgress?.label ?? "正在整理拆章上下文…"}</div>
+            <div>{chapterListProgress?.label ?? "Preparing chapter breakdown context…"}</div>
             {chapterListProgress ? (
               <>
                 <progress
                   className="h-2 w-full accent-primary"
-                  aria-label="章节拆分进度"
+                  aria-label="Chapter breakdown progress"
                   value={chapterListProgress.completedChapters}
                   max={chapterListProgress.totalChapters}
                 />
                 <div className="text-xs text-muted-foreground">
-                  已生成 {chapterListProgress.completedChapters}/{chapterListProgress.totalChapters} 章
-                  {chapterListProgress.completedChapters === chapterListProgress.totalChapters ? "，正在校验并保存章节列表…" : "，每完成一个节奏段更新进度。"}
+                  Generated {chapterListProgress.completedChapters}/{chapterListProgress.totalChapters} chapters
+                  {chapterListProgress.completedChapters === chapterListProgress.totalChapters ? "; validating and saving the chapter list…" : "; progress updates after each beat."}
                 </div>
               </>
             ) : null}
@@ -226,7 +226,7 @@ export default function StructuredChapterListCard(props: StructuredChapterListCa
         ) : null}
         {selectedVolumeNeedsChapterExpansion ? (
           <div className="rounded-md border border-amber-200 bg-amber-50 p-3 text-xs leading-6 text-amber-800">
-            当前卷已生成 {selectedVolumeChapters.length}/{selectedVolumeRequiredChapterCount} 章，仍有节奏段待生成。已生成章节可以先细化和开写，后续段按需继续生成。
+            {selectedVolumeChapters.length}/{selectedVolumeRequiredChapterCount} chapters generated for this volume; some beats still need chapters. You can refine and draft the existing chapters, then generate more beats as needed.
           </div>
         ) : null}
 
@@ -251,7 +251,7 @@ export default function StructuredChapterListCard(props: StructuredChapterListCa
                             {renderBeatStatusBadge(group)}
                           </div>
                           <span className="text-xs text-muted-foreground">
-                            {group.chapters.length}/{Math.max(group.expectedCount, group.chapters.length, 1)}章 · {group.refinedCount}章已细化
+                            {group.chapters.length}/{Math.max(group.expectedCount, group.chapters.length, 1)} chapters · {group.refinedCount} refined
                           </span>
                         </div>
                       </button>
@@ -266,8 +266,8 @@ export default function StructuredChapterListCard(props: StructuredChapterListCa
                           disabled={isGeneratingChapterList || locked}
                         >
                           {isGeneratingCurrentVolume && generatingChapterListMode === "single_beat" && generatingChapterListBeatKey === group.key
-                            ? "重生中..."
-                            : group.chapters.length > 0 ? "重生当前节奏段" : "生成当前节奏段"}
+                            ? "Regenerating..."
+                            : group.chapters.length > 0 ? "Regenerate this beat" : "Generate this beat"}
                         </AiButton>
                       ) : null}
                     </div>
@@ -290,15 +290,15 @@ export default function StructuredChapterListCard(props: StructuredChapterListCa
                               )}
                             >
                               <div className="flex items-center justify-between gap-2">
-                                <Badge variant={isSelected ? "default" : "outline"}>第{chapter.chapterOrder}章</Badge>
+                                <Badge variant={isSelected ? "default" : "outline"}>Chapter {chapter.chapterOrder}</Badge>
                                 {renderChapterDetailStatusBadge(chapter)}
                               </div>
-                              <div className="mt-2 text-sm font-medium">{chapter.title || `第${chapter.chapterOrder}章`}</div>
+                              <div className="mt-2 text-sm font-medium">{chapter.title || `Chapter ${chapter.chapterOrder}`}</div>
                             </button>
                           );
                         }) : (
                           <div className="rounded-lg border border-dashed p-3 text-xs text-muted-foreground">
-                            该节奏段下暂时还没有映射到章节。
+                            No chapters are mapped to this beat yet.
                           </div>
                         )}
                       </div>
@@ -311,15 +311,15 @@ export default function StructuredChapterListCard(props: StructuredChapterListCa
                 <div className="rounded-xl border border-dashed p-3">
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex flex-wrap items-center gap-2">
-                      <Badge variant="outline">未归入节奏段</Badge>
-                      <Badge variant="secondary">{unmatchedChapters.length}章</Badge>
+                      <Badge variant="outline">Unassigned chapters</Badge>
+                      <Badge variant="secondary">{unmatchedChapters.length} chapters</Badge>
                     </div>
-                    <span className="text-xs text-muted-foreground">这些章节暂时没有落到任何节奏段</span>
+                    <span className="text-xs text-muted-foreground">These chapters are not assigned to a beat.</span>
                   </div>
                   <div className="mt-3 space-y-2">
                     {unmatchedChapters.map((chapter) => {
                       const isSelected = selectedChapter?.id === chapter.id;
-                      const title = chapter.title || `第${chapter.chapterOrder}章`;
+                      const title = chapter.title || `Chapter ${chapter.chapterOrder}`;
                       return (
                         <div
                           key={chapter.id}
@@ -334,7 +334,7 @@ export default function StructuredChapterListCard(props: StructuredChapterListCa
                             className="min-w-0 flex-1 text-left"
                           >
                             <div className="flex items-center justify-between gap-2">
-                              <Badge variant={isSelected ? "default" : "outline"}>第{chapter.chapterOrder}章</Badge>
+                              <Badge variant={isSelected ? "default" : "outline"}>Chapter {chapter.chapterOrder}</Badge>
                               {renderChapterDetailStatusBadge(chapter)}
                             </div>
                             <div className="mt-2 text-sm font-medium">{title}</div>
@@ -345,9 +345,9 @@ export default function StructuredChapterListCard(props: StructuredChapterListCa
                             variant="ghost"
                             className="h-8 w-8 shrink-0 text-muted-foreground hover:text-destructive"
                             disabled={locked || selectedVolume.chapters.length <= 1}
-                            title="删除这个未归入节奏段的章节"
+                            title="Delete this unassigned chapter"
                             onClick={() => {
-                              const confirmed = window.confirm(`确认删除「${title}」？这只会从当前卷的章节拆分中移除该章节。`);
+                              const confirmed = window.confirm(`Delete "${title}"? This will only remove the chapter from this volume's chapter breakdown.`);
                               if (!confirmed) {
                                 return;
                               }
@@ -355,7 +355,7 @@ export default function StructuredChapterListCard(props: StructuredChapterListCa
                             }}
                           >
                             <Trash2 className="h-4 w-4" aria-hidden="true" />
-                            <span className="sr-only">删除这个未归入节奏段的章节</span>
+                            <span className="sr-only">Delete this unassigned chapter</span>
                           </Button>
                         </div>
                       );
@@ -369,10 +369,10 @@ export default function StructuredChapterListCard(props: StructuredChapterListCa
               <div className="rounded-md border border-dashed p-4 text-sm text-muted-foreground">
                 {selectedVolumeNeedsChapterExpansion ? (
                   <div className="mb-2 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs leading-6 text-amber-800">
-                    当前节奏段是 {selectedBeat.chapterSpanHint}，还没有生成章节。可以生成当前聚焦段，不需要先补齐整卷。
+                    This beat covers {selectedBeat.chapterSpanHint}, but no chapters have been generated yet. You can generate the focused beat without completing the entire volume first.
                   </div>
                 ) : null}
-                当前节奏段还没有映射到章节。生成这一段后，就可以继续细化和开写该段章节。
+                No chapters are mapped to this beat yet. Generate it to start refining and drafting its chapters.
               </div>
             ) : null}
           </>
@@ -380,10 +380,10 @@ export default function StructuredChapterListCard(props: StructuredChapterListCa
           <div className="rounded-md border border-dashed p-4 text-sm text-muted-foreground">
             {selectedVolumeRequiredChapterCount > 0 ? (
               <div className="mb-2 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs leading-6 text-amber-800">
-                根据当前节奏板，这一卷预计覆盖 {selectedVolumeRequiredChapterCount} 章。可以先生成下一段章节，后续段按需继续拆。
+                The current beat sheet plans {selectedVolumeRequiredChapterCount} chapters for this volume. Generate the next beat's chapters first, then continue with later beats as needed.
               </div>
             ) : null}
-            当前卷还没有章节列表。先生成下一段章节。
+            This volume has no chapter list yet. Generate the next beat's chapters to get started.
           </div>
         )}
       </CardContent>

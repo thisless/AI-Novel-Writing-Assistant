@@ -13,7 +13,7 @@ export default function UnknownClaimsRecovery({claims, runId, novelId, expectedV
   const [deferred, setDeferred] = useState(false);
   const queries = useQueryClient();
   const mutation = useMutation({mutationFn: () => {
-    if (!checked) throw new Error("请先打开本章检查正文，再确认重新执行。");
+    if (!checked) throw new Error("Open this chapter and review its text before confirming that it should be run again.");
     return submitDirectorCommand({type: "resume", runId, expectedVersion, idempotencyKey: commandKey,
       resolveUnknownClaims: {chapterId: claims.chapterId}});
   }, onSuccess: async () => {
@@ -26,17 +26,17 @@ export default function UnknownClaimsRecovery({claims, runId, novelId, expectedV
   }});
   const busy = disabled || mutation.isPending || mutation.isSuccess;
   if (deferred) return <section id="director-unknown-claims" className="space-y-3 py-4" role="status">
-    <p className="text-xs leading-5 text-muted-foreground">第 {claims.chapterOrder} 章保持暂停，进度已保存。检查正文后可随时回来确认。</p>
-    <Button size="sm" variant="ghost" disabled={disabled} onClick={() => setDeferred(false)}>查看待确认步骤</Button>
+    <p className="text-xs leading-5 text-muted-foreground">Chapter {claims.chapterOrder} is paused and its progress is saved. Review the text and return here when you're ready.</p>
+    <Button size="sm" variant="ghost" disabled={disabled} onClick={() => setDeferred(false)}>Review pending step</Button>
   </section>;
   return <section id="director-unknown-claims" aria-labelledby="unknown-claims-title" className="scroll-mt-4 space-y-3 border-t border-border/60 py-4">
-    <h3 id="unknown-claims-title" className="text-sm font-semibold">第 {claims.chapterOrder} 章有一步结果待确认</h3>
-    <p role="status" className="text-xs leading-5 text-muted-foreground">创作中断时，这一步的结果没能保存下来，也无法确认当时是否执行完成。为避免重复执行，创作停在这里等待你确认。</p>
-    <p className="text-xs leading-5 text-muted-foreground">请从左侧目录打开第 {claims.chapterOrder} 章检查正文：正文完整无误时，勾选下方确认，AI 会重新执行这一步并继续创作；正文有缺失或异常时，请先不要确认，保留暂停状态。</p>
+    <h3 id="unknown-claims-title" className="text-sm font-semibold">Chapter {claims.chapterOrder} has a result awaiting confirmation</h3>
+    <p role="status" className="text-xs leading-5 text-muted-foreground">The run stopped before this step's result was saved, so we can't tell whether it finished. To avoid running it twice, the run is paused until you confirm.</p>
+    <p className="text-xs leading-5 text-muted-foreground">Open Chapter {claims.chapterOrder} from the directory and review its text. If the text is complete and correct, check the box below; AI will rerun this step and continue. If anything is missing or incorrect, don't confirm—leave the run paused.</p>
     <label className="flex items-start gap-2 text-xs leading-5"><input type="checkbox" className="mt-1" checked={checked} disabled={busy}
-      onChange={event => {setChecked(event.target.checked); setCommandKey(createDirectorCommandKey());}}/>我已检查第 {claims.chapterOrder} 章正文，确认正文完整无误</label>
-    <Button className="w-full" disabled={busy || !checked} onClick={() => mutation.mutate()}>{mutation.isPending ? "正在提交…" : mutation.isSuccess ? "已提交，正在恢复…" : "确认并重新执行这一步"}</Button>
-    <Button className="w-full" variant="ghost" disabled={busy} onClick={() => setDeferred(true)}>保持暂停</Button>
+      onChange={event => {setChecked(event.target.checked); setCommandKey(createDirectorCommandKey());}}/>I've reviewed Chapter {claims.chapterOrder} and confirmed that its text is complete</label>
+    <Button className="w-full" disabled={busy || !checked} onClick={() => mutation.mutate()}>{mutation.isPending ? "Submitting…" : mutation.isSuccess ? "Submitted; resuming…" : "Confirm and rerun this step"}</Button>
+    <Button className="w-full" variant="ghost" disabled={busy} onClick={() => setDeferred(true)}>Keep paused</Button>
     {mutation.isError ? <p role="alert" className="text-xs text-destructive">{mutation.error.message}</p> : null}
   </section>;
 }

@@ -88,22 +88,22 @@ export function restore(storage, initialStyleProfileId='entry-style', versionsSt
       assert.deepEqual(state.completedStages, ["idea", "basic", "world_style"]);
       assert.equal(state.canGenerate, true);
       assert.doesNotMatch(markup, /id="direction-generation-disabled-reasons"/);
-      assert.match(markup, /<button(?![^>]*\sdisabled=)[^>]*>开始生成方向<\/button>/);
+      assert.match(markup, /<button(?![^>]*\sdisabled=)[^>]*>Generate story directions<\/button>/);
     }
     save(storage(), { selectedStyleProfileId: "" });
     assert.equal(restore(storage()).state.selectedStyleProfileId, "");
     const loading = restore(storage(), "", "loading");
     assert.equal(loading.state.canGenerate, false);
-    assert.match(loading.markup, /正在读取可用导演版本，请稍候。/);
+    assert.match(loading.markup, /Loading available director versions\. Please wait\./);
     const failed = restore(storage(), "", "error");
     assert.equal(failed.state.canGenerate, false);
-    assert.match(failed.markup, /可用导演版本读取失败，请重试。/);
-    assert.match(failed.markup, /重试读取导演版本/);
+    assert.match(failed.markup, /Failed to load available director versions\. Please try again\./);
+    assert.match(failed.markup, /Retry loading director versions/);
     save(storage(), { idea: "", basicForm: {} });
     const missing = restore(storage());
     assert.equal(missing.state.canGenerate, false);
-    assert.match(missing.markup, /请返回第 1 步填写单书构想。/);
-    assert.match(missing.markup, /<button[^>]*disabled=""[^>]*aria-describedby="direction-generation-disabled-reasons"[^>]*>开始生成方向<\/button>/);
+    assert.match(missing.markup, /Return to Step 1 and enter an idea for this book\./);
+    assert.match(missing.markup, /<button[^>]*disabled=""[^>]*aria-describedby="direction-generation-disabled-reasons"[^>]*>Generate story directions<\/button>/);
   } finally {
     if (existsSync(output)) unlinkSync(output);
   }

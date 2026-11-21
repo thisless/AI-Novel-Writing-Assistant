@@ -228,11 +228,11 @@ export default function TaskCenterPage() {
   const selectedDirectorRuntimeProjectionForDisplay = staleActionProjection
     ? null
     : selectedDirectorRuntimeProjection;
-  const listErrorMessage = listQuery.error instanceof Error ? listQuery.error.message : listQuery.isError ? "任务列表读取失败，请重试。" : null;
+  const listErrorMessage = listQuery.error instanceof Error ? listQuery.error.message : listQuery.isError ? "Could not load the task list. Try again." : null;
   const overviewErrorMessage = overviewQuery.error instanceof Error
     ? overviewQuery.error.message
-    : overviewQuery.isError ? "任务概览读取失败，请重试。" : null;
-  const detailErrorMessage = detailQuery.error instanceof Error ? detailQuery.error.message : detailQuery.isError ? "任务详情读取失败，请重试。" : null;
+    : overviewQuery.isError ? "Could not load the task overview. Try again." : null;
+  const detailErrorMessage = detailQuery.error instanceof Error ? detailQuery.error.message : detailQuery.isError ? "Could not load task details. Try again." : null;
   const recommendedBlockingTask = allRows.find(isTaskMustHandle) ?? null;
   const hasMustHandleTask = mustHandleCount > 0 || blockingCount > 0;
   const recommendedRecoveryCandidate = failedTaskCount === 0
@@ -258,9 +258,9 @@ export default function TaskCenterPage() {
     <div className="space-y-5">
       <WorkspaceHeader
         icon={ListChecks}
-        context="执行历史与状态"
-        title="运行记录"
-        description="查看创作、拆书、知识索引和图片任务的状态、错误与来源位置。继续、恢复和重试请回到对应工作页面。"
+        context="Execution history and status"
+        title="Run history"
+        description="View the status, errors, and source location of writing, book analysis, indexing, and image tasks. Continue, recover, or retry tasks from their respective workspaces."
         actions={(
           <Button
             type="button"
@@ -269,7 +269,7 @@ export default function TaskCenterPage() {
             disabled={overviewQuery.isFetching || recoveryCandidatesQuery.isFetching || listQuery.isFetching}
           >
             <RefreshCw className={overviewQuery.isFetching || recoveryCandidatesQuery.isFetching || listQuery.isFetching ? "h-4 w-4 animate-spin" : "h-4 w-4"} aria-hidden="true" />
-            刷新记录
+            Refresh history
           </Button>
         )}
       />
@@ -278,36 +278,36 @@ export default function TaskCenterPage() {
         className="rounded-2xl border-transparent px-5 py-3 shadow-none"
         icon={overviewErrorMessage ? RefreshCw : hasMustHandleTask ? ShieldAlert : Activity}
         tone={overviewQuery.isLoading ? "info" : overviewErrorMessage ? "danger" : hasMustHandleTask ? "danger" : waitingActionCount > 0 ? "info" : qualityReminderCount > 0 ? "warning" : runningCount + queuedCount > 0 ? "info" : allRows.length > 0 ? "success" : "neutral"}
-        title={overviewQuery.isLoading ? "正在读取全局任务状态" : overviewErrorMessage ? "重新读取任务概览" : hasMustHandleTask ? "先查看必须处理的任务" : waitingActionCount > 0 ? "完成等待中的操作" : qualityReminderCount > 0 ? "查看质量提醒" : runningCount + queuedCount > 0 ? "关注正在推进的任务" : allRows.length > 0 ? "当前没有阻塞任务" : "任务会在执行后汇总到这里"}
+        title={overviewQuery.isLoading ? "Loading task status" : overviewErrorMessage ? "Reload task overview" : hasMustHandleTask ? "Review tasks that need attention" : waitingActionCount > 0 ? "Complete pending actions" : qualityReminderCount > 0 ? "Review quality reminders" : runningCount + queuedCount > 0 ? "Monitor active tasks" : allRows.length > 0 ? "No blocked tasks" : "Tasks will appear here when run"}
         description={overviewQuery.isLoading
-          ? "正在汇总执行、等待操作、失败和可恢复任务，请稍候。"
+          ? "Summarizing running, pending, failed, and recoverable tasks. Please wait."
           : overviewErrorMessage
-            ? `${overviewErrorMessage} 当前不会据此判断是否存在阻塞任务。`
+            ? `${overviewErrorMessage} Blocked-task status cannot be determined until the overview loads.`
             : hasMustHandleTask
               ? recoveryCandidatesQuery.isLoading && !recommendedBlockingTask && failedTaskCount === 0
-                ? "正在定位可恢复任务；读取完成后会显示对应来源位置。"
-                : "阻塞状态可能影响对应来源流程；先查看原因和恢复位置，再回到来源页面处理。"
+                ? "Finding recoverable tasks. Their source locations will appear when loading is complete."
+                : "A blocked task may affect its source workflow. Review the cause and recovery location, then return to the source page."
               : waitingActionCount > 0
-                ? "候选确认、章节批次继续等节点需要你的操作，但不代表任务发生故障。"
+                ? "Some steps, such as confirming candidates or continuing a chapter batch, need your input but do not indicate a task failure."
                 : qualityReminderCount > 0
-                  ? "这些提醒不会阻止全书继续执行，可以按影响范围安排局部修复。"
+                  ? "These reminders do not block the rest of the book. Schedule focused repairs based on their impact."
                   : runningCount + queuedCount > 0
-                    ? "系统会持续刷新进度，普通运行状态不需要手动干预。"
+                    ? "Progress updates automatically; routine activity does not need manual intervention."
                     : allRows.length > 0
-                      ? "已完成记录和质量提醒会保留在详情中，便于后续追溯。"
-                      : "从小说、拆书、知识库或图片工作区发起任务后，可在这里查看状态。"}
+                      ? "Completed records and quality reminders remain in the details for later reference."
+                      : "Tasks started from the novel, book analysis, knowledge, or image workspaces appear here."}
         consequence={overviewErrorMessage
-          ? "只重新读取任务概览，不会恢复、重试或取消任务。"
+          ? "Reloads the task overview only. It will not recover, retry, or cancel tasks."
           : !overviewQuery.isLoading && hasRecommendedAction
             ? recommendedTask
-              ? "只定位到推荐任务，不会自动继续、重试或取消。"
+              ? "Selects the recommended task only. It will not automatically continue, retry, or cancel it."
               : shouldOpenFailedFilter
-                ? "只筛选失败任务，不会自动恢复、重试或取消任务。"
-                : "只重新读取恢复候选，不会自动执行恢复。"
+                ? "Filters for failed tasks only. It will not automatically recover, retry, or cancel them."
+                : "Reloads recovery candidates only. It will not automatically recover a task."
             : undefined}
         action={overviewErrorMessage ? (
           <Button type="button" size="sm" variant="outline" onClick={() => void overviewQuery.refetch()}>
-            重新读取
+            Reload
           </Button>
         ) : !overviewQuery.isLoading && hasRecommendedAction ? (
           <Button
@@ -334,7 +334,7 @@ export default function TaskCenterPage() {
               });
             }}
           >
-            {shouldRetryRecoveryLookup ? "重新读取恢复任务" : hasMustHandleTask ? "查看需处理任务" : "查看推荐任务"}
+            {shouldRetryRecoveryLookup ? "Reload recoverable tasks" : hasMustHandleTask ? "View tasks needing attention" : "View recommended task"}
           </Button>
         ) : undefined}
       />
@@ -387,7 +387,7 @@ export default function TaskCenterPage() {
           dashboardView={selectedDirectorDashboardView}
           runtimeProjection={selectedDirectorRuntimeProjectionForDisplay}
           noticeSeverity={selectedTask ? getTaskNoticeSeverity(selectedTask) : "normal"}
-          noticeTitle={selectedTask ? getTaskNoticeTitle(selectedTask) : "任务提醒"}
+          noticeTitle={selectedTask ? getTaskNoticeTitle(selectedTask) : "Task notice"}
           failureIsQualityReminder={selectedTaskHasQualityFailure}
           steps={selectedTaskSteps}
           milestones={selectedTask?.kind === "novel_workflow" && Array.isArray(selectedTaskMeta.milestones)

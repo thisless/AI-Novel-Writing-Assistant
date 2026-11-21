@@ -27,13 +27,13 @@ export default function AntiAiRuleDialog(props: AntiAiRuleDialogProps) {
     <Dialog open={props.open} onOpenChange={props.onOpenChange}>
       <AppDialogContent
         className="max-w-4xl"
-        title={props.editingRule ? "编辑反 AI 规则" : "新建反 AI 规则"}
-        description="规则可以进入全局默认，也可以只作为写法资产的可选约束。"
+        title={props.editingRule ? "Edit Anti-AI rule" : "New Anti-AI rule"}
+        description="Rules can be applied globally or used as optional constraints in a style profile."
         footer={(
           <>
-            <Button type="button" variant="outline" onClick={() => props.onOpenChange(false)}>取消</Button>
+            <Button type="button" variant="outline" onClick={() => props.onOpenChange(false)}>Cancel</Button>
             <Button type="submit" form="anti-ai-rule-form" disabled={props.isSaving}>
-              {props.isSaving ? "保存中..." : "保存规则"}
+              {props.isSaving ? "Saving..." : "Save rule"}
             </Button>
           </>
         )}
@@ -44,12 +44,12 @@ export default function AntiAiRuleDialog(props: AntiAiRuleDialogProps) {
               <div className="space-y-1">
                 <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
                   <Sparkles className="h-4 w-4" />
-                  AI 辅助
+                  AI assistance
                 </div>
                 <div className="text-sm leading-6 text-muted-foreground">
                   {props.editingRule
-                    ? "描述要调整的方向，AI 会基于表单内容优化规则。"
-                    : "描述想压制或鼓励的表达，AI 会生成一条可编辑规则草稿。"}
+                    ? "Describe the changes you want, and AI will refine the rule using the form values."
+                    : "Describe the style you want to discourage or encourage, and AI will generate an editable rule draft."}
                 </div>
               </div>
               <Button
@@ -59,97 +59,97 @@ export default function AntiAiRuleDialog(props: AntiAiRuleDialogProps) {
                 onClick={props.onGenerateDraft}
               >
                 <Sparkles className="h-4 w-4" />
-                {props.isAiDrafting ? "生成中..." : props.editingRule ? "AI 优化草稿" : "AI 生成草稿"}
+                {props.isAiDrafting ? "Generating..." : props.editingRule ? "Refine with AI" : "Generate with AI"}
               </Button>
             </div>
             <textarea
               className="mt-3 min-h-[84px] w-full rounded-md border bg-background p-3 text-sm"
               value={props.aiInstruction}
-              aria-label="描述规则需求"
+              aria-label="Describe the rule you need"
               placeholder={props.editingRule
-                ? "例如：把这条规则改得更适合压制总结腔，但不要误伤正常心理描写。"
-                : "例如：减少正文里空泛总结、解释人物心理、像模型在复盘剧情的表达。"}
+                ? "For example: Make this rule better at discouraging summary-like prose without flagging natural introspection."
+                : "For example: Reduce vague summaries, over-explained character thoughts, and prose that reads like a plot recap."}
               onChange={(event) => props.onAiInstructionChange(event.target.value)}
             />
           </div>
 
           <div className="grid gap-3 md:grid-cols-2">
             <label className="space-y-1.5 text-sm">
-              <span className="font-medium">规则标识</span>
+              <span className="font-medium">Rule key</span>
               <Input
                 value={props.form.key}
-                placeholder="例如 direct_psychology_explain"
+                placeholder="For example: direct_psychology_explain"
                 onChange={(event) => props.onFormChange({ key: event.target.value })}
               />
             </label>
             <label className="space-y-1.5 text-sm">
-              <span className="font-medium">规则名称</span>
+              <span className="font-medium">Rule name</span>
               <Input
                 value={props.form.name}
-                placeholder="例如 避免直白心理解释"
+                placeholder="For example: Avoid explicit psychological exposition"
                 onChange={(event) => props.onFormChange({ name: event.target.value })}
               />
             </label>
             <label className="space-y-1.5 text-sm">
-              <span className="font-medium">规则类型</span>
+              <span className="font-medium">Rule type</span>
               <Select value={props.form.type} onValueChange={(value) => props.onFormChange({ type: value as AntiAiRule["type"] })}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="forbidden">禁用</SelectItem>
-                  <SelectItem value="risk">风险</SelectItem>
-                  <SelectItem value="encourage">鼓励</SelectItem>
+                  <SelectItem value="forbidden">Prohibited</SelectItem>
+                  <SelectItem value="risk">Risk</SelectItem>
+                  <SelectItem value="encourage">Encouraged</SelectItem>
                 </SelectContent>
               </Select>
             </label>
             <label className="space-y-1.5 text-sm">
-              <span className="font-medium">严重度</span>
+              <span className="font-medium">Severity</span>
               <Select value={props.form.severity} onValueChange={(value) => props.onFormChange({ severity: value as AntiAiRule["severity"] })}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="low">低</SelectItem>
-                  <SelectItem value="medium">中</SelectItem>
-                  <SelectItem value="high">高</SelectItem>
+                  <SelectItem value="low">Low</SelectItem>
+                  <SelectItem value="medium">Medium</SelectItem>
+                  <SelectItem value="high">High</SelectItem>
                 </SelectContent>
               </Select>
             </label>
           </div>
 
           <label className="space-y-1.5 text-sm">
-            <span className="font-medium">说明</span>
+            <span className="font-medium">Description</span>
             <textarea
               className="min-h-[76px] w-full rounded-md border bg-background p-3 text-sm"
               value={props.form.description}
-              placeholder="说明这条规则要压制或鼓励哪类表达。"
+              placeholder="Describe the style this rule should discourage or encourage."
               onChange={(event) => props.onFormChange({ description: event.target.value })}
             />
           </label>
 
           <label className="space-y-1.5 text-sm">
-            <span className="font-medium">检测关键词</span>
+            <span className="font-medium">Detection keywords</span>
             <textarea
               className="min-h-[80px] w-full rounded-md border bg-background p-3 text-sm"
               value={props.form.detectPatternsText}
-              placeholder="每行一个关键词，也可以用逗号分隔。"
+              placeholder="Enter one keyword per line, or separate them with commas."
               onChange={(event) => props.onFormChange({ detectPatternsText: event.target.value })}
             />
           </label>
 
           <div className="grid gap-3 md:grid-cols-2">
             <label className="space-y-1.5 text-sm">
-              <span className="font-medium">生成指令</span>
+              <span className="font-medium">Generation instructions</span>
               <textarea
                 className="min-h-[120px] w-full rounded-md border bg-background p-3 text-sm"
                 value={props.form.promptInstruction}
-                placeholder="写进正文生成约束的具体表达要求。"
+                placeholder="Describe the specific style constraints to apply when generating prose."
                 onChange={(event) => props.onFormChange({ promptInstruction: event.target.value })}
               />
             </label>
             <label className="space-y-1.5 text-sm">
-              <span className="font-medium">修正建议</span>
+              <span className="font-medium">Revision suggestion</span>
               <textarea
                 className="min-h-[120px] w-full rounded-md border bg-background p-3 text-sm"
                 value={props.form.rewriteSuggestion}
-                placeholder="检测命中后给用户或改写链路的调整建议。"
+                placeholder="Suggest how to revise text when this rule is triggered."
                 onChange={(event) => props.onFormChange({ rewriteSuggestion: event.target.value })}
               />
             </label>
@@ -157,17 +157,17 @@ export default function AntiAiRuleDialog(props: AntiAiRuleDialogProps) {
 
           <div className="grid gap-x-6 gap-y-3 rounded-lg bg-muted/30 p-4 md:grid-cols-3">
             <AntiAiToggleLine
-              label="启用规则"
+              label="Enable rule"
               checked={props.form.enabled}
               onCheckedChange={(checked) => props.onFormChange({ enabled: checked })}
             />
             <AntiAiToggleLine
-              label="进入全局默认"
+              label="Use as global default"
               checked={props.form.globalBaselineEnabled}
               onCheckedChange={(checked) => props.onFormChange({ globalBaselineEnabled: checked })}
             />
             <AntiAiToggleLine
-              label="允许自动改写"
+              label="Allow automatic rewriting"
               checked={props.form.autoRewrite}
               onCheckedChange={(checked) => props.onFormChange({ autoRewrite: checked })}
             />

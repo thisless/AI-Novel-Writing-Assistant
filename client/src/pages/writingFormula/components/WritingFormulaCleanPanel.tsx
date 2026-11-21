@@ -34,24 +34,24 @@ export default function WritingFormulaCleanPanel(props: WritingFormulaCleanPanel
   return (
     <Card className="border-0 shadow-none">
       <CardHeader>
-        <CardTitle>去 AI 味</CardTitle>
+        <CardTitle>Reduce AI-like writing</CardTitle>
       </CardHeader>
       <CardContent className="space-y-5">
         {selectedProfile ? (
           <div className="rounded-2xl bg-muted/30 px-4 py-3 text-sm leading-7 text-muted-foreground">
-            当前按「{selectedProfile.name}」这套写法来做检测和修正。这里只处理正文的 AI 味，不会改写法字段本身。
+            Checking and revising prose using “{selectedProfile.name}.” This only addresses AI-like writing in the text and does not change the style profile itself.
           </div>
         ) : (
           <div className="rounded-2xl bg-muted/30 px-4 py-3 text-sm leading-7 text-muted-foreground">
-            先从列表里选中一套写法，再来检测正文。
+            Select a style profile from the list before checking the prose.
           </div>
         )}
 
         <div className="space-y-4 py-2">
           <div className="space-y-1">
-            <div className="text-base font-semibold text-slate-950">当前会优先参考的反 AI 约束</div>
+            <div className="text-base font-semibold text-slate-950">Active anti-AI constraints</div>
             <div className="text-sm leading-6 text-slate-500">
-              如果这套写法绑了反 AI 规则，检测和修正会优先按这些约束去判断问题。
+              If this style has anti-AI rules, the checks and revisions will prioritize them.
             </div>
           </div>
           {antiAiRuleNames.length > 0 ? (
@@ -64,16 +64,16 @@ export default function WritingFormulaCleanPanel(props: WritingFormulaCleanPanel
             </div>
           ) : (
             <div className="py-3 text-sm leading-6 text-muted-foreground">
-              这套写法还没有绑定明确的反 AI 规则。当前检测会更依赖通用风险判断，结果可能不够贴合你的预期。
+              No specific anti-AI rules are bound to this style. Checks will rely more on general risk assessments and may not match your expectations.
             </div>
           )}
         </div>
 
         <div className="space-y-4 py-2">
           <div className="space-y-1">
-            <div className="text-base font-semibold text-slate-950">检测正文</div>
+            <div className="text-base font-semibold text-slate-950">Check prose</div>
             <div className="text-sm leading-6 text-slate-500">
-              粘贴你想检查的正文。建议一次给一段完整场景，这样更容易看出叙述腔、对白腔和解释腔的问题。
+              Paste the prose you want to check. A complete scene makes it easier to identify issues with narration, dialogue, and over-explanation.
             </div>
           </div>
 
@@ -81,17 +81,17 @@ export default function WritingFormulaCleanPanel(props: WritingFormulaCleanPanel
             data-writing-formula-detect-input
             autoFocus
             className="min-h-[220px] w-full rounded-md border p-3 text-sm"
-            placeholder="粘贴待检测正文"
+            placeholder="Paste prose to check"
             value={detectInput}
             onChange={(event) => onDetectInputChange(event.target.value)}
           />
 
           <div className="flex flex-wrap gap-2">
             <Button onClick={onDetect} disabled={detectionPending || rewritePending || !selectedProfile || !detectInput.trim()}>
-              执行检测
+              Run check
             </Button>
             <Button variant="secondary" onClick={onRewrite} disabled={rewritePending || detectionPending || !selectedProfile || !detectInput.trim() || Boolean(detectionReport && !detectionReport.violations.some(issue => isStyleIssueRewritable(issue)))}>
-              生成局部修订预览
+              Preview focused revision
             </Button>
           </div>
 
@@ -99,7 +99,7 @@ export default function WritingFormulaCleanPanel(props: WritingFormulaCleanPanel
             <StyleRiskReport report={detectionReport} />
           ) : (
             <div className="py-3 text-sm leading-6 text-muted-foreground">
-              查看句段中的表达问题、原文依据和修改方向。
+              Review style issues, supporting excerpts, and suggested changes.
             </div>
           )}
 

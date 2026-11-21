@@ -96,7 +96,7 @@ export default function SelectControl({
   className,
   triggerClassName,
   contentClassName,
-  placeholder = "请选择",
+  placeholder = "Select an option",
   disabled,
   id,
   name,

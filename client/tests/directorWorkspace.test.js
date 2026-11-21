@@ -80,9 +80,9 @@ export const planned = renderToStaticMarkup(<><ResourceDirectory book={book} sel
       alias: { '@': path.join(clientDir, 'src') }, define: { 'import.meta.env': '{}' }, outfile: output,
     });
     const { markup, planned } = await import(pathToFileURL(output).href);
-    for (const label of ['卷标题','节奏标题','节奏目标','兑现目标','未写章','待写正文']) assert.ok(planned.includes(label),label);
-    for (const label of ['故事规划', '世界设定', '世界地图', '角色关系图', '角色时间线', '角色', '卷纲', '章节', '林渡醒来时', '快速查看角色', '钟声之后']) assert.ok(markup.includes(label), label);
-    assert.ok(markup.includes('待写作'));
+    for (const label of ['卷标题','节奏标题','节奏目标','兑现目标','未写章','Awaiting manuscript']) assert.ok(planned.includes(label),label);
+    for (const label of ['Story plan', 'World setting', 'World map', 'Character relationships', 'Character timeline', 'Characters', 'Volume outlines', 'Chapters', 'Lin Du woke', 'Quick character lookup', 'After the Bell']) assert.ok(markup.includes(label), label);
+    assert.ok(markup.includes('Awaiting writing'));
     assert.doesNotMatch(markup, /border rounded|shadow-lg/);
   } finally { fs.rmSync(output, {force:true}); }
 });
@@ -110,8 +110,8 @@ export const broken=render({...book,materials:{...book.materials,world:{name:'�
     assert.doesNotMatch(result.worldMarkup, /internal-rule|internal-force|internal-faction|internal-location/);
     for (const label of ['十章兑现','同伴信任','不滥杀无辜']) assert.ok(result.storyMarkup.includes(label), label);
     for (const label of ['保存的过去','救下家人','学会信任','失去同伴','保存的秘密']) assert.ok(result.characterMarkup.includes(label), label);
-    assert.match(result.characterMarkup, /<details[^>]*><summary[^>]*>[^<]*秘密/);
-    assert.match(result.absent, /本书尚未保存世界设定/);
+    assert.match(result.characterMarkup, /<details[^>]*><summary[^>]*>[^<]*Secrets &amp; future growth/);
+    assert.match(result.absent, /No world setting has been saved for this novel yet/);
     assert.match(result.broken, /详细设定读取失败/);
     assert.doesNotMatch(result.absent, /保存概况|县城刑场/);
   } finally {fs.rmSync(output,{force:true});}

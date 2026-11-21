@@ -28,14 +28,14 @@ export function renderEntries(source = '/lab/director/book') {
     const {renderEntries}=await import(pathToFileURL(output).href);
     for(const markup of renderEntries()) {
       assert.match(markup,/href="\/lab\/director\/book"/);
-      assert.match(markup,/打开导演台/);
+      assert.match(markup,/Open Auto Director/);
       assert.doesNotMatch(markup,/href="\/novels\/book\/edit"|自动导演接管|推进到可开写/);
     }
     const unknown=renderEntries('/lab/director/other')[1];
-    assert.match(unknown,/重新读取创作入口/);
+    assert.match(unknown,/Reload writing workspace/);
     assert.doesNotMatch(unknown,/href="\/lab\/director\/other"|继续自动导演/);
     const disabled=renderEntries(null);
     assert.match(disabled[0],/href="\/novels\/book\/edit"/);
-    assert.match(disabled[1],/AI 自动导演接管/);
+    assert.match(disabled[1],/Start Auto Director takeover/);
   }finally{if(fs.existsSync(output))fs.unlinkSync(output);}
 });

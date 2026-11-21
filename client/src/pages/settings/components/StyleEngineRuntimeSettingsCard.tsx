@@ -57,11 +57,11 @@ export default function StyleEngineRuntimeSettingsCard() {
         styleExtractionTimeoutMs: minutes * MS_PER_MINUTE,
       }),
     onSuccess: async (response) => {
-      setFeedback(response.message ?? "写法引擎运行设置保存成功。");
+      setFeedback(response.message ?? "Style engine runtime settings saved.");
       await queryClient.invalidateQueries({ queryKey: queryKeys.settings.styleEngineRuntime });
     },
     onError: (error) => {
-      setFeedback(error instanceof Error ? error.message : "写法引擎运行设置保存失败。");
+      setFeedback(error instanceof Error ? error.message : "Failed to save style engine runtime settings.");
     },
   });
 
@@ -71,19 +71,19 @@ export default function StyleEngineRuntimeSettingsCard() {
     && parsedMinutes <= limits.maxMinutes;
   const modeOptions = [
     {
-      label: "快速检测",
+      label: "Quick check",
       value: limits.minMinutes,
-      description: "适合短文本或快速确认样本文风是否可提取。",
+      description: "Best for short text or quickly checking whether a sample's style can be extracted.",
     },
     {
-      label: "稳定推荐",
+      label: "Balanced (recommended)",
       value: clampMinutes(limits.defaultMinutes, limits.minMinutes, limits.maxMinutes),
-      description: "适合大多数写法提取任务，等待时间和异常发现更均衡。",
+      description: "Best for most style extraction tasks, balancing wait time with early detection of problems.",
     },
     {
-      label: "长文提取",
+      label: "Long-form extraction",
       value: limits.maxMinutes,
-      description: "适合长篇原文或较慢模型，给提取过程更充足时间。",
+      description: "Best for long source texts or slower models; allows more time for extraction.",
     },
   ];
 
@@ -91,12 +91,12 @@ export default function StyleEngineRuntimeSettingsCard() {
     <Card className="min-w-0 overflow-hidden">
       <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0 space-y-1">
-          <CardTitle>写法引擎运行设置</CardTitle>
+          <CardTitle>Style engine runtime settings</CardTitle>
           <CardDescription className={AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}>
-            控制写法提取等待模型返回的最长时间。长篇原文提取可以适当调高，短文本保持较短更容易发现异常。
+            Set the maximum time to wait for the model during style extraction. Use a longer timeout for long source texts; shorter timeouts can surface issues sooner for short texts.
           </CardDescription>
         </div>
-        <Badge variant="outline">生效值 {limits.effectiveMinutes} 分钟</Badge>
+        <Badge variant="outline">Effective: {limits.effectiveMinutes} min</Badge>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="grid min-w-0 gap-3 md:grid-cols-3">
@@ -117,12 +117,12 @@ export default function StyleEngineRuntimeSettingsCard() {
               >
                 <div className="flex items-center justify-between gap-2">
                   <div className="font-medium">{mode.label}</div>
-                  {active ? <Badge variant="default">当前选择</Badge> : null}
+                  {active ? <Badge variant="default">Selected</Badge> : null}
                 </div>
                 <div className={`mt-2 text-xs leading-5 text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>
                   {mode.description}
                 </div>
-                <div className="mt-2 text-xs text-muted-foreground">{mode.value} 分钟</div>
+                <div className="mt-2 text-xs text-muted-foreground">{mode.value} min</div>
               </button>
             );
           })}
@@ -130,7 +130,7 @@ export default function StyleEngineRuntimeSettingsCard() {
 
         {!isValidTimeout ? (
           <div className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900">
-            请输入 {limits.minMinutes}-{limits.maxMinutes} 分钟之间的整数。
+            Enter a whole number between {limits.minMinutes} and {limits.maxMinutes} minutes.
           </div>
         ) : null}
 
@@ -141,7 +141,7 @@ export default function StyleEngineRuntimeSettingsCard() {
             aria-expanded={advancedOpen}
             onClick={() => setAdvancedOpen((prev) => !prev)}
           >
-            高级设置
+            Advanced settings
             <ChevronDown className={cn("h-4 w-4 transition-transform duration-200", advancedOpen ? "rotate-180" : "")} />
           </button>
           <Button
@@ -149,13 +149,13 @@ export default function StyleEngineRuntimeSettingsCard() {
             onClick={() => saveMutation.mutate(parsedMinutes)}
             disabled={settingsQuery.isLoading || saveMutation.isPending || !isValidTimeout}
           >
-            {saveMutation.isPending ? "保存中..." : "保存设置"}
+            {saveMutation.isPending ? "Saving…" : "Save settings"}
           </Button>
         </div>
 
         {advancedOpen ? (
           <div className="space-y-2 rounded-md border bg-muted/20 p-3">
-            <div className="text-sm font-medium">写法提取超时（分钟）</div>
+            <div className="text-sm font-medium">Style extraction timeout (minutes)</div>
             <Input
               type="number"
               min={limits.minMinutes}
@@ -168,7 +168,7 @@ export default function StyleEngineRuntimeSettingsCard() {
               }}
             />
             <div className={`text-xs text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>
-              可设置范围：{limits.minMinutes}-{limits.maxMinutes} 分钟。保存后，新提交和重试的写法提取任务会使用该等待时间。
+              Range: {limits.minMinutes}–{limits.maxMinutes} minutes. Newly submitted and retried style extraction tasks will use this timeout after saving.
             </div>
           </div>
         ) : null}

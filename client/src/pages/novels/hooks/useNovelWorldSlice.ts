@@ -64,7 +64,7 @@ export function useNovelWorldSlice({
       temperature: llm.temperature,
     }),
     onSuccess: async () => {
-      setWorldSliceMessage("已重新整理这本书会用到的世界设定。");
+      setWorldSliceMessage("World settings for this novel have been reorganized.");
       await queryClient.invalidateQueries({ queryKey: queryKeys.novels.worldSlice(novelId) });
       await queryClient.invalidateQueries({ queryKey: queryKeys.novels.detail(novelId) });
     },
@@ -73,7 +73,7 @@ export function useNovelWorldSlice({
   const saveWorldSliceOverridesMutation = useMutation({
     mutationFn: (payload: StoryWorldSliceOverrides) => updateNovelWorldSliceOverrides(novelId, payload),
     onSuccess: async () => {
-      setWorldSliceMessage("已保存这本书的世界设定保留项。");
+      setWorldSliceMessage("World settings to preserve for this novel have been saved.");
       await queryClient.invalidateQueries({ queryKey: queryKeys.novels.worldSlice(novelId) });
     },
   });
@@ -92,7 +92,7 @@ export function useNovelWorldSlice({
     mutationFn: (payload: NovelWorldImportInput) => importNovelWorldFromLibrary(novelId, payload),
     onSuccess: async (_response, payload) => {
       onNovelWorldImported?.(payload.worldId);
-      setWorldSliceMessage("已导入为这本书的世界，后续会按本书内容重新整理可用设定。");
+      setWorldSliceMessage("Imported as this novel's world. Available settings will be reorganized based on the novel.");
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: queryKeys.novels.novelWorld(novelId) }),
         queryClient.invalidateQueries({ queryKey: queryKeys.novels.worldSlice(novelId) }),
@@ -111,7 +111,7 @@ export function useNovelWorldSlice({
         temperature: llm.temperature,
       }),
     onSuccess: async () => {
-      setWorldSliceMessage("已根据本书主题生成世界，并保存到世界库供后续复用。");
+      setWorldSliceMessage("World generated from this novel's themes and saved to the world library for reuse.");
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: queryKeys.novels.novelWorld(novelId) }),
         queryClient.invalidateQueries({ queryKey: queryKeys.novels.worldSlice(novelId) }),
@@ -125,7 +125,7 @@ export function useNovelWorldSlice({
   const createManualNovelWorldMutation = useMutation({
     mutationFn: (payload: NovelWorldManualInput) => createManualNovelWorld(novelId, payload),
     onSuccess: async () => {
-      setWorldSliceMessage("本书自定义世界已创建并保存到世界库，可以继续补充规则、势力和故事舞台。");
+      setWorldSliceMessage("Custom world created for this novel and saved to the world library. You can add rules, factions, and story settings.");
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: queryKeys.novels.novelWorld(novelId) }),
         queryClient.invalidateQueries({ queryKey: queryKeys.novels.worldSlice(novelId) }),
@@ -139,7 +139,7 @@ export function useNovelWorldSlice({
   const saveNovelWorldToLibraryMutation = useMutation({
     mutationFn: (payload: NovelWorldSaveToLibraryInput) => saveNovelWorldToLibrary(novelId, payload),
     onSuccess: async () => {
-      setWorldSliceMessage("本书世界已保存到世界库。");
+      setWorldSliceMessage("This novel's world has been saved to the world library.");
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: queryKeys.novels.novelWorld(novelId) }),
         queryClient.invalidateQueries({ queryKey: queryKeys.novels.novelWorldSyncDiff(novelId) }),
@@ -155,10 +155,10 @@ export function useNovelWorldSlice({
     onSuccess: async (_response, payload) => {
       setWorldSliceMessage(
         payload.direction === "none"
-          ? "本书世界会保留为独立副本。"
+          ? "This novel's world will remain a separate copy."
           : payload.direction === "push"
-            ? "已将本书世界推送到世界库。"
-            : "已从世界库拉取更新到本书世界。",
+            ? "This novel's world has been pushed to the world library."
+            : "Updates from the world library have been applied to this novel's world.",
       );
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: queryKeys.novels.novelWorld(novelId) }),

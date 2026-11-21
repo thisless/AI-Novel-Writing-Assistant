@@ -4,21 +4,21 @@ import type { SectionDraft } from "./bookAnalysis.types";
 export function formatStatus(status: BookAnalysisStatus | BookAnalysisSection["status"]): string {
   switch (status) {
     case "draft":
-      return "草稿";
+      return "Draft";
     case "queued":
-      return "排队中";
+      return "Queued";
     case "running":
-      return "运行中";
+      return "Running";
     case "succeeded":
-      return "成功";
+      return "Succeeded";
     case "failed":
-      return "失败";
+      return "Failed";
     case "cancelled":
-      return "已取消";
+      return "Cancelled";
     case "archived":
-      return "已归档";
+      return "Archived";
     case "idle":
-      return "待处理";
+      return "Pending";
     default:
       return status;
   }
@@ -27,15 +27,15 @@ export function formatStatus(status: BookAnalysisStatus | BookAnalysisSection["s
 export function formatStage(stage?: string | null): string {
   switch (stage) {
     case "loading_cache":
-      return "查找可复用结果";
+      return "Looking for reusable results";
     case "preparing_notes":
-      return "准备分析资料";
+      return "Preparing analysis materials";
     case "generating_overview":
-      return "生成总览";
+      return "Generating overview";
     case "generating_sections":
-      return "生成拆书小节";
+      return "Generating analysis sections";
     default:
-      return stage?.trim() || "暂无";
+      return stage?.trim() || "None";
   }
 }
 
@@ -47,7 +47,7 @@ export function isBookAnalysisBudgetExceeded(lastError?: string | null): boolean
 
 export function formatDate(value?: string | null): string {
   if (!value) {
-    return "暂无";
+    return "None";
   }
   return new Date(value).toLocaleString();
 }

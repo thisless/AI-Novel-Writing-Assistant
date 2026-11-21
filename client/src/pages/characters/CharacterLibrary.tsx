@@ -153,7 +153,7 @@ export default function CharacterLibrary() {
   };
 
   const handleDeleteCharacter = (character: BaseCharacter) => {
-    const confirmed = window.confirm(`确认删除角色「${character.name}」？此操作不可恢复。`);
+    const confirmed = window.confirm(`Delete character "${character.name}"? This action cannot be undone.`);
     if (!confirmed) {
       return;
     }
@@ -164,12 +164,12 @@ export default function CharacterLibrary() {
     <div className="space-y-5">
       <AssetLibraryHeader
         icon={UsersRound}
-        context="跨小说复用资产"
-        title="基础角色库"
-        description="把常用角色原型、核心动机和形象资料沉淀为可复用资产。创建小说或完善人物时，可以让 AI 直接读取这些角色基础。"
+        context="Reusable across novels"
+        title="Character Library"
+        description="Save reusable character archetypes, core motivations, and portrait references. AI can use these foundations when you create a novel or develop its characters."
         actions={(
           <>
-            <OpenInCreativeHubButton bindings={{}} label="带着角色库继续创作" />
+            <OpenInCreativeHubButton bindings={{}} label="Continue with the character library" />
             <CharacterCreateDialog />
           </>
         )}
@@ -179,15 +179,15 @@ export default function CharacterLibrary() {
         items={[
           {
             key: "characters",
-            label: "可复用角色",
+            label: "Reusable characters",
             value: characterListQuery.isPending || characterListQuery.isError ? "—" : characters.length,
             detail: characterListQuery.isPending
-              ? "正在读取角色资产"
+              ? "Loading character assets"
               : characterListQuery.isError
-                ? "重新加载后查看"
+                ? "Reload to view"
                 : characters.length > 0
-                  ? "可在小说筹备和角色补充时继续使用"
-                  : "创建后即可用于新小说",
+                  ? "Available when planning novels and adding characters"
+                  : "Create one to use in a new novel",
             icon: LibraryBig,
             tone: characterListQuery.isPending || characterListQuery.isError
               ? "neutral"
@@ -195,16 +195,16 @@ export default function CharacterLibrary() {
           },
           {
             key: "categories",
-            label: "角色类型",
+            label: "Character types",
             value: characterListQuery.isPending || characterListQuery.isError ? "—" : categoryCount,
-            detail: "按主角、配角等角色定位整理",
+            detail: "Organized by roles such as protagonists and supporting characters",
             icon: UsersRound,
           },
           {
             key: "images",
-            label: "已有形象资料",
+            label: "Characters with portraits",
             value: characterListQuery.isPending || characterListQuery.isError ? "—" : characterWithImageCount,
-            detail: "至少保存一张角色形象图",
+            detail: "At least one character portrait is saved",
             icon: ImageIcon,
             tone: characterListQuery.isPending || characterListQuery.isError
               ? "neutral"
@@ -212,9 +212,9 @@ export default function CharacterLibrary() {
           },
           {
             key: "incomplete",
-            label: "待补核心资料",
+            label: "Missing key details",
             value: characterListQuery.isPending || characterListQuery.isError ? "—" : incompleteCharacterCount,
-            detail: "缺少性格、背景或成长轨迹",
+            detail: "Personality, background, or character arc is missing",
             icon: CircleAlert,
             tone: characterListQuery.isPending || characterListQuery.isError
               ? "neutral"
@@ -228,23 +228,23 @@ export default function CharacterLibrary() {
       <AssetLibraryRecommendation
         icon={Sparkles}
         title={characterListQuery.isPending
-          ? "正在整理角色资产"
+          ? "Organizing character assets"
           : characterListQuery.isError
-            ? "先重新加载角色库"
+            ? "Reload the character library"
             : characters.length === 0
-              ? "先建立第一个可复用角色"
+              ? "Create your first reusable character"
               : incompleteCharacterCount > 0
-                ? "优先补齐角色为什么行动、会付出什么代价"
-                : "角色基础可用于小说筹备"}
+                ? "Start by defining why the character acts and what they are willing to sacrifice"
+                : "Character foundations are ready for novel planning"}
         description={characterListQuery.isPending
-          ? "读取完成后会根据角色完整度推荐下一步。"
+          ? "A next step will be recommended when loading is complete, based on character completeness."
           : characterListQuery.isError
-            ? "现有角色不会受到影响，重新加载后即可继续管理。"
+            ? "Your existing characters are safe. Reload to continue managing them."
             : characters.length === 0
-              ? "从一个主角开始即可。先写清目标、弱点和成长方向，AI 会更容易生成有推动力的人物。"
+              ? "Start with a protagonist. Define their goal, weakness, and character arc to help AI create a more compelling character."
               : incompleteCharacterCount > 0
-                ? `有 ${incompleteCharacterCount} 个角色缺少核心资料。补齐后，章节规划和人物对话会获得更稳定的依据。`
-                : "你可以带着整个角色库进入创作中枢，或为单个角色继续完善形象和对话。"}
+                ? `${incompleteCharacterCount} characters are missing key details. Filling them in gives chapter planning and dialogue a stronger foundation.`
+                : "Bring the full library into Creative Hub, or keep developing portraits and dialogue for individual characters."}
         tone={characterListQuery.isError
           ? "danger"
           : characterListQuery.isPending || characters.length === 0
@@ -254,7 +254,7 @@ export default function CharacterLibrary() {
               : "success"}
         action={characterListQuery.isError ? (
           <Button type="button" size="sm" variant="outline" onClick={() => void characterListQuery.refetch()}>
-            重新加载
+            Reload
           </Button>
         ) : undefined}
       />
@@ -303,26 +303,26 @@ export default function CharacterLibrary() {
       ) : null}
 
       <AssetLibrarySection
-        title="角色资产"
-        description="先维护能影响剧情选择的核心信息；形象图和扩展资料可以在需要时继续补充。"
+        title="Character assets"
+        description="Start with the details that shape story choices. Add portraits and further information whenever needed."
       >
         <div className="space-y-3">
           {characterListQuery.isLoading ? (
             <AssetLibraryEmptyState
               icon={UsersRound}
-              title="正在整理角色资产"
-              description="角色列表与形象资料加载完成后会显示在这里。"
+              title="Organizing character assets"
+              description="Characters and portraits will appear here when loading is complete."
             />
           ) : null}
 
           {characterListQuery.isError ? (
             <AssetLibraryEmptyState
               icon={CircleAlert}
-              title="角色库暂时无法加载"
-              description="现有角色不会受到影响。可以重新加载列表后继续。"
+              title="Unable to load the character library"
+              description="Your existing characters are safe. Reload the list to continue."
               action={(
                 <Button type="button" variant="outline" onClick={() => void characterListQuery.refetch()}>
-                  重新加载
+                  Reload
                 </Button>
               )}
             />
@@ -348,7 +348,7 @@ export default function CharacterLibrary() {
                   extraActions={(
                     <OpenInCreativeHubButton
                       bindings={{ baseCharacterId: character.id }}
-                      label="带着角色继续"
+                      label="Continue with character"
                     />
                   )}
                 />
@@ -356,8 +356,8 @@ export default function CharacterLibrary() {
               {characters.length === 0 ? (
                 <AssetLibraryEmptyState
                   icon={UsersRound}
-                  title="还没有基础角色"
-                  description="使用页面右上角的“创建角色”，先建立一个目标明确、弱点清晰的主角。"
+                  title="No characters yet"
+                  description="Select “Create Character” at the top of the page to start with a protagonist who has a clear goal and weakness."
                 />
               ) : null}
             </>

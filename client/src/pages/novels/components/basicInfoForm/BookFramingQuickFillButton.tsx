@@ -85,7 +85,7 @@ export function BookFramingQuickFillButton(props: BookFramingQuickFillButtonProp
     onSuccess: (response) => {
       const suggestion = response.data;
       if (!suggestion) {
-        toast.error("AI 没有返回可用的读者与卖点建议。");
+        toast.error("AI did not return usable audience and selling point suggestions.");
         return;
       }
       onApplySuggestion({
@@ -97,22 +97,22 @@ export function BookFramingQuickFillButton(props: BookFramingQuickFillButtonProp
       });
       toast.success(
         referenceBinding.bookAnalysisId
-          ? "已根据拆书结论填入读者与卖点建议。"
-          : "已根据当前书名和概述填入读者与卖点建议。",
+          ? "Filled in audience and selling point suggestions based on the analysis."
+          : "Filled in audience and selling point suggestions based on the title and description.",
       );
     },
     onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "读者与卖点自动填写失败，请稍后再试。");
+      toast.error(error instanceof Error ? error.message : "Failed to fill in audience and selling points. Try again later.");
     },
   });
 
   const handleGenerate = () => {
     if (!basicForm.title.trim() && !effectiveDescription && !referenceBinding.bookAnalysisId) {
-      toast.error("请先填写书名或一句话概述，再让 AI 帮你填写。");
+      toast.error("Enter a title or a short description before asking AI to help.");
       return;
     }
     if (hasExistingFramingContent(basicForm)) {
-      const confirmed = window.confirm("将用 AI 建议覆盖当前读者与卖点填写，是否继续？");
+      const confirmed = window.confirm("AI suggestions will replace the current audience and selling point details. Continue?");
       if (!confirmed) {
         return;
       }
@@ -128,7 +128,7 @@ export function BookFramingQuickFillButton(props: BookFramingQuickFillButtonProp
       onClick={handleGenerate}
       disabled={suggestionMutation.isPending}
     >
-      {suggestionMutation.isPending ? "填写中..." : "帮我填写"}
+      {suggestionMutation.isPending ? "Filling..." : "Fill with AI"}
     </AiButton>
   );
 }

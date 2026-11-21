@@ -41,45 +41,45 @@ export default function ChapterEditorSidebar(props: ChapterEditorSidebarProps) {
     <div className="flex h-full min-h-0 flex-col gap-5 overflow-y-auto px-3 py-2">
       <section className="space-y-4">
         <div className="flex items-center justify-between gap-2">
-          {props.onBack ? <Button size="sm" variant="outline" onClick={props.onBack}>{props.backLabel ?? "返回章节执行页"}</Button> : <span />}
+          {props.onBack ? <Button size="sm" variant="outline" onClick={props.onBack}>{props.backLabel ?? "Back to chapter execution"}</Button> : <span />}
           {props.onCollapse ? (
-            <Button size="icon" variant="ghost" className="h-8 w-8" title="收起左栏" onClick={props.onCollapse}>
+            <Button size="icon" variant="ghost" className="h-8 w-8" title="Collapse left panel" onClick={props.onCollapse}>
               <PanelLeftClose className="h-4 w-4" />
             </Button>
           ) : null}
         </div>
-        <h2 className="text-lg font-semibold leading-7">第 {chapter.order} 章 · {chapter.title?.trim() || "未命名章节"}</h2>
+        <h2 className="text-lg font-semibold leading-7">Chapter {chapter.order} · {chapter.title?.trim() || "Untitled chapter"}</h2>
         <div className="flex flex-wrap gap-2">
-          <MetaChip label={props.wordCount + " 字"} />
+          <MetaChip label={props.wordCount.toLocaleString("en-US") + " characters"} />
           <MetaChip label={props.saveStatusLabel} />
-          <MetaChip label={loading ? "AI 分析中" : "待处理 " + (workspace?.diagnosticCards.length ?? 0) + " 项"} />
+          <MetaChip label={loading ? "AI analyzing" : (workspace?.diagnosticCards.length ?? 0) + " issues to address"} />
         </div>
         <div className="grid gap-2">
-          <Button size="sm" onClick={props.onSave} disabled={!props.isDirty || props.isSaving} title="保存正文（Ctrl/Cmd+S）" aria-keyshortcuts="Control+S Meta+S">
-            {props.isSaving ? "保存中..." : "保存 · Ctrl/Cmd+S"}
+          <Button size="sm" onClick={props.onSave} disabled={!props.isDirty || props.isSaving} title="Save manuscript (Ctrl/Cmd+S)" aria-keyshortcuts="Control+S Meta+S">
+            {props.isSaving ? "Saving..." : "Save · Ctrl/Cmd+S"}
           </Button>
-          {props.onOpenChapterVersions ? <Button size="sm" variant="outline" onClick={props.onOpenChapterVersions}>查看本章版本</Button>
-            : props.onOpenVersionHistory ? <Button size="sm" variant="outline" onClick={props.onOpenVersionHistory}>版本入口</Button> : null}
+          {props.onOpenChapterVersions ? <Button size="sm" variant="outline" onClick={props.onOpenChapterVersions}>View chapter versions</Button>
+            : props.onOpenVersionHistory ? <Button size="sm" variant="outline" onClick={props.onOpenVersionHistory}>Version history</Button> : null}
           {props.onRefreshWorkspace ? <Button size="sm" variant="ghost" onClick={props.onRefreshWorkspace} disabled={props.isRefreshingWorkspace || props.diagnosticsDisabled}>
-            {props.isRefreshingWorkspace ? "分析中..." : "重新分析本章"}
+            {props.isRefreshingWorkspace ? "Analyzing..." : "Reanalyze chapter"}
           </Button> : null}
         </div>
       </section>
       {props.qualityNotice}
       <details className="border-t border-border/50 pt-5">
         <summary className="cursor-pointer text-sm font-medium">
-          本章目标与章节背景
-          {loading ? <span className="ml-2 text-xs font-normal text-muted-foreground">分析中…</span> : null}
+          Chapter goals and context
+          {loading ? <span className="ml-2 text-xs font-normal text-muted-foreground">Analyzing…</span> : null}
         </summary>
         <div className="mt-3 space-y-3">
-          <p className="text-sm leading-6 text-muted-foreground">{macro?.chapterMission || (loading ? "AI 正在梳理本章目标，你可以继续编辑。" : "结合本章正文选择需要修改的位置。")}</p>
+          <p className="text-sm leading-6 text-muted-foreground">{macro?.chapterMission || (loading ? "AI is outlining this chapter's goals. You can keep editing." : "Select text in the chapter that you want to revise.")}</p>
           <div className="space-y-3 text-sm leading-6 text-muted-foreground">
             {macro ? <>
-              <div><div className="font-medium text-foreground">卷内位置</div>{macro.volumeTitle} · {macro.volumePositionLabel} · {macro.volumePhaseLabel}</div>
-              <div><div className="font-medium text-foreground">节奏建议</div>{macro.paceDirective}</div>
-              <div><div className="font-medium text-foreground">前后承接</div><p>上一章：{macro.previousChapterBridge}</p><p>下一章：{macro.nextChapterBridge}</p></div>
-            </> : <p>{loading ? "正在分析章节背景。" : "章节背景暂时不可用，可继续手动编辑。"}</p>}
-            {workspace?.chapterMeta.styleSummary ? <p>写法：{workspace.chapterMeta.styleSummary}</p> : null}
+              <div><div className="font-medium text-foreground">Volume position</div>{macro.volumeTitle} · {macro.volumePositionLabel} · {macro.volumePhaseLabel}</div>
+              <div><div className="font-medium text-foreground">Pacing guidance</div>{macro.paceDirective}</div>
+              <div><div className="font-medium text-foreground">Continuity</div><p>Previous chapter: {macro.previousChapterBridge}</p><p>Next chapter: {macro.nextChapterBridge}</p></div>
+            </> : <p>{loading ? "Analyzing chapter context." : "Chapter context is temporarily unavailable. You can keep editing."}</p>}
+            {workspace?.chapterMeta.styleSummary ? <p>Style: {workspace.chapterMeta.styleSummary}</p> : null}
           </div>
         </div>
       </details>

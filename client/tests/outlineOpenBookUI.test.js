@@ -24,11 +24,11 @@ export const kinds=[formatOutlineValue('mystery','kind'),formatOutlineValue('pro
 export const issue=presentOutlineOpenBookError('OUTLINE_OPEN_INVALID: source-chapter.characterNodeIds 引用类型错误：source-volume',{story:{nodeId:'story',title:'总纲'},volumes:[{nodeId:'source-volume',title:'首卷'}],chapters:[{nodeId:'source-chapter',title:'来信'}],characters:[],payoffs:[],facts:[]});
 `,resolveDir:root,loader:"tsx"},bundle:true,platform:"node",format:"esm",packages:"external",plugins:[nodeStyles],alias:{"@":path.join(root,"src")},define:{"import.meta.env":"{}"},outfile:output});
     const result=await import(pathToFileURL(output).href);
-    assert.match(result.bound,/选择下一章并确认/);assert.doesNotMatch(result.bound,/选择并继续写第3–5章|交给AI持续推进/);
+    assert.match(result.bound,/Select the next chapter and confirm/);assert.doesNotMatch(result.bound,/选择并继续写第3–5章|交给AI持续推进/);
     assert.match(result.legacy,/选择并继续写第3–5章/);assert.match(result.legacy,/交给AI持续推进/);
-    assert.match(result.controls,/id="director-start"/);assert.match(result.controls,/准备第 2 章/);assert.match(result.controls,/本次仅生成第 2 章/);assert.match(result.controls,/开始写第 2 章/);
+    assert.match(result.controls,/id="director-start"/);assert.match(result.controls,/Prepare chapter 2/);assert.match(result.controls,/Generate only chapter 2/);assert.match(result.controls,/Write chapter 2/);
     assert.doesNotMatch(result.controls,/起始章|结束章|全自动推进/);assert.ok(!result.steps.includes("chapter_batch"));assert.ok(result.steps.includes("execution_contract_sync"));
-    for(const text of ["计划 · 未见正文证据","第 1 章、第 2 章","第 9 章、第 12 章","共 0 项 · 已兑现 0 项"]) assert.ok(result.plans.includes(text),text);
-    assert.doesNotMatch(result.plans,/must-not-render|hidden-id/);assert.deepEqual(result.kinds,["悬念","承诺"]);assert.equal(result.issue.nodeId,"source-chapter");assert.match(result.issue.message,/来信.*关联人物.*首卷/);assert.doesNotMatch(result.issue.message,/source-chapter|source-volume|characterNodeIds|OUTLINE_OPEN_INVALID/);
+    for(const text of ["Planned · no prose evidence found","Chapter 1, Chapter 2","Chapter 9, Chapter 12","0 items · 0 paid off"]) assert.ok(result.plans.includes(text),text);
+    assert.doesNotMatch(result.plans,/must-not-render|hidden-id/);assert.deepEqual(result.kinds,["Mystery","Promise"]);assert.equal(result.issue.nodeId,"source-chapter");assert.match(result.issue.message,/来信.*Related characters.*首卷/);assert.doesNotMatch(result.issue.message,/source-chapter|source-volume|characterNodeIds|OUTLINE_OPEN_INVALID/);
   } finally {fs.rmSync(output,{force:true});}
 });

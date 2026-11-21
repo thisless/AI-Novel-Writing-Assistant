@@ -20,8 +20,8 @@ interface ChapterVersionDrawerProps {
 
 function formatSnapshotDate(value: string): string {
   const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "时间未知";
-  return new Intl.DateTimeFormat("zh-CN", {
+  if (Number.isNaN(date.getTime())) return "Unknown date";
+  return new Intl.DateTimeFormat("en-US", {
     month: "numeric",
     day: "numeric",
     hour: "2-digit",
@@ -30,9 +30,9 @@ function formatSnapshotDate(value: string): string {
 }
 
 function getTriggerLabel(snapshot: NovelChapterSnapshotListItem): string {
-  if (snapshot.triggerType === "before_pipeline") return "自动生成前保存";
-  if (snapshot.triggerType === "auto_milestone") return "自动节点保存";
-  return snapshot.label || "手动保存版本";
+  if (snapshot.triggerType === "before_pipeline") return "Saved before automatic generation";
+  if (snapshot.triggerType === "auto_milestone") return "Automatic checkpoint";
+  return snapshot.label || "Manual save";
 }
 
 export default function ChapterVersionDrawer(props: ChapterVersionDrawerProps) {
@@ -79,33 +79,33 @@ export default function ChapterVersionDrawer(props: ChapterVersionDrawerProps) {
 
   const handleLoadContent = () => {
     if (!selectedSnapshot) return;
-    if (isDirty && !window.confirm("当前正文还有未保存的修改，载入版本会替换编辑区内容。继续吗？")) {
+    if (isDirty && !window.confirm("The manuscript has unsaved changes. Loading this version will replace the editor contents. Continue?")) {
       return;
     }
     onLoadContent(selectedSnapshot.content, selectedSnapshot.id);
     onOpenChange(false);
-    toast.success("版本已载入编辑区，保存后才会写入正文。");
+    toast.success("Version loaded into the editor. Save to apply it to the manuscript.");
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="left-auto right-0 top-0 flex h-dvh max-h-dvh w-full max-w-[620px] translate-x-0 translate-y-0 flex-col gap-0 rounded-none border-y-0 border-r-0 border-l bg-background p-0">
         <DialogHeader className="shrink-0 border-b px-6 py-5 pr-12 text-left">
-          <DialogTitle>本章版本</DialogTitle>
+          <DialogTitle>Chapter versions</DialogTitle>
           <DialogDescription>
-            查看「{chapterTitle}」保存过的正文，把合适的版本载入编辑区后再决定是否保存。
+            View saved versions of “{chapterTitle}”. Load a version into the editor, then decide whether to save it.
           </DialogDescription>
         </DialogHeader>
 
         <div className="grid min-h-0 flex-1 gap-0 md:grid-cols-[220px_minmax(0,1fr)]">
           <div className="min-h-0 overflow-y-auto border-b bg-muted/10 p-3 md:border-b-0 md:border-r">
             {snapshotsQuery.isLoading ? (
-              <div className="p-3 text-sm leading-6 text-muted-foreground">正在读取本章版本...</div>
+              <div className="p-3 text-sm leading-6 text-muted-foreground">Loading chapter versions...</div>
             ) : snapshotsQuery.isError ? (
-              <div className="p-3 text-sm leading-6 text-muted-foreground">版本读取失败，请稍后重试。</div>
+              <div className="p-3 text-sm leading-6 text-muted-foreground">Could not load versions. Please try again later.</div>
             ) : snapshots.length === 0 ? (
               <div className="p-3 text-sm leading-6 text-muted-foreground">
-                还没有包含本章正文的版本。接受 AI 修改或开始自动生成前，系统会自动留下可查看的版本。
+                No saved versions of this chapter yet. The system saves a version before you accept AI revisions or start automatic generation.
               </div>
             ) : (
               <div className="space-y-1">
@@ -120,7 +120,7 @@ export default function ChapterVersionDrawer(props: ChapterVersionDrawerProps) {
                     >
                       <div className="truncate text-sm font-medium">{getTriggerLabel(snapshot)}</div>
                       <div className="mt-1 text-xs">{formatSnapshotDate(snapshot.createdAt)}</div>
-                      <div className="mt-1 text-xs">{snapshot.contentLength.toLocaleString()} 字</div>
+                      <div className="mt-1 text-xs">{snapshot.contentLength.toLocaleString("en-US")} characters</div>
                     </button>
                   );
                 })}
@@ -130,40 +130,40 @@ export default function ChapterVersionDrawer(props: ChapterVersionDrawerProps) {
 
           <div className="min-h-0 overflow-y-auto p-5">
             {snapshotQuery.isLoading ? (
-              <div className="text-sm leading-6 text-muted-foreground">正在读取版本正文...</div>
+              <div className="text-sm leading-6 text-muted-foreground">Loading version contents...</div>
             ) : snapshotQuery.isError ? (
-              <div className="text-sm leading-6 text-muted-foreground">这个版本暂时无法读取，请换一个版本。</div>
+              <div className="text-sm leading-6 text-muted-foreground">This version is temporarily unavailable. Try another version.</div>
             ) : selectedSnapshot ? (
               <div className="space-y-4">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
-                    <div className="text-sm font-medium text-foreground">{selectedListItem ? getTriggerLabel(selectedListItem) : "版本正文"}</div>
+                    <div className="text-sm font-medium text-foreground">{selectedListItem ? getTriggerLabel(selectedListItem) : "Version contents"}</div>
                     <div className="mt-1 text-xs text-muted-foreground">
-                      {formatSnapshotDate(selectedSnapshot.createdAt)} · {selectedSnapshot.contentLength.toLocaleString()} 字
+                      {formatSnapshotDate(selectedSnapshot.createdAt)} · {selectedSnapshot.contentLength.toLocaleString("en-US")} characters
                     </div>
                   </div>
                   <span className="rounded-full bg-muted px-2 py-1 text-xs text-muted-foreground">
-                    当前编辑区 {currentLength.toLocaleString()} 字
+                    Editor: {currentLength.toLocaleString("en-US")} characters
                   </span>
                 </div>
                 <div className="rounded-xl bg-muted/20 p-4">
                   <pre className="max-h-[calc(100dvh-260px)] overflow-y-auto whitespace-pre-wrap break-words text-sm leading-7 text-foreground">
-                    {selectedSnapshot.content || "（这个版本的正文为空）"}
+                    {selectedSnapshot.content || "(This version has no manuscript text.)"}
                   </pre>
                 </div>
               </div>
             ) : (
-              <div className="text-sm leading-6 text-muted-foreground">选择左侧版本查看正文。</div>
+              <div className="text-sm leading-6 text-muted-foreground">Select a version on the left to view its contents.</div>
             )}
           </div>
         </div>
 
         <div className="flex shrink-0 flex-col-reverse gap-2 border-t px-6 py-4 sm:flex-row sm:justify-end">
           <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-            关闭
+            Close
           </Button>
           <Button type="button" disabled={!selectedSnapshot || snapshotQuery.isLoading} onClick={handleLoadContent}>
-            载入编辑区
+            Load into editor
           </Button>
         </div>
       </DialogContent>

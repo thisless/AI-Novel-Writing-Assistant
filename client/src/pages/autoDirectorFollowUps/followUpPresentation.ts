@@ -90,18 +90,18 @@ export function getFollowUpLevelLabel(item: Pick<
   "section" | "reason" | "priority" | "itemType" | "pendingManualRecovery"
 >): string {
   const tone = getFollowUpTone(item);
-  if (item.reason === "replan_required") return "需要重规划";
-  if (item.pendingManualRecovery || item.reason === "manual_recovery_required") return "需要恢复";
-  if (item.reason === "runtime_failed") return "任务失败";
-  if (item.reason === "validation_required") return "需要校验";
-  if (item.reason === "runtime_cancelled") return "已取消";
-  if (item.reason === "runtime_replaced") return "已替代";
-  if (tone === "danger") return "阻塞";
-  if (item.reason === "quality_repair_pending") return "质量提醒";
-  if (item.reason === "candidate_selection_required" || item.reason === "chapter_batch_execution_pending") return "待操作";
-  if (tone === "info") return "自动推进";
-  if (tone === "success") return "已自动通过";
-  return "普通记录";
+  if (item.reason === "replan_required") return "Replanning required";
+  if (item.pendingManualRecovery || item.reason === "manual_recovery_required") return "Recovery required";
+  if (item.reason === "runtime_failed") return "Task failed";
+  if (item.reason === "validation_required") return "Validation required";
+  if (item.reason === "runtime_cancelled") return "Cancelled";
+  if (item.reason === "runtime_replaced") return "Replaced";
+  if (tone === "danger") return "Blocked";
+  if (item.reason === "quality_repair_pending") return "Quality reminder";
+  if (item.reason === "candidate_selection_required" || item.reason === "chapter_batch_execution_pending") return "Action required";
+  if (tone === "info") return "Auto-progressing";
+  if (tone === "success") return "Auto-approved";
+  return "Regular record";
 }
 
 export function getFollowUpSeverity(item: Pick<
@@ -118,35 +118,35 @@ export function getFollowUpPriorityLabel(
   priority: AutoDirectorFollowUpPriority,
   reason?: AutoDirectorFollowUpReason,
 ): string {
-  if (reason === "replan_required") return "立即处理";
-  if (reason === "runtime_cancelled") return "可按需恢复";
-  if (reason === "runtime_replaced") return "历史记录";
-  if (reason === "quality_repair_pending") return "可稍后处理";
-  if (priority === "P0") return "立即处理";
-  if (priority === "P1") return "尽快处理";
-  return "可稍后处理";
+  if (reason === "replan_required") return "Handle now";
+  if (reason === "runtime_cancelled") return "Resume if needed";
+  if (reason === "runtime_replaced") return "History";
+  if (reason === "quality_repair_pending") return "Can wait";
+  if (priority === "P0") return "Handle now";
+  if (priority === "P1") return "Handle soon";
+  return "Can wait";
 }
 
 export function getFollowUpActionConsequence(action: AutoDirectorAction): string {
   if (action.kind === "navigation") {
-    return "只打开对应处理页面，不会改变当前导演任务状态。";
+    return "Opens the relevant page without changing the current director task.";
   }
   if (action.code === "continue_auto_execution") {
-    return "向当前导演任务提交继续命令，并从现有检查点推进自动执行范围。";
+    return "Sends a continue command to the current director task and resumes automation from its existing checkpoint.";
   }
   if (action.code === "continue_generic") {
-    return "向当前导演任务提交恢复命令，并从可恢复位置继续。";
+    return "Sends a recovery command to the current director task and resumes from the available recovery point.";
   }
   if (action.code === "retry_with_task_model") {
-    return "使用任务保存的模型重新入队，不会把其他工作区任务当作当前导演任务。";
+    return "Re-queues the task with its saved model without treating another workspace task as the current director task.";
   }
   if (action.code === "retry_with_route_model") {
-    return "使用当前模型路由重新执行；该操作需要再次确认。";
+    return "Runs the task again using the current model route. This action requires confirmation.";
   }
   if (action.code === "auto_backfill_structured_outline") {
-    return "补齐校验确认缺失的拆章资产，再继续当前导演任务。";
+    return "Fills in the missing chapter-planning assets found by validation, then continues the current director task.";
   }
-  return "只执行校验声明为低风险的状态修复，不替用户确认候选或重写正文。";
+  return "Only applies state fixes identified by validation as low risk. It does not approve candidates or rewrite content.";
 }
 
 export function getFollowUpActionTone(action: AutoDirectorAction): WorkspaceTone {
@@ -157,12 +157,12 @@ export function getFollowUpActionTone(action: AutoDirectorAction): WorkspaceTone
 
 export function getFollowUpActionRiskDescription(action: AutoDirectorAction): string {
   if (action.riskLevel === "high") {
-    return "较高，执行前请核对影响范围。";
+    return "High. Review the impact before proceeding.";
   }
   if (action.riskLevel === "medium" || action.requiresConfirm) {
-    return "需要确认，提交前请核对任务和写入范围。";
+    return "Confirmation required. Review the task and write scope before submitting.";
   }
   return action.kind === "navigation"
-    ? "低风险，只打开处理页面。"
-    : "低风险，只执行当前任务声明的安全动作。";
+    ? "Low risk. Opens the relevant page only."
+    : "Low risk. Performs only the safe action declared for the current task.";
 }

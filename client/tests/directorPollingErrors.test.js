@@ -33,6 +33,6 @@ test('three failed polling requests stay inline and rejected; one failed user co
 });
 test('network failures in polling remain observable without a global toast',async()=>{
  const {client,notices}=interceptorHarness();
- await assert.rejects(client.get('/director-next/records',{errorPresentation:'inline',adapter:async config=>{throw new axios.AxiosError('lost network','ERR_NETWORK',config);}}),/网络连接失败/);
+ await assert.rejects(client.get('/director-next/records',{errorPresentation:'inline',adapter:async config=>{throw new axios.AxiosError('lost network','ERR_NETWORK',config);}}),/Network connection failed\. Check your connection and try again\./);
  assert.equal(notices.length,0);
 });

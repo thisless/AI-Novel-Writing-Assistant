@@ -7,7 +7,7 @@ const options={errorPresentation:"inline" as const};
 async function post<T>(path:string,body:unknown):Promise<T> {return (await apiClient.post(`/manuscripts${path}`,body,options)).data.data as T;}
 export async function createManuscriptImport(input:ManuscriptImportRequest,file?:File):Promise<ManuscriptImportResponse> {
   if(!file)return post("/imports",input);
-  const fileBase64=await new Promise<string>((resolve,reject)=>{const reader=new FileReader();reader.onerror=()=>reject(new Error("无法读取原稿文件，请重新选择。"));reader.onload=()=>resolve(String(reader.result).split(",",2)[1]);reader.readAsDataURL(file);});
+  const fileBase64=await new Promise<string>((resolve,reject)=>{const reader=new FileReader();reader.onerror=()=>reject(new Error("Unable to read the manuscript file. Please choose it again."));reader.onload=()=>resolve(String(reader.result).split(",",2)[1]);reader.readAsDataURL(file);});
   return post("/imports",{...input,fileBase64,fileName:file.name});
 }
 export async function getManuscriptSession(id:string):Promise<ManuscriptSessionView> {return (await apiClient.get(`/manuscripts/imports/${id}`,options)).data.data;}

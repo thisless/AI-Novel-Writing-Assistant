@@ -102,7 +102,7 @@ export function resolveCustomVolumeCountInput(
   if (!Number.isFinite(parsed)) {
     return {
       value: null,
-      message: "请先输入有效的固定卷数。",
+      message: "Enter a valid fixed number of volumes.",
     };
   }
   if (
@@ -111,7 +111,7 @@ export function resolveCustomVolumeCountInput(
   ) {
     return {
       value: null,
-      message: `固定卷数必须落在 ${volumeCountGuidance.allowedVolumeCountRange.min}-${volumeCountGuidance.allowedVolumeCountRange.max} 卷之间。`,
+      message: `The fixed volume count must be between ${volumeCountGuidance.allowedVolumeCountRange.min} and ${volumeCountGuidance.allowedVolumeCountRange.max}.`,
     };
   }
   return {
@@ -122,6 +122,6 @@ export function resolveCustomVolumeCountInput(
 
 export function buildGenerationNotice(strategyPlan: VolumeStrategyPlan | null): string {
   return strategyPlan
-    ? "当前工作区已进入二期链路：先审卷战略，再确认卷骨架，之后按卷生成节奏板和章节列表。"
-    : "先生成卷战略建议，让系统帮你决定卷数和硬/软规划，再进入卷骨架。";
+    ? "This workspace uses the updated workflow: review the volume strategy, confirm the volume outline, then generate beat sheets and chapter lists for each volume."
+    : "Generate a volume strategy recommendation first to decide the volume count and planning approach, then move on to the volume outline.";
 }

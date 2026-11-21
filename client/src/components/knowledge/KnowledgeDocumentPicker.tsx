@@ -17,7 +17,7 @@ interface KnowledgeDocumentPickerProps {
 }
 
 function formatDocumentKind(kind: "user_upload" | "analysis_published"): string {
-  return kind === "analysis_published" ? "拆书发布" : "上传文档";
+  return kind === "analysis_published" ? "Published analysis" : "Uploaded document";
 }
 
 export default function KnowledgeDocumentPicker(props: KnowledgeDocumentPickerProps) {
@@ -53,35 +53,35 @@ export default function KnowledgeDocumentPicker(props: KnowledgeDocumentPickerPr
             className={`rounded-md border px-3 py-1 text-sm ${isAuto ? "bg-accent" : ""}`}
             onClick={() => props.onChange(null)}
           >
-            自动
+            Automatic
           </button>
           <button
             type="button"
             className={`rounded-md border px-3 py-1 text-sm ${!isAuto ? "bg-accent" : ""}`}
             onClick={() => props.onChange(selectedIds)}
           >
-            自定义
+            Custom
           </button>
         </div>
       ) : null}
 
       {isAuto ? (
         <div className="rounded-md border border-dashed p-3 text-sm text-muted-foreground">
-          当前使用自动规则：若有实体绑定文档则优先使用绑定文档，否则回退到全部启用文档。
+          Using automatic rules: bound documents take priority; otherwise, all enabled documents are used.
         </div>
       ) : (
         <>
           <Input
             value={keyword}
             onChange={(event) => setKeyword(event.target.value)}
-            placeholder="搜索知识文档"
+            placeholder="Search knowledge documents"
           />
           <div className="max-h-64 space-y-2 overflow-auto rounded-md border p-2">
             {documentsQuery.isLoading ? (
-              <div className="text-sm text-muted-foreground">加载中...</div>
+              <div className="text-sm text-muted-foreground">Loading...</div>
             ) : null}
             {visibleDocuments.length === 0 && !documentsQuery.isLoading ? (
-              <div className="text-sm text-muted-foreground">没有可选文档。</div>
+              <div className="text-sm text-muted-foreground">No documents available.</div>
             ) : null}
             {visibleDocuments.map((item) => {
               const checked = selectedIds.includes(item.id);
@@ -117,7 +117,7 @@ export default function KnowledgeDocumentPicker(props: KnowledgeDocumentPickerPr
                         className="text-xs text-primary hover:underline"
                         onClick={(event) => event.stopPropagation()}
                       >
-                        查看来源拆书
+                        View source analysis
                       </Link>
                     ) : null}
                   </div>
@@ -126,7 +126,7 @@ export default function KnowledgeDocumentPicker(props: KnowledgeDocumentPickerPr
             })}
           </div>
           <div className="text-xs text-muted-foreground">
-            已选择 {selectedIds.length} 个文档。保持为空会显式关闭知识库检索。
+            {selectedIds.length} documents selected. Leave empty to explicitly disable knowledge base retrieval.
           </div>
         </>
       )}

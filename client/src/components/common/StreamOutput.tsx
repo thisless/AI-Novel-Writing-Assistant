@@ -10,7 +10,7 @@ interface StreamOutputProps {
   emptyText?: string;
 }
 
-export default function StreamOutput({ isStreaming, content, onAbort, title = "AI 输出", emptyText = "等待流式输出..." }: StreamOutputProps) {
+export default function StreamOutput({ isStreaming, content, onAbort, title = "AI output", emptyText = "Waiting for streamed output..." }: StreamOutputProps) {
   const wordCount = content.trim().length;
 
   return (
@@ -24,13 +24,13 @@ export default function StreamOutput({ isStreaming, content, onAbort, title = "A
         <span className="text-sm font-medium">{title}</span>
         <div className="flex items-center gap-2">
           {isStreaming ? (
-            <span className="text-xs text-muted-foreground">正在生成...</span>
+            <span className="text-xs text-muted-foreground">Generating...</span>
           ) : (
-            <span className="text-xs text-muted-foreground">字数：{wordCount}</span>
+            <span className="text-xs text-muted-foreground">Characters: {wordCount}</span>
           )}
           {isStreaming && onAbort ? (
             <Button size="sm" variant="secondary" onClick={onAbort}>
-              停止生成
+              Stop generation
             </Button>
           ) : null}
         </div>

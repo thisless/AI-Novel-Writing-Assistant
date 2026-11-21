@@ -88,8 +88,8 @@ export default function BookAnalysisSectionCard(props: BookAnalysisSectionCardPr
   ) : (
     <div className="text-sm text-muted-foreground">
       {unselectedSection
-        ? "这个小节未纳入本次生成。需要补充时，可先取消跳过并保存，再重新生成。"
-        : "当前小节还没有可展示的内容。"}
+        ? "This section wasn't included in this run. To add it, clear Skip and save, then regenerate."
+        : "This section has no content to display yet."}
     </div>
   );
 
@@ -101,9 +101,9 @@ export default function BookAnalysisSectionCard(props: BookAnalysisSectionCardPr
             <CardTitle>{section.title}</CardTitle>
             <Badge variant="secondary" className="border-0 bg-muted/65 font-normal">
               <span className={`mr-1.5 h-1.5 w-1.5 rounded-full ${section.status === "succeeded" ? "bg-success" : "bg-muted-foreground/50"}`} />
-              {unselectedSection ? "本次未选择" : hasResultAnomaly ? "结果异常" : formatStatus(section.status)}
+              {unselectedSection ? "Not selected this run" : hasResultAnomaly ? "Unexpected result" : formatStatus(section.status)}
             </Badge>
-            {draft.frozen && !unselectedSection ? <Badge variant="secondary" className="border-0 font-normal">已冻结</Badge> : null}
+            {draft.frozen && !unselectedSection ? <Badge variant="secondary" className="border-0 font-normal">Frozen</Badge> : null}
           </div>
           <div className="flex flex-wrap gap-2">
             <Button
@@ -112,10 +112,10 @@ export default function BookAnalysisSectionCard(props: BookAnalysisSectionCardPr
               disabled={!canRegenerate}
               onClick={() => onRegenerate(section)}
             >
-              重新生成
+              Regenerate
             </Button>
             <Button size="sm" disabled={!canOperate || isSaving} onClick={() => onSave(section)}>
-              保存
+              Save
             </Button>
           </div>
         </div>
@@ -131,8 +131,8 @@ export default function BookAnalysisSectionCard(props: BookAnalysisSectionCardPr
         {evidenceItems.length > 0 ? (
           <div className="space-y-3 rounded-2xl bg-muted/20 p-4">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <div className="text-sm font-medium">本节证据</div>
-              <Badge variant="secondary" className="border-0 bg-background/70 font-normal">{evidenceItems.length} 条</Badge>
+              <div className="text-sm font-medium">Evidence for this section</div>
+              <Badge variant="secondary" className="border-0 bg-background/70 font-normal">{evidenceItems.length} items</Badge>
             </div>
             <div className="flex flex-wrap gap-1.5">
               {evidenceItems.map((item) => {
@@ -161,7 +161,7 @@ export default function BookAnalysisSectionCard(props: BookAnalysisSectionCardPr
                     {item.chapterIndex !== undefined && item.excerptOffsetRange ? (
                       <span className="ml-2 inline-flex items-center gap-1 rounded border px-1 text-[11px] text-muted-foreground">
                         <LocateFixed className="h-3 w-3" />
-                        原文
+                        Source text
                       </span>
                     ) : null}
                   </button>
@@ -180,14 +180,14 @@ export default function BookAnalysisSectionCard(props: BookAnalysisSectionCardPr
                     </div>
                   </div>
                   {selectedEvidence.chapterIndex !== undefined ? (
-                    <Badge variant="outline">第 {selectedEvidence.chapterIndex + 1} 章</Badge>
+                    <Badge variant="outline">Chapter {selectedEvidence.chapterIndex + 1}</Badge>
                   ) : null}
                 </div>
                 <div className="mt-2 whitespace-pre-wrap text-muted-foreground">{selectedEvidence.excerpt}</div>
                 {!isDualPane && selectedEvidenceChapter && selectedEvidence.excerptOffsetRange ? (
                   <div className="mt-3">
                     <div className="mb-2 text-xs font-medium text-muted-foreground">
-                      原文定位：{selectedEvidenceChapter.title}
+                      Source location: {selectedEvidenceChapter.title}
                     </div>
                     <HighlightedChapterExcerpt
                       chapterContent={selectedChapterContent}
@@ -196,9 +196,9 @@ export default function BookAnalysisSectionCard(props: BookAnalysisSectionCardPr
                     />
                   </div>
                 ) : isDualPane && selectedEvidenceChapter && selectedEvidence.excerptOffsetRange ? (
-                  <div className="mt-2 text-xs text-muted-foreground">已在左侧原文章节中定位这条证据。</div>
+                  <div className="mt-2 text-xs text-muted-foreground">This evidence is located in the source chapter on the left.</div>
                 ) : (
-                  <div className="mt-2 text-xs text-muted-foreground">这条证据暂无可跳转的章节定位。</div>
+                  <div className="mt-2 text-xs text-muted-foreground">No chapter location is available for this evidence.</div>
                 )}
               </div>
             ) : null}
@@ -207,14 +207,14 @@ export default function BookAnalysisSectionCard(props: BookAnalysisSectionCardPr
 
         {readingMode === "full" ? (
           <div className="space-y-2">
-            <div className="text-sm font-medium">分析正文</div>
+            <div className="text-sm font-medium">Full analysis</div>
             <div className="min-h-[220px] rounded-2xl bg-muted/20 px-5 py-5 leading-7">
               {contentBlock}
             </div>
           </div>
         ) : (
           <details className="rounded-2xl bg-muted/15 p-4">
-            <summary className="cursor-pointer text-sm font-medium">查看完整正文</summary>
+            <summary className="cursor-pointer text-sm font-medium">View full analysis</summary>
             <div className="mt-3 min-h-[180px] rounded-xl bg-background/75 p-4">
               {contentBlock}
             </div>
@@ -222,7 +222,7 @@ export default function BookAnalysisSectionCard(props: BookAnalysisSectionCardPr
         )}
 
         <details className="rounded-2xl border border-border/40 bg-muted/10 p-4">
-          <summary className="cursor-pointer text-sm font-medium">{canOperate ? "编辑与优化" : "归档内容与备注"}</summary>
+          <summary className="cursor-pointer text-sm font-medium">{canOperate ? "Edit and refine" : "Archived content and notes"}</summary>
           <div className="mt-3 space-y-4">
             <label className="flex items-center gap-2 text-sm">
               <input
@@ -231,51 +231,51 @@ export default function BookAnalysisSectionCard(props: BookAnalysisSectionCardPr
                 disabled={!canOperate}
                 onChange={(event) => onDraftChange(section, { frozen: event.target.checked })}
               />
-              跳过自动重跑，并保留这个小节的现有内容。
+              Skip automatic reruns and keep this section's current content.
             </label>
 
             {draft.frozen || frozenChangePending ? (
               <div className="rounded-md border border-warning/30 bg-warning/5 p-2 text-xs text-foreground">
                 {frozenChangePending
                   ? draft.frozen
-                    ? "跳过设置尚未保存。保存后，自动重跑会保留这个小节的现有内容。"
-                    : "取消跳过尚未保存。保存后，即可重新生成或使用 AI 优化。"
+                    ? "Skip changes haven't been saved. After saving, automatic reruns will preserve this section's current content."
+                    : "Clearing Skip hasn't been saved. Save to regenerate or refine this section with AI."
                   : unselectedSection
-                    ? "这个小节未纳入本次生成。需要补充时，请先取消跳过并保存。"
-                    : "当前内容已冻结。需要重新生成或 AI 优化时，请先取消跳过并保存。"}
+                    ? "This section wasn't included in this run. To add it, clear Skip and save."
+                    : "This content is frozen. To regenerate or refine it with AI, clear Skip and save first."}
               </div>
             ) : null}
 
             <div className="space-y-2">
-              <div className="text-sm font-medium">本节特别关注</div>
+              <div className="text-sm font-medium">Section focus</div>
               <textarea
                 className="min-h-[90px] w-full rounded-md border bg-background p-3 text-sm"
                 value={draft.focusInstruction}
                 disabled={!canOperate}
                 onChange={(event) => onDraftChange(section, { focusInstruction: event.target.value })}
-                placeholder="例如：只看阶段推进里的转折证据，或重点检查人物高光是否能复用。"
+                placeholder="For example, focus on evidence of turning points in the progression, or check whether character highlights can be reused."
               />
             </div>
 
             <div className="space-y-2">
-              <div className="text-sm font-medium">编辑正文</div>
+              <div className="text-sm font-medium">Edit analysis</div>
               <textarea
                 className="min-h-[220px] w-full rounded-md border bg-background p-3 text-sm"
                 value={draft.editedContent}
                 disabled={!canOperate}
                 onChange={(event) => onDraftChange(section, { editedContent: event.target.value })}
-                placeholder="在此直接编辑当前小节草稿。"
+                placeholder="Edit this section's draft here."
               />
             </div>
 
             <div className="space-y-2">
-              <div className="text-sm font-medium">AI 优化 / 修正</div>
+              <div className="text-sm font-medium">AI refinement / correction</div>
               <textarea
                 className="min-h-[90px] w-full rounded-md border bg-background p-2 text-sm"
                 value={draft.optimizeInstruction}
                 disabled={!canOperate}
                 onChange={(event) => onDraftChange(section, { optimizeInstruction: event.target.value })}
-                placeholder="输入优化或修正提示词，例如：压缩冗余、突出冲突、保持同样事实。"
+                placeholder="Enter refinement instructions, such as: remove redundancy, emphasize conflict, or preserve the facts."
               />
               <div className="flex flex-wrap gap-2">
                 <Button
@@ -284,36 +284,36 @@ export default function BookAnalysisSectionCard(props: BookAnalysisSectionCardPr
                   disabled={!canOptimize}
                   onClick={() => onOptimize(section)}
                 >
-                  {isOptimizing ? "生成预览中..." : "生成优化预览"}
+                  {isOptimizing ? "Generating preview…" : "Preview refinements"}
                 </Button>
               </div>
             </div>
 
             {draft.optimizePreview.trim() ? (
               <div className="space-y-2">
-                <div className="text-xs font-medium text-muted-foreground">优化预览</div>
+                <div className="text-xs font-medium text-muted-foreground">Refinement preview</div>
                 <div className="max-h-[320px] overflow-auto rounded-md border bg-muted/20 p-4">
                   <MarkdownViewer content={draft.optimizePreview} />
                 </div>
                 <div className="flex flex-wrap gap-2">
                   <Button size="sm" disabled={!canOperate} onClick={() => onApplyOptimizePreview(section)}>
-                    应用到当前草稿
+                    Apply to current draft
                   </Button>
                   <Button size="sm" variant="outline" disabled={!canOperate} onClick={() => onCancelOptimizePreview(section)}>
-                    取消预览
+                    Discard preview
                   </Button>
                 </div>
               </div>
             ) : null}
 
             <div className="space-y-2">
-              <div className="text-sm font-medium">备注</div>
+              <div className="text-sm font-medium">Notes</div>
               <textarea
                 className="min-h-[120px] w-full rounded-md border bg-background p-3 text-sm"
                 value={draft.notes}
                 disabled={!canOperate}
                 onChange={(event) => onDraftChange(section, { notes: event.target.value })}
-                placeholder="添加备注、假设或后续行动。"
+                placeholder="Add notes, assumptions, or follow-up actions."
               />
             </div>
           </div>

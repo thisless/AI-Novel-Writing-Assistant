@@ -44,12 +44,12 @@ export default function Navbar(props: NavbarProps) {
     <>
     <header className="flex h-16 min-w-0 items-center justify-between gap-3 border-b bg-background px-4 sm:px-6">
       <div className="flex min-w-0 items-center gap-2">
-        <button type="button" aria-label="工作台标识" onClick={handleBrandClick} className="shrink-0 rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-ring">
+        <button type="button" aria-label="Workspace logo" onClick={handleBrandClick} className="shrink-0 rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-ring">
           <DesktopBrandMark className="h-8 w-8 shrink-0 drop-shadow-none" />
         </button>
         <div className="flex min-w-0 flex-col leading-tight">
           <div className="flex min-w-0 items-center gap-1.5">
-            <span className="min-w-0 truncate text-sm font-semibold">AI 小说创作工作台</span>
+            <span className="min-w-0 truncate text-sm font-semibold">AI Novel Writing Studio</span>
             <AppVersionBadge />
             <DesktopReleaseNotesDialog />
             <ProjectGithubLink />
@@ -58,7 +58,7 @@ export default function Navbar(props: NavbarProps) {
         </div>
       </div>
       <div className="flex shrink-0 items-center gap-2 sm:gap-3">
-        {props.onOpenProjectNav ? <Button type="button" size="sm" variant="ghost" onClick={props.onOpenProjectNav}>全局菜单</Button> : null}
+        {props.onOpenProjectNav ? <Button type="button" size="sm" variant="ghost" onClick={props.onOpenProjectNav}>Global menu</Button> : null}
         {!isHome && showWorkspaceToggle ? (
           <Button
             type="button"
@@ -67,7 +67,7 @@ export default function Navbar(props: NavbarProps) {
             className={useMobileAutoDirectorShell ? AUTO_DIRECTOR_MOBILE_CLASSES.navbarWorkspaceToggle : undefined}
             onClick={() => onWorkspaceNavModeChange?.(workspaceNavMode === "workspace" ? "project" : "workspace")}
           >
-            {workspaceNavMode === "workspace" ? "项目导航" : "创作导航"}
+            {workspaceNavMode === "workspace" ? "Project navigation" : "Writing navigation"}
           </Button>
         ) : null}
         <LiveExecutionDialog />
@@ -80,7 +80,7 @@ export default function Navbar(props: NavbarProps) {
           onClick={openModelSettings}
         >
           <SlidersHorizontal className="h-4 w-4" />
-          <span className="hidden lg:inline">模型设置</span>
+          <span className="hidden lg:inline">Model settings</span>
         </Button>
         <div className={useMobileAutoDirectorShell ? AUTO_DIRECTOR_MOBILE_CLASSES.navbarModelSelector : undefined}>
           <LLMSelector

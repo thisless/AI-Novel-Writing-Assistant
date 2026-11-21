@@ -51,21 +51,21 @@ export interface TakeoverContinuousTargetViewModel {
 }
 
 const ENTRY_STEP_USER_LABELS: Record<DirectorTakeoverEntryStep, string> = {
-  basic: "项目设定",
-  story_macro: "故事宏观规划",
-  world: "世界观准备",
-  character: "角色准备",
-  outline: "卷规划",
-  structured: "节奏拆章",
-  chapter: "章节执行",
-  pipeline: "质量修复",
+  basic: "Project setup",
+  story_macro: "Story macro plan",
+  world: "World setup",
+  character: "Character setup",
+  outline: "Volume planning",
+  structured: "Beats and chapter breakdown",
+  chapter: "Chapter execution",
+  pipeline: "Quality repair",
 };
 
 const RUN_MODE_ACTION_LABELS: Record<DirectorRunMode, string> = {
-  auto_to_ready: "继续推进到可开写",
-  auto_to_execution: "按范围继续推进",
-  full_book_autopilot: "接管整本书继续推进",
-  stage_review: "继续推进",
+  auto_to_ready: "Continue until ready to draft",
+  auto_to_execution: "Continue within selected scope",
+  full_book_autopilot: "Take over and continue the entire book",
+  stage_review: "Continue",
 };
 
 export function isTakeoverEntryStepAllowedForScope(
@@ -118,50 +118,50 @@ export function buildTakeoverGuidance(
   const task = taskSnapshot?.task ?? null;
   const chapterProgress = taskSnapshot?.chapterProgress ?? taskSnapshot?.projection?.chapterExecutionProgress ?? null;
   if (task && (task.status === "queued" || task.status === "running" || task.status === "waiting_approval")) {
-    const currentStage = task.currentStage?.trim() || taskSnapshot?.displayState.stageLabel || "当前任务";
-    const currentLabel = task.currentItemLabel?.trim() || taskSnapshot?.displayState.currentAction || "等待继续";
+    const currentStage = task.currentStage?.trim() || taskSnapshot?.displayState.stageLabel || "Current task";
+    const currentLabel = task.currentItemLabel?.trim() || taskSnapshot?.displayState.currentAction || "Waiting to continue";
     const nextChapterOrder = chapterProgress?.currentChapterOrder ?? chapterProgress?.activeChapterOrder ?? null;
     return {
-      diagnosis: `当前已有导演任务停在「${currentStage}」。`,
+      diagnosis: `An existing director task is paused at "${currentStage}".`,
       nextStep: nextChapterOrder
-        ? `系统检测到章节执行已推进到第 ${nextChapterOrder} 章附近，建议先回到当前任务继续。`
-        : `当前任务状态：${currentLabel}。`,
+        ? `Chapter execution has reached around Chapter ${nextChapterOrder}. Return to the current task to continue.`
+        : `Current task status: ${currentLabel}.`,
       protectionNotes: [
-        `任务状态：${task.status}`,
+        `Task status: ${task.status}`,
         currentLabel,
-        "继续当前任务不会新开一条重复接管。",
+        "Continuing this task won't create a duplicate takeover.",
       ],
       riskLevel: "safe",
-      actionLabel: "进入当前任务",
+      actionLabel: "Open current task",
     };
   }
   if (!readiness) {
     return {
-      diagnosis: "正在读取项目进度，读取完成后会给出推荐接续位置。",
-      nextStep: "读取完成后即可继续推进。",
-      protectionNotes: ["默认保留已有写作资产。"],
+      diagnosis: "Loading project progress. A recommended point to continue will appear when it's ready.",
+      nextStep: "Continue when loading is complete.",
+      protectionNotes: ["Existing writing assets are preserved by default."],
       riskLevel: "safe",
-      actionLabel: RUN_MODE_ACTION_LABELS[runMode] ?? "继续推进",
+      actionLabel: RUN_MODE_ACTION_LABELS[runMode] ?? "Continue",
     };
   }
   const preview = findTakeoverPreview(readiness, entryStep, strategy);
-  const entryLabel = ENTRY_STEP_USER_LABELS[preview?.effectiveStep ?? entryStep] ?? "推荐位置";
+  const entryLabel = ENTRY_STEP_USER_LABELS[preview?.effectiveStep ?? entryStep] ?? "Recommended point";
   const hasCharacters = readiness.snapshot.characterCount > 0;
   const hasVolumes = readiness.snapshot.volumeCount > 0;
   const hasChapters = readiness.snapshot.chapterCount > 0;
   const protectionNotes = [
-    hasCharacters ? `保留已创建的 ${readiness.snapshot.characterCount} 个角色资产。` : "没有检测到已创建角色，AI 会补齐角色准备。",
-    hasVolumes ? "沿用已有卷规划资产，只补后续缺口。" : "没有检测到卷规划，AI 会继续生成卷规划。",
-    hasChapters ? `保留已有 ${readiness.snapshot.chapterCount} 章正文或章节资产。` : "没有检测到已生成正文。",
+    hasCharacters ? `Preserve ${readiness.snapshot.characterCount} existing character assets.` : "No existing characters detected. AI will prepare the cast.",
+    hasVolumes ? "Keep the existing volume plans and fill only the remaining gaps." : "No volume plan detected. AI will generate one.",
+    hasChapters ? `Preserve existing drafts or chapter assets for ${readiness.snapshot.chapterCount} chapters.` : "No generated drafts detected.",
   ];
   const riskLevel = strategy === "restart_current_step" ? "caution" : "safe";
   return {
-    diagnosis: `系统检测到项目可以从「${entryLabel}」接上。`,
-    nextStep: preview?.summary ?? `AI 会从「${entryLabel}」继续推进。`,
+    diagnosis: `The project can continue from "${entryLabel}".`,
+    nextStep: preview?.summary ?? `AI will continue from "${entryLabel}".`,
     protectionNotes,
     riskLevel,
     actionLabel: buildPrimaryActionLabel({
-      fallback: RUN_MODE_ACTION_LABELS[runMode] ?? "继续推进",
+      fallback: RUN_MODE_ACTION_LABELS[runMode] ?? "Continue",
       taskSnapshot,
       readiness,
     }),
@@ -170,7 +170,7 @@ export function buildTakeoverGuidance(
 
 function formatRatio(done: number, total: number): string {
   if (total <= 0) {
-    return done > 0 ? `${done} 项` : "暂无";
+    return done > 0 ? `${done} items` : "None";
   }
   return `${done} / ${total}`;
 }
@@ -184,15 +184,15 @@ function buildPrimaryActionLabel(input: {
     ?? input.taskSnapshot?.projection?.chapterExecutionProgress
     ?? null;
   if (progress?.currentChapterOrder) {
-    return `继续写第 ${progress.currentChapterOrder} 章`;
+    return `Continue drafting Chapter ${progress.currentChapterOrder}`;
   }
   const drafted = progress?.draftedChapterCount ?? input.readiness?.snapshot.generatedChapterCount ?? 0;
   const approved = progress?.approvedChapterCount ?? input.readiness?.snapshot.approvedChapterCount ?? 0;
   if (drafted > approved) {
-    return "处理待确认章节";
+    return "Review chapters awaiting approval";
   }
   if ((input.readiness?.snapshot.chapterCount ?? 0) > 0) {
-    return "继续章节执行";
+    return "Continue chapter execution";
   }
   return input.fallback;
 }
@@ -269,10 +269,10 @@ export function buildTakeoverChapterTarget(
     maxOrder: totalChapters,
     selectedOrder: selected,
     plan,
-    actionLabel: `推进至第 ${selected} 章`,
+    actionLabel: `Continue through Chapter ${selected}`,
     summary: selected === startOrder
-      ? `从第 ${startOrder} 章继续推进。`
-      : `从第 ${startOrder} 章开始，连续推进到第 ${selected} 章。`,
+      ? `Continue from Chapter ${startOrder}.`
+      : `Continue from Chapter ${startOrder} through Chapter ${selected}.`,
   };
 }
 
@@ -300,10 +300,10 @@ export function buildTakeoverContinuousTarget(
     currentWindowEndOrder: currentWindow.maxOrder,
     targetOrder,
     selectedOrder: resolvedSelected,
-    actionLabel: resolvedSelected === targetOrder ? `持续推进至第 ${targetOrder} 章` : `推进至第 ${resolvedSelected} 章`,
+    actionLabel: resolvedSelected === targetOrder ? `Continue through Chapter ${targetOrder}` : `Continue through Chapter ${resolvedSelected}`,
     summary: resolvedSelected === targetOrder
-      ? `先推进第 ${currentWindow.startOrder}-${currentWindow.maxOrder} 章；接近范围末尾时，AI 会补后续卷骨架和近期拆章，不会预先生成远期章节任务。`
-      : `本次只推进第 ${currentWindow.startOrder}-${resolvedSelected} 章；之后仍可从当前进度继续，预计章节数为 ${targetOrder} 章。`,
+      ? `Continue through Chapters ${currentWindow.startOrder}–${currentWindow.maxOrder} first. Near the end of this range, AI will add the next volume outline and chapter breakdown without planning distant chapters too early.`
+      : `This run will cover Chapters ${currentWindow.startOrder}–${resolvedSelected}. You can continue from the current progress later; the planned total is ${targetOrder} chapters.`,
   };
 }
 
@@ -331,53 +331,53 @@ export function buildTakeoverProgressInspection(
 
   const cards: TakeoverProgressCard[] = [
     {
-      title: "卷规划进度",
-      status: factSummary?.hasVolumeStrategy || (snapshot?.volumeCount ?? 0) > 0 ? "已具备卷战略" : "待补卷战略",
+      title: "Volume planning progress",
+      status: factSummary?.hasVolumeStrategy || (snapshot?.volumeCount ?? 0) > 0 ? "Volume strategy ready" : "Volume strategy needed",
       detail: snapshot
-        ? `${snapshot.volumeCount} 卷；当前卷章节 ${snapshot.firstVolumeChapterCount} 章；已拆范围 ${volumeRanges.map((range) => `第${range.startOrder}-${range.endOrder}章`).join("、") || "暂无"}`
-        : "正在读取卷规划。",
+        ? `${snapshot.volumeCount} volumes; ${snapshot.firstVolumeChapterCount} chapters in the current volume; broken-down ranges: ${volumeRanges.map((range) => `Chapters ${range.startOrder}–${range.endOrder}`).join(", ") || "None"}`
+        : "Loading volume plans...",
     },
     {
-      title: "拆章同步进度",
+      title: "Chapter breakdown sync",
       status: formatRatio(syncedChapterCount, plannedChapterCount),
       detail: selectedChapterCount > 0
-        ? `当前可执行范围 ${readiness?.executableRange?.startOrder ?? 1}-${readiness?.executableRange?.endOrder ?? selectedChapterCount} 章。`
-        : "尚未检测到可执行章节范围。",
+        ? `Current executable range: Chapters ${readiness?.executableRange?.startOrder ?? 1}–${readiness?.executableRange?.endOrder ?? selectedChapterCount}.`
+        : "No executable chapter range detected.",
     },
     {
-      title: "章节细化进度",
+      title: "Chapter refinement progress",
       status: formatRatio(detailDone, detailTotal),
       detail: outline?.chapterDetailReady || detailDone > 0
-        ? `已准备 ${detailDone} 个章节任务单 / 执行资源。`
-        : "尚未检测到章节细化资源。",
+        ? `${detailDone} chapter task sheets / execution resources prepared.`
+        : "No chapter refinement resources detected.",
     },
     {
-      title: "正文与质量进度",
+      title: "Draft and quality progress",
       status: formatRatio(drafted, chapterProgress?.totalChapters ?? chapterFacts?.totalChapters ?? plannedChapterCount),
       detail: [
-        reviewed > 0 ? `已审校 ${reviewed} 章` : "",
-        approved > 0 ? `已通过 ${approved} 章` : "",
-        pendingRepair > 0 ? `待处理 ${pendingRepair} 章` : "",
-        nextChapterOrder ? `下一章第 ${nextChapterOrder} 章` : "",
-      ].filter(Boolean).join("；") || "尚未开始正文生产。",
+        reviewed > 0 ? `${reviewed} chapters reviewed` : "",
+        approved > 0 ? `${approved} chapters approved` : "",
+        pendingRepair > 0 ? `${pendingRepair} chapters need follow-up` : "",
+        nextChapterOrder ? `Next: Chapter ${nextChapterOrder}` : "",
+      ].filter(Boolean).join("; ") || "Drafting has not started yet.",
     },
   ];
 
   return {
     cards,
     summary: taskSnapshot?.task
-      ? `当前任务：${taskSnapshot.task.currentStage || taskSnapshot.displayState.stageLabel || "自动导演"} / ${taskSnapshot.task.currentItemLabel || taskSnapshot.displayState.currentAction || "等待继续"}`
-      : "以下为当前项目已检测到的资产进度。",
+      ? `Current task: ${taskSnapshot.task.currentStage || taskSnapshot.displayState.stageLabel || "Auto Director"} / ${taskSnapshot.task.currentItemLabel || taskSnapshot.displayState.currentAction || "Waiting to continue"}`
+      : "Detected asset progress for this project.",
   };
 }
 
 export function formatTakeoverStartError(error: unknown): string {
   const message = error instanceof Error ? error.message : String(error || "");
   if (message.includes("章节范围只能从节奏拆章、章节执行或质量修复开始")) {
-    return "当前项目还没有进入章节生产阶段，不能直接从章节范围继续。建议使用系统推荐位置继续推进。";
+    return "This project has not reached chapter production yet, so it cannot continue directly from a chapter range. Use the system's recommended point instead.";
   }
   if (message.includes("当前已有自动导演任务")) {
-    return "当前已有自动导演任务在处理这本书，请先进入当前任务继续或取消后再接管。";
+    return "An Auto Director task is already working on this book. Open or cancel that task before starting a takeover.";
   }
-  return message || "启动自动导演接管失败。";
+  return message || "Failed to start Auto Director takeover.";
 }

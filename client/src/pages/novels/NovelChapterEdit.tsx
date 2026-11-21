@@ -56,7 +56,7 @@ export default function NovelChapterEdit() {
   if (novelDetailQuery.isLoading && !detail) {
     return (
       <div className="flex h-full min-h-0 flex-col gap-4">
-        <PageStateCard message="正在加载章节编辑器..." />
+        <PageStateCard message="Loading chapter editor..." />
       </div>
     );
   }
@@ -64,7 +64,7 @@ export default function NovelChapterEdit() {
   if (novelDetailQuery.isError) {
     return (
       <div className="flex h-full min-h-0 flex-col gap-4">
-        <PageStateCard message="章节数据加载失败，请刷新后重试。" />
+        <PageStateCard message="Failed to load chapter data. Refresh and try again." />
       </div>
     );
   }
@@ -72,7 +72,7 @@ export default function NovelChapterEdit() {
   if (!chapter) {
     return (
       <div className="flex h-full min-h-0 flex-col gap-4">
-        <PageStateCard message="没有找到对应章节，可能已被删除或当前链接不完整。" />
+        <PageStateCard message="Chapter not found. It may have been deleted, or the link may be incomplete." />
       </div>
     );
   }
@@ -85,7 +85,7 @@ export default function NovelChapterEdit() {
           <Button asChild size="sm" variant="outline">
             <Link to={`/prompt-workbench?experience=writing&novelId=${encodeURIComponent(id)}&chapterId=${encodeURIComponent(chapterId)}`}>
               <FlaskConical className="mr-2 h-4 w-4" />
-              正文效果实验室
+              Writing Effectiveness Lab
             </Link>
           </Button>
         )}

@@ -10,6 +10,6 @@ test('global recovery records only open the source page and cannot resume tasks'
   assert.doesNotMatch(dialog, /resumeSingle|resumeAll|继续全部|继续单个/);
   assert.doesNotMatch(provider, /useMutation|resumeRecoveryCandidate|resumeAllRecoveryCandidates|acceptedRecoveryKeys/);
   assert.match(dialog, /to=\{item.sourceRoute\}/);
-  assert.match(dialog, /查看已保存结果/);
+  assert.match(dialog, /review saved results/);
   assert.match(provider, /listRecoveryCandidates/);
 });

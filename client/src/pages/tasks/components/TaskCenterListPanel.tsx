@@ -39,21 +39,21 @@ export default function TaskCenterListPanel({
 }: TaskCenterListPanelProps) {
   return (
     <TaskQueueSection
-      title="任务记录"
-      description={`${tasks.length} 项结果，优先展示需要处理和等待操作的任务。`}
+      title="Task history"
+      description={`${tasks.length} results, prioritizing tasks that need attention or input.`}
       className="overflow-hidden rounded-2xl border-border/40 bg-card/60 shadow-[0_12px_36px_rgba(15,23,42,0.035)]"
     >
       <div className="space-y-3">
         {loading ? (
-          <WorkspaceStateNotice compact loading title="正在读取任务" description="正在汇总任务状态和最近进度。" />
+          <WorkspaceStateNotice compact loading title="Loading tasks" description="Gathering task status and recent progress." />
         ) : null}
         {errorMessage ? (
           <WorkspaceStateNotice
             compact
             tone="danger"
-            title="任务列表读取失败"
+            title="Could not load the task list"
             description={errorMessage}
-            action={<Button size="sm" variant="outline" onClick={onRetry}>重新读取</Button>}
+            action={<Button size="sm" variant="outline" onClick={onRetry}>Reload</Button>}
           />
         ) : null}
         {tasks.map((task) => {
@@ -90,7 +90,7 @@ export default function TaskCenterListPanel({
                 <span className="shrink-0 text-xs tabular-nums text-muted-foreground">{progressPercent}%</span>
               </div>
               <div className="mt-3 text-sm leading-5 text-foreground/85">
-                {task.currentItemLabel ?? task.displayStatus ?? task.currentStage ?? "等待任务更新"}
+                {task.currentItemLabel ?? task.displayStatus ?? task.currentStage ?? "Waiting for task updates"}
               </div>
               {task.blockingReason ? (
                 <div className="mt-2 line-clamp-2 rounded-lg bg-destructive/[0.055] px-3 py-2 text-xs leading-5 text-destructive">
@@ -98,7 +98,7 @@ export default function TaskCenterListPanel({
                 </div>
               ) : null}
               <div className="mt-3 text-[11px] text-muted-foreground">
-                更新于 {formatDate(task.updatedAt)}
+                Updated {formatDate(task.updatedAt)}
               </div>
             </TaskQueueItem>
             <TaskRecordActions kind={task.kind} id={task.id} status={task.status} title={task.title} />
@@ -107,8 +107,8 @@ export default function TaskCenterListPanel({
         })}
         {!loading && !errorMessage && tasks.length === 0 ? (
           <TaskQueueEmptyState
-            title="没有符合条件的任务"
-            description="可以清除筛选条件，或回到来源页面发起新的创作与资料处理任务。"
+            title="No tasks match your filters"
+            description="Clear the filters or return to a source page to start a new writing or data-processing task."
           />
         ) : null}
       </div>

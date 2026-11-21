@@ -206,7 +206,7 @@ export default function StoryModeManagementPage() {
     }),
     onSuccess: async () => {
       await invalidate();
-      toast.success("推进模式已创建。");
+      toast.success("Progression mode created.");
       setCreateDialogOpen(false);
     },
   });
@@ -214,7 +214,7 @@ export default function StoryModeManagementPage() {
   const createSelectedChildrenMutation = useMutation({
     mutationFn: async () => {
       if (!defaultParentId) {
-        throw new Error("父级推进模式不存在。");
+        throw new Error("Parent progression mode not found.");
       }
 
       const drafts = selectedGeneratedChildIndexes
@@ -227,7 +227,7 @@ export default function StoryModeManagementPage() {
         }));
 
       if (drafts.length === 0) {
-        throw new Error("请至少选择一个子类候选。");
+        throw new Error("Select at least one subcategory candidate.");
       }
 
       return createStoryModeChildren({
@@ -238,7 +238,7 @@ export default function StoryModeManagementPage() {
     onSuccess: async (response) => {
       await invalidate();
       const savedCount = response.data?.length ?? selectedGeneratedChildIndexes.length;
-      toast.success(`已批量创建 ${savedCount} 个推进模式子类。`);
+      toast.success(`Created ${savedCount} progression mode subcategories.`);
       setCreateDialogOpen(false);
     },
   });
@@ -246,7 +246,7 @@ export default function StoryModeManagementPage() {
   const updateMutation = useMutation({
     mutationFn: () => {
       if (!editingStoryMode) {
-        throw new Error("推进模式不存在。");
+        throw new Error("Progression mode not found.");
       }
       return updateStoryMode(editingStoryMode.id, {
         name: editState.name.trim(),
@@ -257,7 +257,7 @@ export default function StoryModeManagementPage() {
     },
     onSuccess: async () => {
       await invalidate();
-      toast.success("推进模式已更新。");
+      toast.success("Progression mode updated.");
       setEditingStoryModeId("");
     },
   });
@@ -266,7 +266,7 @@ export default function StoryModeManagementPage() {
     mutationFn: (id: string) => deleteStoryMode(id),
     onSuccess: async () => {
       await invalidate();
-      toast.success("推进模式已删除。");
+      toast.success("Progression mode deleted.");
     },
   });
 
@@ -286,7 +286,7 @@ export default function StoryModeManagementPage() {
     onSuccess: (drafts) => {
       setExpansionCandidates(drafts.map(cloneDraft));
       setSelectedExpansionIndexes(drafts.map((_draft, index) => index));
-      toast.success(`AI 已推荐 ${drafts.length} 个新的推进方向。`);
+      toast.success(`AI suggested ${drafts.length} new progression directions.`);
     },
   });
 
@@ -296,7 +296,7 @@ export default function StoryModeManagementPage() {
         .map((index) => expansionCandidates[index])
         .filter((draft): draft is StoryModeTreeDraft => Boolean(draft))
         .map((draft) => ({ ...cloneDraft(draft), children: [], profile: normalizeProfileInput(draft.profile) }));
-      if (drafts.length === 0) throw new Error("请至少选择一个推进模式方向。");
+      if (drafts.length === 0) throw new Error("Select at least one progression mode.");
       if (expansionParentId) {
         return createStoryModeChildren({ parentId: expansionParentId, drafts });
       }
@@ -312,11 +312,11 @@ export default function StoryModeManagementPage() {
         });
         if (response.data) created.push(response.data);
       }
-      return { success: true, data: created, message: "推进模式根节点创建成功。" };
+      return { success: true, data: created, message: "Root progression mode created." };
     },
     onSuccess: async (response) => {
       await invalidate();
-      toast.success(`已加入 ${response.data?.length ?? selectedExpansionIndexes.length} 个新的推进模式。`);
+      toast.success(`Added ${response.data?.length ?? selectedExpansionIndexes.length} new progression modes.`);
       setExpansionDialogOpen(false);
     },
   });
@@ -364,7 +364,7 @@ export default function StoryModeManagementPage() {
         setSelectedGeneratedChildIndexes(candidates.map((_item, index) => index));
         setActiveGeneratedChildIndex(0);
         setCreateDraft(cloneDraft(candidates[0]));
-        toast.success(`AI 已生成 ${candidates.length} 个推进模式子类草稿。`);
+        toast.success(`AI generated ${candidates.length} progression mode subcategory drafts.`);
         return;
       }
       setSelectedGeneratedChildIndexes([]);
@@ -374,7 +374,7 @@ export default function StoryModeManagementPage() {
       }
       setGeneratedChildCandidates([]);
       setCreateDraft(cloneDraft(result.draft));
-      toast.success("AI 推进模式树草稿已生成。");
+      toast.success("AI generated a progression mode tree draft.");
     },
   });
 
@@ -416,8 +416,8 @@ export default function StoryModeManagementPage() {
   const handleDelete = (node: StoryModeTreeNode) => {
     const descendantCount = collectDescendantIds(node).length;
     const message = descendantCount > 0
-      ? `确认删除推进模式「${node.name}」吗？这会同时删除其下 ${descendantCount} 个子类，此操作不可恢复。`
-      : `确认删除推进模式「${node.name}」吗？此操作不可恢复。`;
+      ? `Delete the progression mode “${node.name}”? This will also delete its ${descendantCount} subcategories. This action cannot be undone.`
+      : `Delete the progression mode “${node.name}”? This action cannot be undone.`;
     const confirmed = window.confirm(message);
     if (!confirmed) {
       return;
@@ -427,9 +427,9 @@ export default function StoryModeManagementPage() {
 
   const selectedParentLabel = useMemo(() => {
     if (!defaultParentId) {
-      return "作为根推进模式创建";
+      return "Create as a root progression mode";
     }
-    return parentOptions.find((item) => item.id === defaultParentId)?.path ?? "作为根推进模式创建";
+    return parentOptions.find((item) => item.id === defaultParentId)?.path ?? "Create as a root progression mode";
   }, [defaultParentId, parentOptions]);
 
   const editParentOptions = useMemo(
@@ -495,23 +495,23 @@ export default function StoryModeManagementPage() {
       <Dialog open={Boolean(editingStoryMode)} onOpenChange={(open) => { if (!open) setEditingStoryModeId(""); }}>
         <DialogContent className="max-h-[90vh] max-w-4xl overflow-auto">
           <DialogHeader>
-            <DialogTitle>编辑推进模式</DialogTitle>
+            <DialogTitle>Edit progression mode</DialogTitle>
             <DialogDescription>
-              可以修改名称、描述、模板和 profile。两级树限制仍会保留。
+              Update the name, description, template, and profile. The two-level hierarchy limit will remain in place.
             </DialogDescription>
           </DialogHeader>
 
           {editingStoryMode ? (
             <div className="space-y-4">
               <div className="rounded-lg border bg-muted/20 p-3 text-sm text-muted-foreground">
-                当前父级：{editingStoryMode.parentId ? (editParentOptions.find((item) => item.id === editingStoryMode.parentId)?.path ?? "未找到") : "根节点"}
+                Current parent: {editingStoryMode.parentId ? (editParentOptions.find((item) => item.id === editingStoryMode.parentId)?.path ?? "Not found") : "Root"}
               </div>
               <label className="space-y-2 text-sm">
-                <span className="font-medium text-foreground">名称</span>
+                <span className="font-medium text-foreground">Name</span>
                 <Input value={editState.name} onChange={(event) => setEditState((prev) => ({ ...prev, name: event.target.value }))} />
               </label>
               <label className="space-y-2 text-sm">
-                <span className="font-medium text-foreground">描述</span>
+                <span className="font-medium text-foreground">Description</span>
                 <textarea
                   rows={3}
                   className="w-full rounded-md border bg-background px-3 py-2 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
@@ -520,7 +520,7 @@ export default function StoryModeManagementPage() {
                 />
               </label>
               <label className="space-y-2 text-sm">
-                <span className="font-medium text-foreground">人工模板补充</span>
+                <span className="font-medium text-foreground">Additional template instructions</span>
                 <textarea
                   rows={3}
                   className="w-full rounded-md border bg-background px-3 py-2 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
@@ -537,10 +537,10 @@ export default function StoryModeManagementPage() {
 
           <DialogFooter className="gap-2">
             <Button type="button" variant="outline" onClick={() => setEditingStoryModeId("")}>
-              取消
+              Cancel
             </Button>
             <Button type="button" onClick={() => updateMutation.mutate()} disabled={updateMutation.isPending || !editState.name.trim()}>
-              {updateMutation.isPending ? "保存中..." : "保存修改"}
+              {updateMutation.isPending ? "Saving..." : "Save changes"}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -549,13 +549,13 @@ export default function StoryModeManagementPage() {
       <Card>
         <CardHeader className="flex flex-row items-start justify-between gap-4">
           <div className="space-y-1">
-            <CardTitle>推进模式库</CardTitle>
+            <CardTitle>Progression mode library</CardTitle>
             <CardDescription>
-              这里维护作品的推进模式，例如系统流、无敌流、种田流、治愈日常。它回答的是“这本书靠什么持续推进和兑现”，会作为后续规划和生成的硬约束输入。
+              Manage the progression modes that drive each story, such as leveling systems, power fantasies, settlement building, or healing slice-of-life. These modes define how the story keeps moving and delivering on reader expectations, and guide later planning and generation.
             </CardDescription>
           </div>
           <div className="flex flex-col items-end gap-2">
-            <div className="text-sm text-muted-foreground">当前推进模式数：{totalStoryModes}</div>
+            <div className="text-sm text-muted-foreground">Progression modes: {totalStoryModes}</div>
             <div className="flex gap-2">
               {storyModeTree.length > 0 ? (
                 <Button type="button" variant="outline" onClick={() => {
@@ -564,27 +564,27 @@ export default function StoryModeManagementPage() {
                   setSelectedExpansionIndexes([]);
                   setExpansionDialogOpen(true);
                 }}>
-                  扩展推进模式
+                  Expand progression modes
                 </Button>
               ) : null}
-              <Button type="button" onClick={handleCreateRoot}>新建推进模式树</Button>
+              <Button type="button" onClick={handleCreateRoot}>New progression mode tree</Button>
             </div>
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
           {storyModeTreeQuery.isLoading ? (
-            <div className="text-sm text-muted-foreground">正在加载推进模式树...</div>
+            <div className="text-sm text-muted-foreground">Loading progression mode tree...</div>
           ) : null}
 
           {!storyModeTreeQuery.isLoading && storyModeTree.length === 0 ? (
             <div className="rounded-xl border border-dashed p-6 text-center">
-              <div className="text-sm font-medium text-foreground">还没有任何推进模式</div>
+              <div className="text-sm font-medium text-foreground">No progression modes yet</div>
               <div className="mt-1 text-sm text-muted-foreground">
-                可以先手动建一个根推进模式，也可以直接让 AI 生成一份结构化草稿。
+                Create a root progression mode manually, or have AI generate a structured draft.
               </div>
               <div className="mt-4">
                 <Button type="button" onClick={handleCreateRoot}>
-                  开始创建
+                  Get started
                 </Button>
               </div>
             </div>

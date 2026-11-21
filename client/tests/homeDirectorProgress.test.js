@@ -42,7 +42,7 @@ const book = (status = 'completed') => ({id: 'novel', title: '十四毫米', dir
 test('home uses real saved prose and V2 source instead of an opening success', () => {
   const novel = book(), html = render(novel);
   assert.equal(model.getHomeNovelTask(novel), null);
-  assert.match(html, /已保存 1 章正文，全书目标 90 章/);
+  assert.match(html, /Saved chapters: 1 · Novel goal: 90 chapters/);
   assert.doesNotMatch(html.replace(/<[^>]*>/g, ''), /小说主流程已完成|100%|整本创作旅程/);
   assert.match(html, /href="\/lab\/director\/novel"/);
   assert.doesNotMatch(html, /href="\/novels\/novel\/edit/);
@@ -52,7 +52,7 @@ test('home uses real saved prose and V2 source instead of an opening success', (
 test('V2 running, manual pauses and failures remain visible and do not offer legacy mutations', () => {
   for (const status of ['running', 'paused', 'waiting_gate', 'failed', 'cancelled']) {
     const novel = book(status), html = render(novel);
-    assert.match(html, /打开导演台/);
+    assert.match(html, /Open Auto Director/);
     assert.doesNotMatch(html, /继续导演|进入章节执行|小说主流程已完成/);
     const metrics = model.buildHomeMetrics({novels: [novel]});
     assert.equal(metrics.find(metric => metric.id === 'running').value, status === 'running' ? 1 : 0);
@@ -63,21 +63,21 @@ test('V2 running, manual pauses and failures remain visible and do not offer leg
 test('unknown V2 source cannot fall back to the old editor and unknown targets do not imply completion', () => {
   const novel = {...book(), workspaceSourceRoute: null, bookProgress: {writtenChapters: 1, targetChapters: null, director: null}};
   const html = render(novel);
-  assert.match(html, /重新读取创作入口/);
+  assert.match(html, /Reload writing workspace/);
   assert.doesNotMatch(html, /href="\/novels\/novel\/edit/);
   assert.doesNotMatch(html.replace(/<[^>]*>/g, ''), /100%/);
-  assert.match(html, /确定全书目标/);
+  assert.match(html, /Set a chapter goal in Auto Director/);
 });
 
 test('V1 and short stories preserve their own workspace and progress paths', () => {
   const v1 = {...book(), directorVersion: 'v1', workspaceSourceRoute: '/novels/novel/edit'};
   assert.equal(model.getHomeNovelTask(v1), v1.latestAutoDirectorTask);
   const legacyHtml = render(v1);
-  assert.match(legacyHtml, /整本创作旅程/);
+  assert.match(legacyHtml, /Your novel(?:&#x27;|')s journey/);
   assert.match(legacyHtml, /href="\/novels\/novel\/edit/);
   const short = {...book(), narrativeForm: 'short_story', latestCreationStudioTask: {status: 'succeeded', progress: 1}};
   assert.equal(model.getHomeNovelTask(short), short.latestCreationStudioTask);
   const shortHtml = render(short);
   assert.match(shortHtml, /href="\/novels\/novel\/story"/);
-  assert.doesNotMatch(shortHtml, /打开导演台|重新读取创作入口/);
+  assert.doesNotMatch(shortHtml, /Open Auto Director|Reload writing workspace/);
 });

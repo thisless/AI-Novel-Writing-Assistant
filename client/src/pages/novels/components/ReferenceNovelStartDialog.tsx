@@ -60,18 +60,18 @@ export default function ReferenceNovelStartDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <AppDialogContent
         className="max-w-3xl"
-        title="照着一本书写"
-        description="选择参考小说和创作方式，系统会自动带入拆书结论与写法。"
+        title="Use a novel as a reference"
+        description="Choose a reference novel and writing approach. The system will include analysis findings and style guidance."
       >
         {!fixedAnalysis ? (
           <section>
-            <div className="text-sm font-medium text-foreground">选择参考小说</div>
+            <div className="text-sm font-medium text-foreground">Choose a reference novel</div>
             {analysesQuery.isLoading ? (
               <div className="mt-3 flex items-center gap-2 rounded-xl bg-muted/45 px-4 py-6 text-sm text-muted-foreground">
-                <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />正在读取可用小说…
+                <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />Loading available novels…
               </div>
             ) : analyses.length > 0 ? (
-              <div className="mt-3 max-h-56 space-y-1 overflow-y-auto rounded-xl bg-muted/35 p-2" role="radiogroup" aria-label="参考小说">
+              <div className="mt-3 max-h-56 space-y-1 overflow-y-auto rounded-xl bg-muted/35 p-2" role="radiogroup" aria-label="Reference novels">
                 {analyses.map((analysis) => {
                   const selected = analysis.id === selectedAnalysis?.id;
                   return (
@@ -94,27 +94,27 @@ export default function ReferenceNovelStartDialog({
               </div>
             ) : (
               <div className="mt-3 rounded-xl bg-muted/45 px-4 py-5 text-sm text-muted-foreground">
-                <p>还没有完成拆书的参考小说。</p>
-                <Button type="button" variant="ghost" className="mt-2 h-auto p-0 text-primary hover:bg-transparent" onClick={() => navigate("/book-analysis")}>导入并分析参考小说</Button>
+                <p>No analyzed reference novels are available yet.</p>
+                <Button type="button" variant="ghost" className="mt-2 h-auto p-0 text-primary hover:bg-transparent" onClick={() => navigate("/book-analysis")}>Import and analyze a reference novel</Button>
               </div>
             )}
           </section>
         ) : (
           <div className="rounded-xl bg-muted/40 px-4 py-3">
-            <div className="text-xs text-muted-foreground">参考小说</div>
+            <div className="text-xs text-muted-foreground">Reference novel</div>
             <div className="mt-1 font-medium text-foreground">{fixedAnalysis.documentTitle}</div>
           </div>
         )}
 
-        <section className="mt-5" aria-label="作品规模">
-          <div className="text-sm font-medium">选择作品规模</div>
+        <section className="mt-5" aria-label="Work length">
+          <div className="text-sm font-medium">Choose a work length</div>
           <div className="mt-3 flex flex-wrap gap-2">
-            <Button type="button" variant={targetForm === "long_novel" ? "default" : "outline"} aria-pressed={targetForm === "long_novel"} onClick={() => setTargetForm("long_novel")}>长篇小说</Button>
-            <Button type="button" variant={targetForm === "short_story" ? "default" : "outline"} aria-pressed={targetForm === "short_story"} onClick={() => setTargetForm("short_story")}>短篇 · 3,000—30,000 字</Button>
+            <Button type="button" variant={targetForm === "long_novel" ? "default" : "outline"} aria-pressed={targetForm === "long_novel"} onClick={() => setTargetForm("long_novel")}>Novel</Button>
+            <Button type="button" variant={targetForm === "short_story" ? "default" : "outline"} aria-pressed={targetForm === "short_story"} onClick={() => setTargetForm("short_story")}>Short story · 3,000–30,000 words</Button>
           </div>
         </section>
         <section className="mt-5">
-          <div className="text-sm font-medium text-foreground">选择创作方式</div>
+          <div className="text-sm font-medium text-foreground">Choose a writing approach</div>
           <div className="mt-3 grid gap-3 sm:grid-cols-2">
             <button
               type="button"
@@ -123,8 +123,8 @@ export default function ReferenceNovelStartDialog({
               onClick={() => startCreation("continuation")}
             >
               <BookOpen className="h-5 w-5" aria-hidden="true" />
-              <div className="mt-4 font-semibold text-foreground">续写原作</div>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">{targetForm === "short_story" ? "续写原作请选长篇；短篇支持借鉴方法、创作新故事。" : "保留角色、世界规则、时间线与未完线索，从原作结尾继续写。"}</p>
+              <div className="mt-4 font-semibold text-foreground">Continue the source story</div>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">{targetForm === "short_story" ? "Choose a novel to continue the source story. Short stories can use the source as inspiration for a new story." : "Keep the characters, world rules, timeline, and unresolved threads, and continue from the source story's ending."}</p>
             </button>
             <button
               type="button"
@@ -133,8 +133,8 @@ export default function ReferenceNovelStartDialog({
               onClick={() => startCreation("adaptation")}
             >
               <GitBranch className="h-5 w-5" aria-hidden="true" />
-              <div className="mt-4 font-semibold text-foreground">{targetForm === "short_story" ? "参考创作新短篇" : "参考创作新书"}</div>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">参考结构、节奏和写法，重新生成角色、世界与剧情。</p>
+              <div className="mt-4 font-semibold text-foreground">{targetForm === "short_story" ? "Create a new short story from a reference" : "Create a new novel from a reference"}</div>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">Use the source's structure, pacing, and style as a reference, then create new characters, a new world, and a new plot.</p>
             </button>
           </div>
         </section>

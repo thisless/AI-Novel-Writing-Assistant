@@ -27,41 +27,41 @@ interface DirectorPanelProps {
 
 function formatEvent(event: DirectorTimelineEvent): string {
   const label: Record<string, string> = {
-    command_accepted: "已接收创作命令",
-    step_started: "开始处理阶段",
-    step_finished: "阶段处理完成",
-    quality_debt_recorded: "记录质量提醒",
-    stop_signal: "记录暂停原因",
-    token_usage: "完成一次 AI 调用",
+    command_accepted: "Writing command accepted",
+    step_started: "Stage started",
+    step_finished: "Stage completed",
+    quality_debt_recorded: "Quality reminder recorded",
+    stop_signal: "Pause reason recorded",
+    token_usage: "AI call completed",
   };
-  return label[event.type] ?? "更新创作记录";
+  return label[event.type] ?? "Writing record updated";
 }
 
 function formatTime(value: string): string {
   const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? "时间未知" : date.toLocaleString();
+  return Number.isNaN(date.getTime()) ? "Unknown time" : date.toLocaleString();
 }
 
 export default function DirectorPanel({ view, novelId, timeline = [], preview = false, startForm, reviewTarget, reviewReady = false, reviewRunId, reviewVersion, renderPlanEditor, outlineBound = false }: DirectorPanelProps) {
   const candidates = useDirectorCharacterCandidates(view.runId, !preview);
   const candidatePage = candidates.data?.data;
   const reviewingCharacters = candidatePage?.reviews.some(r => r.blocking) ?? false;
-  const badgeView = reviewingCharacters ? {...view, headline: "请确认本章人物后继续", availableActions: view.availableActions.filter(a => a.command !== "resume")} : view;
+  const badgeView = reviewingCharacters ? {...view, headline: "Review this chapter's characters to continue", availableActions: view.availableActions.filter(a => a.command !== "resume")} : view;
   const reviewingCurrentGate=reviewReady && reviewRunId===view.runId && reviewVersion===view.sourceTrace.controlVersion && view.availableActions.some(action=>action.id.startsWith("review:") && action.kind==="navigate" && action.target===reviewTarget);
   const navigationAction = view.availableActions.find(action => action.kind === "navigate" && action.target !== reviewTarget);
   const driveSwitch = view.availableActions.find(action => action.command === "handoff" && action.toDriver);
   const chapterText = view.debts.chapterOrders.length > 0
-    ? `第 ${view.debts.chapterOrders.join("、")} 章`
-    : "本次没有记录章节质量问题";
+    ? `Chapters ${view.debts.chapterOrders.join(", ")}`
+    : "No chapter quality issues were recorded for this run.";
   const chapterProgress = view.chapterProgress;
   const chapterListProgress = view.chapterListProgress;
   const progress = chapterProgress ?? view.progress;
 
   return (
-    <aside className="flex min-h-0 flex-col gap-0 bg-background" aria-label="小说导演台">
-      <DirectorBadge view={badgeView} novelId={novelId} preview={preview} currentNavigationTarget={reviewTarget} openRunLabel={outlineBound ? "选择下一章并确认" : undefined} />
+    <aside className="flex min-h-0 flex-col gap-0 bg-background" aria-label="Novel Director panel">
+      <DirectorBadge view={badgeView} novelId={novelId} preview={preview} currentNavigationTarget={reviewTarget} openRunLabel={outlineBound ? "Select the next chapter and confirm" : undefined} />
       {!preview ? <DirectorCharacterCandidates page={candidatePage} runId={view.runId} novelId={novelId}/> : null}
-      {candidates.isError ? <p role="alert" className="py-2 text-xs text-destructive">人物候选暂时未能加载，请稍后重试。</p> : null}
+      {candidates.isError ? <p role="alert" className="py-2 text-xs text-destructive">Couldn't load character candidates. Try again later.</p> : null}
       {view.mode === "paused" && view.chapterBudget ? <ChapterBudgetRecovery key={`${view.runId}:${view.sourceTrace.controlVersion}:${view.chapterBudget.chapterId}`}
         budget={view.chapterBudget} runId={view.runId} novelId={novelId} expectedVersion={view.sourceTrace.controlVersion} disabled={preview || reviewingCharacters}/> : null}
       {view.mode === "paused" && view.unknownClaims ? <UnknownClaimsRecovery key={`${view.runId}:${view.sourceTrace.controlVersion}:${view.unknownClaims.chapterId}`}
@@ -72,28 +72,28 @@ export default function DirectorPanel({ view, novelId, timeline = [], preview = 
       <section className="border-t border-border/60 py-4" aria-labelledby="director-current-work">
         <div className="flex items-center gap-2 text-sm font-semibold" id="director-current-work">
           <BookOpen className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
-          正在做什么
+          Current activity
         </div>
         <p className="mt-2 text-sm leading-6 text-foreground">{view.headline}</p>
         {chapterListProgress ? (
           <div className="mt-3 space-y-2 text-xs" role="status" aria-live="polite">
             <p>{chapterListProgress.label}</p>
-            <div role="progressbar" aria-label="章节拆分进度" aria-valuemin={0}
+            <div role="progressbar" aria-label="Chapter breakdown progress" aria-valuemin={0}
               aria-valuemax={chapterListProgress.totalChapters} aria-valuenow={chapterListProgress.completedChapters}>
               <WorkflowProgressBar progress={chapterListProgress.completedChapters / chapterListProgress.totalChapters} />
             </div>
             <p className="text-muted-foreground">
-              已生成 {chapterListProgress.completedChapters}/{chapterListProgress.totalChapters} 章
+              Generated {chapterListProgress.completedChapters}/{chapterListProgress.totalChapters} chapters
               {chapterListProgress.completedChapters === chapterListProgress.totalChapters
-                ? "，正在校验并保存章节列表…" : "，每完成一个节奏段更新进度。"}
+                ? " · Validating and saving the chapter list…" : " · Progress updates as each beat is completed."}
             </p>
           </div>
         ) : null}
-        {chapterProgress ? <p className="mt-2 text-xs text-muted-foreground">本次正文：第 {chapterProgress.from}—{chapterProgress.to} 章</p> : null}
-        <div className="mt-3" role="progressbar" aria-valuemin={0} aria-valuemax={progress.total} aria-valuenow={progress.done} aria-label={chapterProgress ? "本次正文完成进度" : "导演阶段进度"}>
+        {chapterProgress ? <p className="mt-2 text-xs text-muted-foreground">Current manuscript: Chapters {chapterProgress.from}–{chapterProgress.to}</p> : null}
+        <div className="mt-3" role="progressbar" aria-valuemin={0} aria-valuemax={progress.total} aria-valuenow={progress.done} aria-label={chapterProgress ? "Current manuscript progress" : "Director stage progress"}>
           <div className="flex items-center justify-between text-xs text-muted-foreground">
-            <span>{chapterProgress ? "检查并保存完成" : "规划阶段完成"}</span>
-            <span>{progress.done}/{progress.total}{chapterProgress ? " 章" : " 阶段"}</span>
+            <span>{chapterProgress ? "Review and save complete" : "Planning stages complete"}</span>
+            <span>{progress.done}/{progress.total}{chapterProgress ? " chapters" : " stages"}</span>
           </div>
           <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-muted" aria-hidden="true">
             <div className="h-full rounded-full bg-primary transition-[width]" style={{ width: `${progress.total > 0 ? Math.min(100, (progress.done / progress.total) * 100) : 0}%` }} />
@@ -104,13 +104,13 @@ export default function DirectorPanel({ view, novelId, timeline = [], preview = 
       <section className="border-t border-border/60 py-4" aria-labelledby="director-next-action">
         <div className="flex items-center gap-2 text-sm font-semibold" id="director-next-action">
           <ClipboardList className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
-          需要你做什么
+          Next steps
         </div>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">{reviewingCurrentGate ? "请核对左侧本阶段结果，确认后 AI 按本次授权范围继续。" : view.nextActionGuidance}</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">{reviewingCurrentGate ? "Review this stage's results on the left. Confirm to let AI continue within the authorized range." : view.nextActionGuidance}</p>
         {view.detail ? <p className={`mt-2 text-sm leading-6 ${reviewingCharacters ? "text-muted-foreground" : "text-destructive"}`}>{view.detail}</p> : null}
         {navigationAction ? (
           <Link className="mt-3 inline-flex text-sm font-medium text-primary underline-offset-4 hover:underline" to={navigationAction.target ?? view.sourceRoute}>
-            查看本阶段结果
+            View this stage's results
           </Link>
         ) : null}
         {!preview && ["completed","cancelled","failed"].includes(view.mode) && view.availableActions.some(action=>action.command === "open_run")
@@ -121,21 +121,21 @@ export default function DirectorPanel({ view, novelId, timeline = [], preview = 
       <section className="border-t border-border/60 py-4" aria-labelledby="director-quality-debt">
         <div className="flex items-center gap-2 text-sm font-semibold" id="director-quality-debt">
           <ShieldAlert className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
-          质量提醒
+          Quality reminders
         </div>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          {view.debts.count > 0 ? `已记录 ${view.debts.count} 项质量提醒，${chapterText}。` : chapterText}
+          {view.debts.count > 0 ? `${view.debts.count} quality reminders recorded · ${chapterText}` : chapterText}
         </p>
-        <p className="mt-1 text-xs text-muted-foreground">可从左侧目录查看这些章节。局部质量提醒不代表本次创作失败；暂停事项请按上方提示处理。</p>
+        <p className="mt-1 text-xs text-muted-foreground">Find these chapters in the directory on the left. A local quality reminder doesn't mean the run failed. Follow the guidance above to resolve pauses.</p>
       </section>
 
       <section className="border-t border-border/60 py-4" aria-labelledby="director-timeline">
         <div className="flex items-center gap-2 text-sm font-semibold" id="director-timeline">
           <History className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
-          时间线
+          Timeline
         </div>
         {timeline.length === 0 ? (
-          <p className="mt-2 text-sm text-muted-foreground">暂时没有可展示的时间线。</p>
+          <p className="mt-2 text-sm text-muted-foreground">No timeline events to display yet.</p>
         ) : (
           <ol className="mt-3 space-y-3">
             {timeline.slice(-8).reverse().map((event) => (
@@ -152,12 +152,12 @@ export default function DirectorPanel({ view, novelId, timeline = [], preview = 
       </section>
 
       <details className="border-t border-border/60 py-3 text-xs text-muted-foreground">
-        <summary className="cursor-pointer select-none">查看运行诊断</summary>
+        <summary className="cursor-pointer select-none">Run diagnostics</summary>
         <dl className="mt-3 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1.5">
-          <dt>创作方式</dt><dd className="text-foreground">{directorDriverLabel(view.driver)}</dd>
-          <dt>计划版本</dt><dd className="break-all text-foreground">{view.sourceTrace.planVersion}</dd>
-          <dt>状态版本</dt><dd className="text-foreground">{view.sourceTrace.controlVersion}</dd>
-          <dt>阶段完成</dt><dd className="text-foreground">{view.progress.done}/{view.progress.total}</dd>
+          <dt>Writing mode</dt><dd className="text-foreground">{directorDriverLabel(view.driver)}</dd>
+          <dt>Plan version</dt><dd className="break-all text-foreground">{view.sourceTrace.planVersion}</dd>
+          <dt>State version</dt><dd className="text-foreground">{view.sourceTrace.controlVersion}</dd>
+          <dt>Stages completed</dt><dd className="text-foreground">{view.progress.done}/{view.progress.total}</dd>
         </dl>
       </details>
     </aside>

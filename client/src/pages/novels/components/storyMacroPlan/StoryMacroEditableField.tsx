@@ -46,8 +46,8 @@ export default function StoryMacroEditableField({
             variant="ghost"
             size="icon"
             className="h-7 w-7 text-muted-foreground"
-            aria-label={`${editing ? "完成编辑" : "编辑"}${label}`}
-            title={editing ? "完成编辑，返回阅读" : "编辑内容"}
+            aria-label={`${editing ? "Finish editing " : "Edit "}${label}`}
+            title={editing ? "Finish editing and return to reading" : "Edit content"}
             onClick={() => editing ? setEditing(false) : startEditing()}
           >
             {editing ? <Check className="h-3.5 w-3.5" /> : <Pencil className="h-3.5 w-3.5" />}
@@ -78,7 +78,7 @@ export default function StoryMacroEditableField({
         <div
           role="button"
           tabIndex={0}
-          aria-label={`编辑${label}`}
+          aria-label={`Edit ${label}`}
           onClick={startEditing}
           onKeyDown={(event) => {
             if (event.key === "Enter" || event.key === " ") {
@@ -96,7 +96,7 @@ export default function StoryMacroEditableField({
               {items.map((item, index) => <li key={index} className="whitespace-pre-wrap break-words">{item}</li>)}
             </ul>
           ) : (
-            <p className="whitespace-pre-wrap break-words">{value.trim() ? value : `${placeholder} 点击补充。`}</p>
+            <p className="whitespace-pre-wrap break-words">{value.trim() ? value : `${placeholder} Click to add details.`}</p>
           )}
         </div>
       )}

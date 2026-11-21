@@ -10,10 +10,10 @@ export const READING_FONT_SIZE_MIN = 14;
 export const READING_FONT_SIZE_MAX = 32;
 export const DEFAULT_READING_DISPLAY: Readonly<ReadingDisplayPreferences> = {fontSize: 17, font: "default"};
 export const READING_FONT_OPTIONS: ReadonlyArray<{value: ReadingDisplayFont; label: string; family: string}> = [
-  {value: "default", label: "默认衬线", family: 'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif'},
-  {value: "song", label: "宋体", family: '"SimSun", "Songti SC", "Noto Serif CJK SC", serif'},
-  {value: "sans", label: "微软雅黑", family: '"Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", sans-serif'},
-  {value: "kai", label: "楷体", family: '"KaiTi", "STKaiti", serif'},
+  {value: "default", label: "Default serif", family: 'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif'},
+  {value: "song", label: "Songti serif", family: '"SimSun", "Songti SC", "Noto Serif CJK SC", serif'},
+  {value: "sans", label: "Sans serif", family: '"Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", sans-serif'},
+  {value: "kai", label: "Kaiti", family: '"KaiTi", "STKaiti", serif'},
 ];
 
 export function normalizeReadingDisplayPreferences(value: unknown): ReadingDisplayPreferences {

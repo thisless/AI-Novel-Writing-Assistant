@@ -26,32 +26,32 @@ export function ChapterReader({ chapter, characters, onCharacter, onChapter, cha
     viewport.scrollTop += Math.max(0, tail.current.getBoundingClientRect().bottom - viewport.getBoundingClientRect().bottom);
   }, [live?.executionId, live?.revision]);
   const index = chapters.findIndex(row => row.id === chapter.id);
-  return <article className="mx-auto max-w-[42rem] px-2 pb-10 sm:px-6" aria-label="章节正文">
+  return <article className="mx-auto max-w-[42rem] px-2 pb-10 sm:px-6" aria-label="Chapter manuscript">
     <div className="mb-9 space-y-3 border-b border-border/50 pb-6">
-      <p className="text-xs tracking-widest text-muted-foreground">第 {edition.order} 章 · {(live ? live.content.replace(/\s/g, "").length : edition.wordCount).toLocaleString()} 字</p>
+      <p className="text-xs tracking-widest text-muted-foreground">Chapter {edition.order} · {(live ? live.content.replace(/\s/g, "").length : edition.wordCount).toLocaleString()} words</p>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="min-w-0 text-2xl font-semibold tracking-wide">{edition.title}</h2>
         <div className="flex items-center gap-2">
-          {onEdit ? <Button size="sm" variant="outline" onClick={() => onEdit(chapter.id)}>编辑正文</Button> : null}
+          {onEdit ? <Button size="sm" variant="outline" onClick={() => onEdit(chapter.id)}>Edit manuscript</Button> : null}
           <ReadingDisplaySettings preferences={readingDisplay} onChange={onReadingDisplayChange} previewText={content}/>
         </div>
       </div>
-      {live ? <p role="status" className="text-xs text-muted-foreground">{live.state === "writing" ? "正在生成正文 · 实时预览" : live.state === "checking" ? "正文生成完成，正在检查与保存" : live.state === "saved" ? "正文已保存" : "生成已中断，请查看导演台的处理提示。正文以保存版为准。"}</p> : null}
-      {changed ? <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground" role="status">本章有新保存的内容<Button size="sm" variant="outline" onClick={() => setEdition(chapter)}>查看新内容</Button></div> : null}
+      {live ? <p role="status" className="text-xs text-muted-foreground">{live.state === "writing" ? "Writing manuscript · Live preview" : live.state === "checking" ? "Draft complete · Checking and saving" : live.state === "saved" ? "Manuscript saved" : "Writing was interrupted. Check the Director panel for guidance; the saved version is shown."}</p> : null}
+      {changed ? <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground" role="status">New content has been saved for this chapter<Button size="sm" variant="outline" onClick={() => setEdition(chapter)}>View new content</Button></div> : null}
       {chapter.qualityDebt ? <div className="space-y-1 bg-muted/40 px-3 py-2 text-sm" role="status">
-        <p className="font-medium">正文已保存，仍有待复查事项</p>
+        <p className="font-medium">Manuscript saved, with items to review</p>
         <p className="text-muted-foreground">{chapter.qualityDebt.reason}</p>
-        <p className="text-xs text-muted-foreground">可在“编辑正文”中查看问题并使用 AI 检查或修文，后续章节可以继续创作。</p>
+        <p className="text-xs text-muted-foreground">Review the issue and use AI to check or revise it under “Edit manuscript.” You can continue writing later chapters.</p>
       </div> : null}
-      <div className="flex flex-wrap items-center gap-1.5"><span className="mr-2 text-xs text-muted-foreground">快速查看角色</span>{characters.map(character => <Button key={character.id} size="sm" variant="ghost" onClick={() => onCharacter(character.id)}>{character.name}</Button>)}{characters.length === 0 ? <span className="text-xs text-muted-foreground">暂无角色资料</span> : null}</div>
+      <div className="flex flex-wrap items-center gap-1.5"><span className="mr-2 text-xs text-muted-foreground">Quick character lookup</span>{characters.map(character => <Button key={character.id} size="sm" variant="ghost" onClick={() => onCharacter(character.id)}>{character.name}</Button>)}{characters.length === 0 ? <span className="text-xs text-muted-foreground">No character profiles yet</span> : null}</div>
     </div>
     {content?.trim() ? <div className="space-y-6 leading-[2.15] tracking-wide text-foreground/90" style={readingTextStyle(readingDisplay)}>{content.split(/\n\s*\n/).filter(Boolean).map((paragraph, index) => <p key={index} className="whitespace-pre-wrap break-words">{paragraph}</p>)}{live?.state === "writing" ? <span aria-hidden="true" className="inline-block h-5 w-1 animate-pulse bg-primary"/> : null}</div>
-      : live?.state === "writing" ? <p className="py-16 text-center text-sm text-muted-foreground">正在准备正文输出…</p>
-      : <div className="py-16 text-center"><p className="text-lg font-medium">这一章等待写作</p><p className="mt-3 text-sm text-muted-foreground">正文保存后可在这里阅读。你可以先查看故事规划和角色资料。</p></div>}
+      : live?.state === "writing" ? <p className="py-16 text-center text-sm text-muted-foreground">Preparing manuscript…</p>
+      : <div className="py-16 text-center"><p className="text-lg font-medium">This chapter is waiting to be written</p><p className="mt-3 text-sm text-muted-foreground">The manuscript will appear here once saved. In the meantime, review the story plan and character profiles.</p></div>}
     <div ref={tail}/>
     <footer className="mt-12 flex justify-between gap-3 border-t border-border/50 pt-5">
-      <Button variant="ghost" disabled={index <= 0} onClick={() => onChapter(chapters[index - 1].id)}>上一章</Button>
-      <Button variant="ghost" disabled={index < 0 || index >= chapters.length - 1} onClick={() => onChapter(chapters[index + 1].id)}>下一章</Button>
+      <Button variant="ghost" disabled={index <= 0} onClick={() => onChapter(chapters[index - 1].id)}>Previous chapter</Button>
+      <Button variant="ghost" disabled={index < 0 || index >= chapters.length - 1} onClick={() => onChapter(chapters[index + 1].id)}>Next chapter</Button>
     </footer>
   </article>;
 }

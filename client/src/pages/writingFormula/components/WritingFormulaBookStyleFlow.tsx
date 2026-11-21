@@ -21,43 +21,43 @@ export default function WritingFormulaBookStyleFlow(props: WritingFormulaBookSty
   return (
     <Card className="border-slate-200/80 bg-white/90 shadow-[0_20px_60px_rgba(15,23,42,0.06)]">
       <CardHeader>
-        <CardTitle>从小说基础信息设置书级默认写法</CardTitle>
+        <CardTitle>Set a novel's default style in its basic information</CardTitle>
         <div className="text-sm leading-7 text-muted-foreground">
-          写法引擎负责创建、测试和整理写法资产。当前小说要使用哪套默认写法，请回到小说基础信息里确认，再带入后续导演和正文流程。
+          Use the Style Engine to create, test, and manage style profiles. To choose a novel's default style, return to its basic information and confirm which style to use in later director and prose workflows.
         </div>
       </CardHeader>
       <CardContent className="space-y-5">
         <div className="grid gap-4 xl:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
           <div className="space-y-4 rounded-2xl border bg-slate-50/70 p-4">
-            <div className="text-sm font-medium text-slate-900">现在应该从哪里进入</div>
+            <div className="text-sm font-medium text-slate-900">Where to go next</div>
             <div className="rounded-2xl border bg-white p-4 text-sm leading-7 text-slate-700">
               {novelId
-                ? `当前小说${novelTitle ? `《${novelTitle}》` : ""}的“默认写法”已经放到小说基础信息页里。`
-                : "请先进入某本小说的基础信息页，在那里确认书级默认写法。"}
+                ? `The default style for ${novelTitle ? `“${novelTitle}”` : "this novel"} is set on its basic information page.`
+                : "Open a novel's basic information page to choose its default style."}
             </div>
             <div className="rounded-2xl border bg-slate-950 p-4 text-white">
-              <div className="text-sm font-medium">两个入口分别负责什么</div>
+              <div className="text-sm font-medium">What each area does</div>
               <div className="mt-3 space-y-2 text-sm leading-7 text-slate-200">
-                <div>小说页：为当前小说选择默认写法，触发推荐、比较候选，并决定何时带入自动导演。</div>
-                <div>写法引擎：继续负责整理写法资产、试写、去 AI 味和规则管理。</div>
+                <div>Novel page: Choose a default style, request recommendations, compare options, and decide when to use it with Auto Director.</div>
+                <div>Style Engine: Manage style profiles, generate samples, reduce AI-like writing, and edit rules.</div>
               </div>
             </div>
           </div>
 
           <div className="space-y-4 rounded-2xl border bg-white p-4">
-            <div className="text-sm font-medium text-slate-900">下一步</div>
+            <div className="text-sm font-medium text-slate-900">Next step</div>
             <div className="rounded-2xl border bg-slate-50/70 p-4 text-sm leading-7 text-slate-700">
-              先去小说页确认这本书的默认写法。如果当前资产库里还没有合适的写法，再回到写法引擎创建或整理资产。
+              Choose this novel's default style on its novel page. If the library does not have a suitable style, return here to create or edit one.
             </div>
             <div className="flex flex-wrap gap-3">
               <Button asChild type="button">
-                <Link to={novelRoute}>去小说页设置默认写法</Link>
+                <Link to={novelRoute}>Set default style on the novel page</Link>
               </Button>
               <Button type="button" variant="outline" onClick={onOpenAdvanced}>
-                编辑当前写法
+                Edit current style
               </Button>
               <Button type="button" variant="outline" onClick={onOpenCreate}>
-                新建一套写法
+                Create a style profile
               </Button>
             </div>
           </div>

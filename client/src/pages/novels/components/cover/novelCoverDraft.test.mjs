@@ -1,6 +1,11 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {
+  DEFAULT_NOVEL_COVER_NEGATIVE_PROMPT,
+  buildNovelCoverNegativePrompt,
+  buildNovelCoverTitleInstruction,
+} from "@ai-novel/shared/imagePrompt";
+import {
   buildNovelCoverDraftContext,
   buildNovelCoverDraftSourcePrompt,
 } from "./novelCoverDraft.ts";
@@ -72,9 +77,9 @@ test("novel cover draft context reuses basic info and world slice labels", () =>
   assert.equal(context.primaryStoryModeLabel, "爽文 / 审判升级流");
   assert.equal(context.secondaryStoryModeLabel, "悬疑 / 悬案追凶流");
   assert.equal(context.worldSummary, "高压雾港里，审判机构与地下交易同时运作。");
-  assert.equal(context.narrativePovLabel, "第三人称");
-  assert.equal(context.pacePreferenceLabel, "快节奏");
-  assert.equal(context.emotionIntensityLabel, "高情绪浓度");
+  assert.equal(context.narrativePovLabel, "Third person");
+  assert.equal(context.pacePreferenceLabel, "Fast-paced");
+  assert.equal(context.emotionIntensityLabel, "High emotional intensity");
 });
 
 test("novel cover draft source prompt includes beginner-facing cover cues", () => {
@@ -102,12 +107,12 @@ test("novel cover draft source prompt includes beginner-facing cover cues", () =
     },
   });
 
-  assert.match(prompt, /雾港审判局 的小说封面主画面/);
-  assert.match(prompt, /目标读者：喜欢都市悬疑和高压追更感的读者/);
-  assert.match(prompt, /商业标签：强冲突、都市奇诡、持续追更/);
-  assert.match(prompt, /世界氛围：高压雾港里，审判机构与地下交易同时运作。/);
-  assert.match(prompt, /作者笔名：雾港夜行/);
-  assert.match(prompt, /封面目标：突出这本书最抓人的视觉卖点，生成带有准确书名“雾港审判局”和作者笔名“雾港夜行”的竖版完整小说封面。/);
+  assert.match(prompt, /Main image for the novel cover: 雾港审判局/);
+  assert.match(prompt, /Target audience: 喜欢都市悬疑和高压追更感的读者/);
+  assert.match(prompt, /Commercial tags: 强冲突, 都市奇诡, 持续追更/);
+  assert.match(prompt, /World atmosphere: 高压雾港里，审判机构与地下交易同时运作。/);
+  assert.match(prompt, /Author pen name: 雾港夜行/);
+  assert.match(prompt, /Cover goal: Emphasize the book's strongest visual appeal and create a complete vertical novel cover with the exact title "雾港审判局" and author pen name "雾港夜行"./);
 });
 
 
@@ -119,8 +124,21 @@ test("novel cover draft source prompt omits pen name when it is not filled", () 
     worldOptions: [],
   });
 
-  assert.match(prompt, /雾港审判局 的小说封面主画面/);
+  assert.match(prompt, /Main image for the novel cover: 雾港审判局/);
   assert.doesNotMatch(prompt, /作者笔名/);
-  assert.match(prompt, /生成带有准确书名“雾港审判局”的竖版完整小说封面。/);
+  assert.match(prompt, /create a complete vertical novel cover with the exact title "雾港审判局"/);
   assert.doesNotMatch(prompt, /作者笔名“/);
+});
+
+test("cover prompts use English instructions while preserving Chinese title text", () => {
+  const titleInstruction = buildNovelCoverTitleInstruction("雾港审判局", "雾港夜行");
+  assert.match(titleInstruction, /Clearly display only the title "雾港审判局" and author pen name "雾港夜行"/);
+  assert.match(titleInstruction, /Render both in Simplified Chinese/);
+
+  const withPenName = buildNovelCoverNegativePrompt(DEFAULT_NOVEL_COVER_NEGATIVE_PROMPT, "雾港夜行");
+  assert.doesNotMatch(withPenName, /author name/);
+  assert.match(withPenName, /gibberish/);
+
+  const legacyNegativePrompt = buildNovelCoverNegativePrompt("乱码，作者名，水印", "雾港夜行");
+  assert.equal(legacyNegativePrompt, "乱码, 水印");
 });
