@@ -19,12 +19,13 @@ const writingFormulaPage = readClientFile("src/pages/writingFormula/WritingFormu
 const promptWorkbenchRoute = readFileSync(resolve(clientRoot, "../server/src/routes/promptWorkbench.ts"), "utf8");
 const promptWorkbenchService = readFileSync(resolve(clientRoot, "../server/src/prompting/PromptWorkbenchService.ts"), "utf8");
 
-test("正文效果实验室从章节与写法引擎直达本书高级模板试写", () => {
+test("the writing effectiveness lab links directly from chapters and formulas to advanced template tests", () => {
   assert.match(chapterPage, /experience=writing&novelId=/);
+  assert.match(chapterPage, /Writing Effectiveness Lab/);
   assert.match(writingFormulaPage, /prompt-workbench\?experience=writing/);
-  assert.match(workbenchPage, /正文效果实验室/);
+  assert.match(workbenchPage, /heading=\{writingLab \? "Manuscript preview lab"/);
   assert.match(workbenchPage, /novel\.chapter\.writer/);
-  assert.match(runBar, /试写效果/);
+  assert.match(runBar, /Try a sample/);
 });
 
 test("提示词页隐藏治理摘要，并只在高级模板显示上下文引用", () => {
@@ -50,8 +51,8 @@ test("提示词目录默认按可调整能力筛选并保留全目录搜索", ()
 
 test("编辑器头部使用语义色并区分草稿与本书模板", () => {
   assert.match(editorShell, /bg-card/);
-  assert.match(editorShell, /模板草稿/);
-  assert.match(editorShell, /本书模板/);
+  assert.match(editorShell, /Template draft/);
+  assert.match(editorShell, /This novel's template/);
   assert.match(themeStyles, /background-color: hsl\(var\(--success\)\);/);
   assert.match(themeStyles, /color: hsl\(var\(--success\)\);/);
 });
@@ -71,5 +72,5 @@ test("文本类测试产出通过 SSE 持续显示，结构化测试保留校验
   assert.match(promptWorkbenchService, /async testRunTextStream/);
   assert.match(previewHook, /prompt\?\.outputType === "text"/);
   assert.match(previewHook, /\/prompt-workbench\/test-run\/stream/);
-  assert.match(previewPanel, /正在持续显示模型返回内容/);
+  assert.match(previewPanel, /Displaying the model response as it arrives/);
 });

@@ -16,11 +16,11 @@ export const AUTO_DIRECTOR_CREATE_STAGES: Array<{
   order: number;
   label: string;
 }> = [
-  { key: "idea", order: 0, label: "起始想法" },
-  { key: "basic", order: 1, label: "导演起始设置" },
-  { key: "world_style", order: 2, label: "世界与写法" },
-  { key: "model_run", order: 3, label: "模型与生产准备" },
-  { key: "candidates", order: 4, label: "方向与自动准备" },
+  { key: "idea", order: 0, label: "Starting idea" },
+  { key: "basic", order: 1, label: "Director setup" },
+  { key: "world_style", order: 2, label: "World and style" },
+  { key: "model_run", order: 3, label: "Model and production setup" },
+  { key: "candidates", order: 4, label: "Direction and preparation" },
 ];
 
 function findLabel(options: Array<{ value: string; label: string }>, value: string): string {
@@ -33,7 +33,7 @@ export function summarizeIdea(idea: string, foundation?: {
 }): string {
   const normalized = idea.trim().replace(/\s+/g, " ");
   if (!normalized) {
-    return "等待填写起始想法";
+    return "Add a starting idea";
   }
   const ideaSummary = normalized.length > 30 ? `${normalized.slice(0, 30)}...` : normalized;
   const foundationSummary = [foundation?.genre, foundation?.storyMode].filter(Boolean).join(" · ");
@@ -46,8 +46,8 @@ export function summarizeBasicStage(basicForm: NovelBasicFormState): string {
     findLabel(POV_OPTIONS, basicForm.narrativePov),
     findLabel(PACE_OPTIONS, basicForm.pacePreference),
     findLabel(EMOTION_OPTIONS, basicForm.emotionIntensity),
-    basicForm.estimatedChapterCountSource === "default" ? "章节数由 AI 推荐" : `约 ${basicForm.estimatedChapterCount} 章`,
-    basicForm.userPreferredVolumeCount === undefined ? "卷数由 AI 推荐" : `固定 ${basicForm.userPreferredVolumeCount} 卷`,
+    basicForm.estimatedChapterCountSource === "default" ? "Chapter count suggested by AI" : `About ${basicForm.estimatedChapterCount} chapters`,
+    basicForm.userPreferredVolumeCount === undefined ? "Volume count suggested by AI" : `${basicForm.userPreferredVolumeCount} volumes`,
   ].join(" · ");
 }
 
@@ -61,14 +61,14 @@ export function summarizeWorldStyleStage(input: {
 }): string {
   const selectedWorld = input.worldOptions.find((world) => world.id === input.basicForm.worldId);
   const worldLabel = selectedWorld
-    ? `参考世界：${selectedWorld.name}`
+    ? `Reference world: ${selectedWorld.name}`
     : input.worldSetupMode === "skip"
-      ? "暂不使用世界观"
-      : "自动生成本书世界";
+      ? "No world selected"
+      : "Generate a world for this novel";
   const styleProfile = input.styleProfiles.find((profile) => profile.id === input.styleProfileId);
   const styleLabel = styleProfile?.name
     ?? input.selectedStyleSummary?.headline
-    ?? (input.basicForm.styleTone.trim() ? `文风：${input.basicForm.styleTone.trim()}` : "默认写法");
+    ?? (input.basicForm.styleTone.trim() ? `Style: ${input.basicForm.styleTone.trim()}` : "Default style");
   return `${worldLabel} · ${styleLabel}`;
 }
 
@@ -78,5 +78,5 @@ export function summarizeModelRunStage(input: {
   postGenerationStyleReviewEnabled: boolean;
 }): string {
   const runModeLabel = input.runModeOptions.find((option) => option.value === input.runMode)?.label ?? input.runMode;
-  return `${runModeLabel} · ${input.postGenerationStyleReviewEnabled ? "正文后检测 AI 味" : "不做正文后 AI 味检测"}`;
+  return `${runModeLabel} · ${input.postGenerationStyleReviewEnabled ? "Check for AI-sounding prose after drafting" : "No post-draft AI-style check"}`;
 }

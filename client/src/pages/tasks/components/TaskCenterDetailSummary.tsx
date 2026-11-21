@@ -28,22 +28,22 @@ export default function TaskCenterDetailSummary({
   const progressPercent = typeof dashboardView?.progressPercent === "number"
     ? dashboardView.progressPercent
     : Math.round(task.progress * 100);
-  const currentStage = dashboardView?.stageLabel ?? task.currentStage ?? "暂无";
-  const currentItem = dashboardView?.currentAction ?? task.currentItemLabel ?? "暂无";
+  const currentStage = dashboardView?.stageLabel ?? task.currentStage ?? "Not available";
+  const currentItem = dashboardView?.currentAction ?? task.currentItemLabel ?? "Not available";
   const tone = getTaskQueueTone(task);
   const technicalRows = [
-    ["最近心跳", formatDate(task.heartbeatAt)],
-    ["开始时间", formatDate(task.startedAt)],
-    ["结束时间", formatDate(task.finishedAt)],
-    ["重试次数", task.retryCountLabel],
-    ...((task.provider || task.model) ? [["调用模型", `${task.provider ?? "暂无"} / ${task.model ?? "暂无"}`]] : []),
-    ...(isAutoDirectorTask ? [["界面模型", currentModelLabel]] : []),
+    ["Last heartbeat", formatDate(task.heartbeatAt)],
+    ["Started", formatDate(task.startedAt)],
+    ["Finished", formatDate(task.finishedAt)],
+    ["Retries", task.retryCountLabel],
+    ...((task.provider || task.model) ? [["Model used", `${task.provider ?? "Not available"} / ${task.model ?? "Not available"}`]] : []),
+    ...(isAutoDirectorTask ? [["Selected model", currentModelLabel]] : []),
     ...((task.tokenUsage || task.provider || task.model) ? [
-      ["累计调用", formatTokenCount(task.tokenUsage?.llmCallCount ?? 0)],
-      ["输入 Tokens", formatTokenCount(task.tokenUsage?.promptTokens ?? 0)],
-      ["输出 Tokens", formatTokenCount(task.tokenUsage?.completionTokens ?? 0)],
-      ["累计 Tokens", formatTokenCount(task.tokenUsage?.totalTokens ?? 0)],
-      ["最近记录", formatDate(task.tokenUsage?.lastRecordedAt)],
+      ["Total calls", formatTokenCount(task.tokenUsage?.llmCallCount ?? 0)],
+      ["Input tokens", formatTokenCount(task.tokenUsage?.promptTokens ?? 0)],
+      ["Output tokens", formatTokenCount(task.tokenUsage?.completionTokens ?? 0)],
+      ["Total tokens", formatTokenCount(task.tokenUsage?.totalTokens ?? 0)],
+      ["Last recorded", formatDate(task.tokenUsage?.lastRecordedAt)],
     ] : []),
   ];
 
@@ -70,21 +70,21 @@ export default function TaskCenterDetailSummary({
       </div>
       <div className="grid gap-3 rounded-xl bg-muted/25 p-4 sm:grid-cols-2 xl:grid-cols-1 2xl:grid-cols-2">
         <div>
-          <div className="text-[11px] text-muted-foreground">当前阶段</div>
+          <div className="text-[11px] text-muted-foreground">Current stage</div>
           <div className="mt-1 leading-5 text-foreground/90">{currentStage}</div>
         </div>
         <div>
-          <div className="text-[11px] text-muted-foreground">正在处理</div>
+          <div className="text-[11px] text-muted-foreground">Current action</div>
           <div className="mt-1 leading-5 text-foreground/90">{currentItem}</div>
         </div>
         {task.kind === "novel_workflow" ? (
           <>
             <div>
-              <div className="text-[11px] text-muted-foreground">建议下一步</div>
-              <div className="mt-1 leading-5 text-foreground/90">{task.resumeAction ?? task.nextActionLabel ?? "继续小说主流程"}</div>
+              <div className="text-[11px] text-muted-foreground">Suggested next step</div>
+              <div className="mt-1 leading-5 text-foreground/90">{task.resumeAction ?? task.nextActionLabel ?? "Continue the main novel workflow"}</div>
             </div>
             <div>
-              <div className="text-[11px] text-muted-foreground">最近检查点</div>
+              <div className="text-[11px] text-muted-foreground">Latest checkpoint</div>
               <div className="mt-1 leading-5 text-foreground/90">{formatCheckpoint(task.checkpointType, task.executionScopeLabel)}</div>
             </div>
           </>
@@ -97,15 +97,15 @@ export default function TaskCenterDetailSummary({
       ) : null}
       <details className="group border-t border-border/35 pt-3">
         <summary className="flex cursor-pointer list-none items-center justify-between text-xs font-medium text-muted-foreground marker:hidden">
-          运行信息
-          <span className="group-open:hidden">展开</span>
-          <span className="hidden group-open:inline">收起</span>
+          Run details
+          <span className="group-open:hidden">Expand</span>
+          <span className="hidden group-open:inline">Collapse</span>
         </summary>
         <dl className="mt-3 grid gap-x-4 gap-y-2 text-xs sm:grid-cols-2 xl:grid-cols-1 2xl:grid-cols-2">
           {task.kind === "novel_workflow" ? (
             <>
-              <div><dt className="text-muted-foreground">恢复目标页</dt><dd className="mt-0.5 text-foreground/85">{formatResumeTarget(task.resumeTarget)}</dd></div>
-              <div><dt className="text-muted-foreground">最近健康阶段</dt><dd className="mt-0.5 text-foreground/85">{task.lastHealthyStage ?? "暂无"}</dd></div>
+              <div><dt className="text-muted-foreground">Recovery page</dt><dd className="mt-0.5 text-foreground/85">{formatResumeTarget(task.resumeTarget)}</dd></div>
+              <div><dt className="text-muted-foreground">Last healthy stage</dt><dd className="mt-0.5 text-foreground/85">{task.lastHealthyStage ?? "Not available"}</dd></div>
             </>
           ) : null}
           {technicalRows.map(([label, value]) => (

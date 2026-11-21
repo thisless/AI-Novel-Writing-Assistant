@@ -26,14 +26,14 @@ export default function FirstNovelJourneyStrip() {
         </span>
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-sm font-semibold">第一本书向导</span>
-            <span className="text-xs text-muted-foreground">{journey.completedCount}/{journey.totalCount} 步完成</span>
+            <span className="text-sm font-semibold">First novel guide</span>
+            <span className="text-xs text-muted-foreground">{journey.completedCount}/{journey.totalCount} steps complete</span>
           </div>
           <p className="mt-1 truncate text-xs text-muted-foreground">{journey.headline}</p>
         </div>
       </div>
       <div className="flex items-center gap-3">
-        <div className="flex gap-1" aria-label={`已完成 ${journey.completedCount} 个步骤`}>
+        <div className="flex gap-1" aria-label={`${journey.completedCount} steps completed`}>
           {journey.milestones.map((milestone) => (
             <span
               key={milestone.key}

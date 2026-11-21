@@ -37,14 +37,14 @@ function buildPreviewExtraContextBlocks(prompt: PromptCatalogItem) {
       group: "chapter_mission",
       priority: 100,
       content: [
-        "Chapter mission: 示例章节",
-        "Objective: 让主角发现旧仓库暗号，并确认有人正在逼近。",
-        "Expectation: 本章需要推进线索发现、制造外部压力，并在结尾留下追踪钩子。",
+        "Chapter mission: Sample chapter",
+        "Objective: Have the protagonist discover a code in the old warehouse and confirm that someone is closing in.",
+        "Expectation: Advance the investigation, create external pressure, and end with a pursuit hook.",
         "Must advance",
-        "- 主角发现墙上暗号并判断它指向旧城档案站。",
-        "- 门外脚步声逼近，迫使主角做出即时选择。",
+        "- The protagonist discovers a code on the wall and determines that it points to the Old City archive.",
+        "- Footsteps approach outside, forcing the protagonist to make an immediate choice.",
         "Must preserve",
-        "- 暗号是真实线索，不是幻觉或普通涂鸦。",
+        "- The code is a real clue, not a hallucination or ordinary graffiti.",
       ].join("\n"),
     },
     {
@@ -54,15 +54,15 @@ function buildPreviewExtraContextBlocks(prompt: PromptCatalogItem) {
       required: true,
       content: [
         "Chapter boundary:",
-        "Exclusive event: 主角第一次在旧仓库发现上一任调查员留下的暗号。",
-        "Entry state: 主角独自进入旧仓库，尚未确认暗号含义。",
-        "Ending state: 主角确认暗号指向旧城档案站，同时意识到追踪者已经到门外。",
-        "Next chapter entry state: 主角必须在暴露前决定带走证据还是设伏反查。",
+        "Exclusive event: The protagonist finds a code left by the previous investigator in the old warehouse for the first time.",
+        "Entry state: The protagonist enters the old warehouse alone, not yet knowing what the code means.",
+        "Ending state: The protagonist confirms that the code points to the Old City archive and realizes the pursuer is already outside.",
+        "Next chapter entry state: Before being discovered, the protagonist must decide whether to take the evidence or set a trap and investigate.",
         "Do not cross",
-        "- 不得在本章直接揭开旧城组织的真实首领。",
-        "- 不得让追踪者当场完整解释暗号系统。",
+        "- Do not reveal the true leader of the Old City organization in this chapter.",
+        "- Do not have the pursuer fully explain the code system.",
         "Protected reveals",
-        "- 上一任调查员的真实身份。",
+        "- The previous investigator's true identity.",
       ].join("\n"),
     },
     {
@@ -72,22 +72,22 @@ function buildPreviewExtraContextBlocks(prompt: PromptCatalogItem) {
       required: true,
       content: [
         "Structure obligations",
-        "- 必须检查本章是否完成线索发现、压力逼近和章末选择点。",
-        "- 必须检查主角行动动机是否连续，不能凭空知道暗号答案。",
-        "- 必须检查结尾是否形成新的悬念或追踪压力。",
+        "- Check whether the chapter includes a clue discovery, mounting pressure, and an end-of-chapter choice.",
+        "- Check that the protagonist's motivation is consistent and that they do not guess the code without evidence.",
+        "- Check whether the ending creates new suspense or pursuit pressure.",
       ].join("\n"),
     },
     {
       id: "local_state",
       group: "local_state",
       priority: 89,
-      content: "Local state before review:\n主角身处旧仓库内部，外部追踪者正在靠近，暗号含义尚未完全确认。",
+      content: "Local state before review:\nThe protagonist is inside the old warehouse. A pursuer is approaching, and the code's meaning has not yet been fully confirmed.",
     },
     {
       id: "world_rules",
       group: "world_rules",
       priority: 84,
-      content: "Relevant world rules\n- 旧城暗号系统只由少数调查员和地下组织成员掌握。",
+      content: "Relevant world rules\n- Only a few investigators and members of the underground organization know the Old City code system.",
     },
   ];
 }
@@ -116,19 +116,19 @@ function buildPreviewPromptInput(
       ? previewChapter.content?.trim()
         || previewChapter.taskSheet?.trim()
         || previewChapter.expectation?.trim()
-        || "当前章节暂无正文。"
-      : "主角走进旧仓库，发现墙上残留着上一任调查员留下的暗号。门外脚步声逼近，他必须在暴露前判断暗号指向哪里。";
+        || "This chapter has no text yet."
+      : "The protagonist enters the old warehouse and finds a code left on the wall by the previous investigator. Footsteps approach outside; before being discovered, the protagonist must determine what the code points to.";
     return {
-      novelTitle: previewNovel?.title || "示例小说",
+      novelTitle: previewNovel?.title || "Sample novel",
       chapterTitle: previewChapter
-        ? `第 ${previewChapter.order ?? "?"} 章 ${previewChapter.title || "未命名章节"}`
-        : "示例章节",
+        ? `Chapter ${previewChapter.order ?? "?"}: ${previewChapter.title || "Untitled chapter"}`
+        : "Sample chapter",
       requestedTypes: ["plot", "character", "continuity"],
       storyModeContext: previewNovel
-        ? "使用所选小说的章节任务、章节边界和结构义务进行本书预览。"
-        : "本书偏连载网文节奏，章节需要持续推进冲突并保留章末钩子。",
+        ? "Preview this novel using its chapter mission, chapter boundaries, and structural obligations."
+        : "This serialized novel needs to keep conflicts moving and end chapters with hooks.",
       content: chapterContent,
-      ragContext: "无额外检索补充。",
+      ragContext: "No additional retrieved context.",
     };
   }
 
@@ -137,9 +137,9 @@ function buildPreviewPromptInput(
     const softMinWordCount = Math.max(800, Math.round(targetWordCount * 0.86));
     const softMaxWordCount = Math.max(softMinWordCount + 200, Math.round(targetWordCount * 1.14));
     return {
-      novelTitle: previewNovel?.title || "示例小说",
+      novelTitle: previewNovel?.title || "Sample novel",
       chapterOrder: previewChapter?.order ?? 1,
-      chapterTitle: previewChapter?.title || "示例章节",
+      chapterTitle: previewChapter?.title || "Sample chapter",
       mode: "draft",
       targetWordCount,
       minWordCount: softMinWordCount,
@@ -149,11 +149,11 @@ function buildPreviewPromptInput(
 
   if (prompt.id === "novel.short_story.segment.write") {
     return {
-      originalIdea: "一个能听见谎言的女孩，遇见唯一无法判断真假的人。",
-      understanding: "用真假判断失效制造信任危机，并在一次完整事件中兑现关系与真相。",
-      direction: { id: "preview", title: "沉默证词", premise: "女孩必须与无法判断的证人合作。", coreExperience: "悬疑与信任", protagonist: "能听见谎言的女孩", centralConflict: "能力失效与迫近的危险", endingPromise: "揭开能力失效的原因", styleKeywords: ["快开场", "连续揭示"] },
-      plan: { title: "沉默证词", targetWordCount: 8000, endingPromise: "揭开真相", segments: [] },
-      segment: { order: 1, purpose: "建立异常与合作压力", targetWordCount: 2600, openingState: "能力一向可靠", openingHook: "唯一的沉默", immediateGoal: "判断证人是否可信", progressionBeats: ["危险逼近", "被迫合作"], turningPoint: "能力并非失效", payoff: "发现第一层真相", closingPull: "真正的谎言来自身边人", closingState: "两人暂时结盟" },
+      originalIdea: "A girl who can hear lies meets the one person whose honesty she cannot judge.",
+      understanding: "Create a crisis of trust by making her truth-detection fail, then resolve the relationship and reveal the truth through one complete incident.",
+      direction: { id: "preview", title: "The Silent Testimony", premise: "A girl must work with a witness she cannot read.", coreExperience: "Suspense and trust", protagonist: "A girl who can hear lies", centralConflict: "Her ability fails as danger draws near", endingPromise: "Reveal why her ability failed", styleKeywords: ["Fast opening", "Progressive reveals"] },
+      plan: { title: "The Silent Testimony", targetWordCount: 8000, endingPromise: "Uncover the truth", segments: [] },
+      segment: { order: 1, purpose: "Establish the anomaly and pressure to cooperate", targetWordCount: 2600, openingState: "Her ability has always been reliable", openingHook: "The one silence", immediateGoal: "Determine whether the witness can be trusted", progressionBeats: ["Danger approaches", "Forced cooperation"], turningPoint: "Her ability has not failed", payoff: "Discover the first layer of truth", closingPull: "The real lie comes from someone close", closingState: "The two form a temporary alliance" },
       previousContinuity: "",
       previousContentTail: "",
     };
@@ -161,15 +161,15 @@ function buildPreviewPromptInput(
 
   if (prompt.id === "novel.chapter_editor.workspace_diagnosis") {
     return {
-      chapterTitle: "示例章节",
-      chapterMission: "让主角发现关键线索。",
-      volumePositionLabel: "第一卷中段",
-      volumePhaseLabel: "冲突展开",
-      paceDirective: "加快推进",
-      previousChapterBridge: "上一章留下追踪线索。",
-      nextChapterBridge: "下一章进入正面对抗。",
-      activePlotThreads: ["追踪档案站"],
-      paragraphs: [{ index: 1, text: "主角走进旧仓库。" }],
+      chapterTitle: "Sample chapter",
+      chapterMission: "Have the protagonist discover a key clue.",
+      volumePositionLabel: "Middle of Volume 1",
+      volumePhaseLabel: "Conflict unfolds",
+      paceDirective: "Move the story forward faster",
+      previousChapterBridge: "The previous chapter left a clue to follow.",
+      nextChapterBridge: "The next chapter begins a direct confrontation.",
+      activePlotThreads: ["Find the archive"],
+      paragraphs: [{ index: 1, text: "The protagonist enters the old warehouse." }],
       openIssues: [],
     };
   }
@@ -179,14 +179,14 @@ function buildPreviewPromptInput(
       generationDepth: "standard",
       selectedDimensions: ["basic", "personality", "arc"],
       character: {
-        name: "林澈",
-        role: "主角",
-        briefDescription: "被迫追查旧仓库暗号的年轻调查员。",
+        name: "Lin Che",
+        role: "Protagonist",
+        briefDescription: "A young investigator forced to follow a code found in an old warehouse.",
         importance: "high",
-        occurringChapters: ["第 1 章"],
+        occurringChapters: ["Chapter 1"],
       },
-      characterSystemContext: "主角承担揭开旧城秘密的推进职责。",
-      notesText: "第 1 章中，林澈发现旧仓库暗号，并意识到有人正在追踪他。",
+      characterSystemContext: "The protagonist drives the discovery of the Old City's secrets.",
+      notesText: "In Chapter 1, Lin Che finds a code in the old warehouse and realizes someone is following him.",
       ragEvidenceText: "",
     };
   }
@@ -195,42 +195,42 @@ function buildPreviewPromptInput(
     return {
       generationDepth: "standard",
       selectedDimensions: ["basic", "personality", "arc"],
-      characterNames: ["林澈", "沈雾"],
-      characterSystemContext: "核心角色围绕旧城秘密和追踪压力形成关系网。",
-      notesText: "林澈发现暗号，沈雾掌握旧城线索，两人暂时互不信任。",
+      characterNames: ["Lin Che", "Shen Wu"],
+      characterSystemContext: "The main characters form a web of relationships around the Old City's secrets and the pressure of being pursued.",
+      notesText: "Lin Che finds a code, while Shen Wu knows about the Old City. They do not trust each other yet.",
     };
   }
 
   if (prompt.id === "image.novel_cover.brief") {
     return {
-      sourcePrompt: "旧城仓库、墙上暗号、门外脚步声、悬疑感强的竖版封面。",
-      title: "旧城暗号",
-      description: "年轻调查员在旧城废仓中发现改变命运的暗号。",
-      targetAudience: "喜欢都市悬疑和强钩子开篇的读者。",
-      bookSellingPoint: "每章都围绕一个可追查的线索推进。",
-      competingFeel: "紧张、克制、带一点冷色电影感。",
-      first30ChapterPromise: "揭开旧城暗号背后的组织，并让主角卷入更大的阴谋。",
-      commercialTags: ["都市悬疑", "线索追查", "高压开局"],
-      genreLabel: "都市悬疑",
-      primaryStoryModeLabel: "线索推进",
-      secondaryStoryModeLabel: "身份谜团",
-      worldName: "旧城",
-      worldSummary: "一座表面平静、地下线索交错的旧城区。",
-      styleTone: "冷峻、紧凑、画面感强",
-      narrativePovLabel: "第三人称有限视角",
-      pacePreferenceLabel: "中快节奏",
-      emotionIntensityLabel: "高压克制",
+      sourcePrompt: "An old city warehouse, a code on the wall, footsteps outside, and a suspenseful portrait-format cover.",
+      title: "The Old City Code",
+      description: "A young investigator discovers a life-changing code in an abandoned Old City warehouse.",
+      targetAudience: "Readers who enjoy urban suspense and gripping opening hooks.",
+      bookSellingPoint: "Every chapter advances through a clue that can be investigated.",
+      competingFeel: "Tense and restrained, with a cool cinematic look.",
+      first30ChapterPromise: "Uncover the organization behind the Old City code and draw the protagonist into a larger conspiracy.",
+      commercialTags: ["Urban suspense", "Clue investigation", "High-pressure opening"],
+      genreLabel: "Urban suspense",
+      primaryStoryModeLabel: "Clue-driven progression",
+      secondaryStoryModeLabel: "Identity mystery",
+      worldName: "Old City",
+      worldSummary: "A seemingly quiet old district crossed by a hidden network of clues.",
+      styleTone: "Cool, restrained, and vivid",
+      narrativePovLabel: "Third-person limited",
+      pacePreferenceLabel: "Moderately fast",
+      emotionIntensityLabel: "Restrained intensity",
     };
   }
 
   if (prompt.id === "novel.character.castAuto.relations") {
     return {
-      storyInput: "主角在旧城追查暗号，逐步发现身边人的隐瞒与组织压力。",
-      optionTitle: "旧城追踪阵容",
-      optionSummary: "主角、线索提供者和压力来源围绕旧城秘密形成互相试探的关系网。",
-      protagonistName: "林澈",
-      memberNames: ["林澈", "沈雾", "顾衡"],
-      memberRosterText: "林澈：主角，年轻调查员。\n沈雾：线索提供者，知道旧城暗号来源。\n顾衡：压力来源，试图阻止调查。",
+      storyInput: "The protagonist follows a code through the Old City, gradually uncovering secrets kept by those around him and pressure from an organization.",
+      optionTitle: "Old City investigation cast",
+      optionSummary: "The protagonist, a source of clues, and the source of pressure form a web of mutual suspicion around the Old City's secrets.",
+      protagonistName: "Lin Che",
+      memberNames: ["Lin Che", "Shen Wu", "Gu Heng"],
+      memberRosterText: "Lin Che: The protagonist, a young investigator.\nShen Wu: A source of clues who knows where the Old City code came from.\nGu Heng: The source of pressure, trying to stop the investigation.",
     };
   }
 
@@ -238,17 +238,17 @@ function buildPreviewPromptInput(
     return {
       layerKey: "foundation",
       targetFields: ["background", "geography"],
-      worldName: "旧城",
-      worldType: "都市异闻",
-      templateName: "都市悬疑",
-      templateDescription: "现实城市表层下隐藏长期运转的秘密秩序。",
-      classicElements: ["旧城区", "地下组织", "线索暗号"],
-      pitfalls: ["不要把所有谜团一次解释完", "不要让规则只停留在概念"],
-      axioms: "旧城的暗号系统真实存在，并会影响人物行动。",
-      summary: "旧城由表面生活区和地下线索网络构成。",
-      blueprintPromptBlock: "核心舞台是废弃仓库、老街和被遮蔽的档案站。",
+      worldName: "Old City",
+      worldType: "Urban supernatural",
+      templateName: "Urban suspense",
+      templateDescription: "A secret order has operated for years beneath the surface of an ordinary city.",
+      classicElements: ["Old district", "Underground organization", "Coded clues"],
+      pitfalls: ["Do not explain every mystery at once", "Do not leave the rules as abstract concepts"],
+      axioms: "The Old City's code system is real and influences how characters act.",
+      summary: "The Old City consists of ordinary neighborhoods and a hidden network of clues.",
+      blueprintPromptBlock: "The main settings are an abandoned warehouse, old streets, and a concealed archive.",
       existingJson: "{}",
-      ragContext: "无额外参考。",
+      ragContext: "No additional references.",
     };
   }
 
@@ -266,38 +266,38 @@ function buildPreviewPromptInput(
   if (prompt.id === "writingFormula.extract.stream") {
     return {
       extractLevel: "standard",
-      focusAreas: ["节奏", "句式", "画面感"],
-      sourceText: "门外脚步声停住了。林澈按住呼吸，指尖擦过墙上的暗号，忽然明白这不是警告，而是邀请。",
+      focusAreas: ["Pacing", "Sentence structure", "Imagery"],
+      sourceText: "The footsteps outside stopped. Lin Che held his breath, fingertips brushing the code on the wall. He suddenly understood: it was not a warning, but an invitation.",
     };
   }
 
   if (prompt.id === "novel.chapter_editor.rewrite_candidates") {
     return {
       operation: "polish",
-      operationLabel: "润色选中片段",
+      operationLabel: "Polish selected passage",
       scope: "selection",
       customInstruction: "",
-      selectedText: "门外脚步声停住了。林澈按住呼吸，指尖擦过墙上的暗号。",
-      beforeParagraphs: ["旧仓库里只剩一盏忽明忽暗的灯。"],
-      afterParagraphs: ["下一秒，铁门被人从外面轻轻推开。"],
-      goalSummary: "让主角发现关键线索，并用外部压力制造章末紧张感。",
-      chapterSummary: "主角进入旧仓库，发现暗号，同时意识到追踪者已经逼近。",
-      styleSummary: "冷峻、克制、动作细节清晰。",
-      characterStateSummary: "主角警惕但仍愿意冒险推进调查。",
-      worldConstraintSummary: "旧城暗号是真实线索，不是幻觉或普通涂鸦。",
-      macroContextSummary: "本章负责把主角卷入旧城秘密的第一层门槛。",
-      resolvedIntentSummary: "让片段更自然，并加强悬疑压力。",
-      constraintsText: "不改变暗号存在、门外有人逼近和主角正在调查这三个事实。",
+      selectedText: "The footsteps outside stopped. Lin Che held his breath, fingertips brushing the code on the wall.",
+      beforeParagraphs: ["Only one flickering light remained in the old warehouse."],
+      afterParagraphs: ["The next second, someone gently pushed the iron door open from outside."],
+      goalSummary: "Have the protagonist discover a key clue and use external pressure to create tension at the chapter's end.",
+      chapterSummary: "The protagonist enters the old warehouse, finds a code, and realizes the pursuer is closing in.",
+      styleSummary: "Cool and restrained, with clear physical details.",
+      characterStateSummary: "The protagonist is wary but still willing to risk continuing the investigation.",
+      worldConstraintSummary: "The Old City code is a real clue, not a hallucination or ordinary graffiti.",
+      macroContextSummary: "This chapter draws the protagonist across the first threshold into the Old City's secrets.",
+      resolvedIntentSummary: "Make the passage feel more natural and heighten suspense.",
+      constraintsText: "Do not change these facts: the code exists, someone is approaching outside, and the protagonist is investigating.",
     };
   }
 
   return {
-    goal: "查看提示词预览",
+    goal: "Preview the prompt",
     messages: [],
     contextMode: "novel",
     novelId: "novel-1",
-    chapterTitle: "示例章节",
-    chapterMission: "让主角发现关键线索。",
+    chapterTitle: "Sample chapter",
+    chapterMission: "Have the protagonist discover a key clue.",
   };
 }
 
@@ -364,7 +364,7 @@ export function usePromptPreview(input: UsePromptPreviewInput) {
 
   const buildPayload = useCallback((): PromptPreviewPayload => {
     if (!prompt) {
-      throw new Error("请选择提示词后再生成预览。");
+      throw new Error("Select a prompt before generating a preview.");
     }
     const executionNovelId = novelId || undefined;
     const executionChapterId = novelId ? chapterId || previewChapter?.id : undefined;
@@ -376,7 +376,7 @@ export function usePromptPreview(input: UsePromptPreviewInput) {
         entrypoint,
         novelId: executionNovelId,
         chapterId: executionChapterId,
-        userGoal: "查看提示词预览",
+        userGoal: "Preview the prompt",
         resourceBindings: {
           novelId: executionNovelId,
           ...(executionChapterId ? { chapterId: executionChapterId } : {}),

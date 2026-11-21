@@ -55,9 +55,9 @@ interface StageIdeaProps {
 }
 
 function sourceLabel(source: NovelResourceRecommendationSource | undefined): string | null {
-  if (source === "user_selected") return "你的选择";
-  if (source === "ai_recommended") return "AI 匹配";
-  if (source === "market_recommended") return "雷达推荐";
+  if (source === "user_selected") return "Your choice";
+  if (source === "ai_recommended") return "AI suggestion";
+  if (source === "market_recommended") return "Radar recommendation";
   return null;
 }
 
@@ -123,7 +123,7 @@ export default function StageIdea({
     () => buildFoundationCloudOptions(
       flattenGenreTreeOptions(genreTree),
       selectedGenreId,
-      "这个故事类型会约束世界、人物和主要冲突。",
+      "This genre shapes the world, characters, and central conflict.",
     ),
     [genreTree, selectedGenreId],
   );
@@ -131,7 +131,7 @@ export default function StageIdea({
     () => buildFoundationCloudOptions(
       flattenStoryModeTreeOptions(storyModeTree),
       selectedStoryModeId,
-      "这种推进方式会决定故事持续制造期待的方法。",
+      "This progression style determines how the story keeps readers engaged.",
     ),
     [selectedStoryModeId, storyModeTree],
   );
@@ -170,7 +170,7 @@ export default function StageIdea({
 
   const useIdeaInspiration = (text: string) => {
     if (idea.trim()) {
-      const confirmed = window.confirm("上方起始想法已有内容。确认使用这条灵感并覆盖原内容吗？");
+      const confirmed = window.confirm("Your starting idea already has content. Use this inspiration and replace it?");
       if (!confirmed) return;
     }
     fillIdea(text);
@@ -204,19 +204,19 @@ export default function StageIdea({
         className="w-full text-center"
       >
         <h1 className="text-3xl font-semibold tracking-normal text-foreground sm:text-[32px]">
-          用一句话，开始你的整本书
+          Start your novel with one sentence
         </h1>
         <p className="mt-3 text-sm leading-6 text-muted-foreground sm:text-base">
-          写下你想看的故事，AI 会先帮你整理成可选择的整本书方向。
+          Describe the story you want to read. AI will turn it into a few novel directions to choose from.
         </p>
       </motion.div>
 
       <div className="mt-6 w-full">
         <OnboardingTip
           storageKey="auto-director-idea"
-          title="一句话不需要写成完整大纲"
-          description="写清主角、处境或最想看的冲突即可。故事类型和推进方式可以交给 AI，也可以在下方先指定。"
-          next="AI 生成两套差异明确的整书方向。"
+          title="Your idea doesn't need to be a full outline"
+          description="Describe the main character, their situation, or a conflict you'd like to see. Let AI choose the genre and story progression, or set them below."
+          next="AI will generate two distinct directions for your novel."
         />
       </div>
 
@@ -233,13 +233,13 @@ export default function StageIdea({
           className="min-h-[180px] w-full resize-none bg-transparent px-1 py-1 text-base leading-7 text-foreground outline-none placeholder:text-muted-foreground/60 sm:text-lg sm:leading-8"
           value={idea}
           onChange={(event) => onIdeaChange(event.target.value)}
-          placeholder="例如：普通女大学生误入异能组织，一边上学打工，一边调查父亲失踪真相。"
+          placeholder="For example: A college student joins a secret society of superpowered people while studying, working, and investigating her father's disappearance."
         />
         <div className="px-1 pb-3 text-left text-xs text-muted-foreground">
-          填写内容会保存在本机，刷新或重新打开后可以继续。
+          Your idea is saved on this device, so you can continue after refreshing or reopening the app.
         </div>
         <div className="border-t border-border/60 pt-3">
-          <div className="mb-2 text-xs font-medium text-muted-foreground">创作偏好（可选）</div>
+          <div className="mb-2 text-xs font-medium text-muted-foreground">Writing preferences (optional)</div>
           <div className="flex flex-col gap-2 sm:flex-row">
             <div className="flex min-w-0 flex-1 items-center rounded-md bg-background/65 ring-1 ring-border/70">
               <button
@@ -250,7 +250,7 @@ export default function StageIdea({
               >
                 <Layers3 className="h-4 w-4 shrink-0 text-muted-foreground" />
                 <span className="min-w-0 flex-1 truncate">
-                  {selectedGenreLabel || "故事类型：AI 自动匹配"}
+                  {selectedGenreLabel || "Genre: Choose automatically"}
                 </span>
                 {sourceLabel(selectedGenreSource) ? (
                   <span className="shrink-0 text-[11px] text-muted-foreground">{sourceLabel(selectedGenreSource)}</span>
@@ -260,7 +260,7 @@ export default function StageIdea({
                 <button
                   type="button"
                   className="mr-1 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition hover:bg-muted hover:text-foreground"
-                  aria-label="清除故事类型"
+                  aria-label="Clear genre"
                   disabled={isGenerating || isUpdatingFoundation}
                   onClick={() => void onFoundationChange({ genreId: "" })}
                 >
@@ -278,7 +278,7 @@ export default function StageIdea({
               >
                 <Route className="h-4 w-4 shrink-0 text-muted-foreground" />
                 <span className="min-w-0 flex-1 truncate">
-                  {selectedStoryModeLabel || "推进方式：AI 自动搭配"}
+                  {selectedStoryModeLabel || "Story progression: Choose automatically"}
                 </span>
                 {sourceLabel(selectedStoryModeSource) ? (
                   <span className="shrink-0 text-[11px] text-muted-foreground">{sourceLabel(selectedStoryModeSource)}</span>
@@ -288,7 +288,7 @@ export default function StageIdea({
                 <button
                   type="button"
                   className="mr-1 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition hover:bg-muted hover:text-foreground"
-                  aria-label="清除推进方式"
+                  aria-label="Clear story progression"
                   disabled={isGenerating || isUpdatingFoundation}
                   onClick={() => void onFoundationChange({ primaryStoryModeId: "" })}
                 >
@@ -299,7 +299,7 @@ export default function StageIdea({
           </div>
           {(genreError || storyModeError) ? (
             <div className="mt-2 text-xs text-muted-foreground">
-              部分可选方向暂时未加载，你仍可交给 AI 自动搭配后继续。
+              Some options couldn't be loaded. You can still let AI choose them and continue.
             </div>
           ) : null}
         </div>
@@ -313,7 +313,7 @@ export default function StageIdea({
               disabled={isGenerating || isComposingIdeaConstellation}
             >
               <Sparkles className="h-4 w-4" />
-              打开故事星图
+              Explore story ideas
             </Button>
             <button
               type="button"
@@ -321,7 +321,7 @@ export default function StageIdea({
               onClick={handleShowInspirations}
               disabled={isGeneratingIdeaInspirations}
             >
-              {isGeneratingIdeaInspirations ? "正在准备几个想法..." : "直接给我几个想法"}
+              {isGeneratingIdeaInspirations ? "Preparing ideas…" : "Give me some ideas"}
             </button>
           </div>
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
@@ -331,10 +331,10 @@ export default function StageIdea({
               onClick={onQuickGenerate}
               disabled={!canContinue || isGenerating}
             >
-              {isGenerating ? "生成中..." : "用默认设置直接生成方向"}
+              {isGenerating ? "Generating…" : "Generate directions with default settings"}
             </button>
             <Button type="button" onClick={onContinue} disabled={!canContinue}>
-              继续完善设定
+              Continue planning
               <ArrowRight className="h-4 w-4" />
             </Button>
           </div>
@@ -378,13 +378,13 @@ export default function StageIdea({
       <CreationFoundationPickerDialog
         open={genreDialogOpen}
         onOpenChange={setGenreDialogOpen}
-        title="选择故事类型"
-        description="这个选择会约束后续方向、世界、人物与剧情规划；不确定时交给 AI 即可。"
-        treeTitle="题材目录"
+        title="Choose a genre"
+        description="Your choice shapes the story direction, world, characters, and plot. Let AI choose if you're unsure."
+        treeTitle="Genre catalog"
         nodes={genreTree}
         selectedId={selectedGenreId}
-        autoLabel="交给 AI 匹配故事类型"
-        emptyLabel="题材基底库暂时为空，可以先交给 AI 自动处理。"
+        autoLabel="Let AI choose a genre"
+        emptyLabel="The genre library is empty for now. You can let AI choose instead."
         loading={genreLoading}
         error={genreError}
         applying={isUpdatingFoundation}
@@ -395,19 +395,19 @@ export default function StageIdea({
       <CreationFoundationPickerDialog
         open={storyModeDialogOpen}
         onOpenChange={setStoryModeDialogOpen}
-        title="选择主要推进方式"
-        description="它决定故事主要靠什么持续变精彩；辅助推进方式仍由 AI 自动补充。"
-        treeTitle="推进模式目录"
+        title="Choose a primary story progression"
+        description="This determines how the story keeps getting more exciting. AI will add supporting progression styles."
+        treeTitle="Story progression catalog"
         nodes={storyModeTree}
         selectedId={selectedStoryModeId}
-        autoLabel="交给 AI 搭配推进方式"
-        emptyLabel="推进模式库暂时为空，可以先交给 AI 自动处理。"
+        autoLabel="Let AI choose a progression style"
+        emptyLabel="The story progression library is empty for now. You can let AI choose instead."
         loading={storyModeLoading}
         error={storyModeError}
         applying={isUpdatingFoundation}
         onRetry={onRetryStoryModes}
         onApply={(primaryStoryModeId) => onFoundationChange({ primaryStoryModeId })}
-        renderDetails={(node) => <StoryModeProfileDetails node={node} eyebrow="当前选择" />}
+        renderDetails={(node) => <StoryModeProfileDetails node={node} eyebrow="Selected" />}
       />
     </section>
   );

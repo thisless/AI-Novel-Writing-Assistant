@@ -56,30 +56,30 @@ export interface DirectorIssueCatalogEntry {
 }
 
 export const DIRECTOR_ISSUE_CATALOG: readonly DirectorIssueCatalogEntry[] = [
-  { code: "planning.prerequisite_missing", category: "planning", label: "前置创作资料缺失", defaultAction: "pause_for_manual", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "pause_for_manual" },
-  { code: "planning.volume_strategy_high_risk", category: "planning", label: "卷战略风险过高", defaultAction: "pause_for_manual", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "pause_for_manual" },
-  { code: "planning.execution_contract_invalid", category: "planning", label: "章节执行合同不可用", defaultAction: "auto_retry", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "pause_for_manual" },
-  { code: "planning.route_window_unavailable", category: "planning", label: "后续章节路线未准备好", defaultAction: "auto_retry", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "pause_for_manual" },
-  { code: "generation.empty_content", category: "generation", label: "模型未返回正文", defaultAction: "auto_retry", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "fail_task" },
-  { code: "generation.output_unusable", category: "generation", label: "正文结果不可保存", defaultAction: "fail_task", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "fail_task", enforcedAction: "fail_task", lockedReason: "没有可用正文时不能继续推进。" },
-  { code: "generation.runtime_failed", category: "generation", label: "章节运行失败", defaultAction: "auto_retry", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "pause_for_manual" },
-  { code: "quality.chapter_below_threshold", category: "quality", label: "章节质量分未达标", defaultAction: "continue_with_warning", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "continue_with_warning", lockedReason: "全书模式会把局部章节质量债记录后继续。" },
-  { code: "quality.acceptance_unavailable", category: "quality", label: "章节接收检查不可用", defaultAction: "continue_with_warning", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "continue_with_warning", lockedReason: "全书模式会保留可用正文并安排后续复查。" },
-  { code: "quality.obligation_gap", category: "quality", label: "本章义务仍有缺口", defaultAction: "continue_with_warning", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "continue_with_warning", lockedReason: "全书模式会把局部义务缺口作为质量债继续。" },
-  { code: "quality.local_repair_failed", category: "quality", label: "局部修复未安全应用", defaultAction: "continue_with_warning", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "continue_with_warning", lockedReason: "全书模式已有可用正文时会记录质量债并继续。" },
-  { code: "quality.local_replan_failed", category: "quality", label: "后续章节调整失败", defaultAction: "continue_with_warning", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "continue_with_warning", lockedReason: "当前章节已有可用正文时保留质量债并继续。" },
-  { code: "quality.loop_exhausted", category: "quality", label: "同类质量修复已耗尽", defaultAction: "continue_with_warning", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "pause_for_manual" },
-  { code: "quality.replan_required", category: "quality", label: "后续章节必须重规划", defaultAction: "pause_for_manual", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "pause_for_manual", enforcedAction: "pause_for_manual", lockedReason: "明确重规划必须在安全节点暂停。" },
-  { code: "quality.replan_loop", category: "quality", label: "重规划重复循环", defaultAction: "continue_with_warning", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "pause_for_manual" },
-  { code: "runtime.model_unavailable", category: "runtime", label: "创作模型不可用", defaultAction: "auto_retry", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "pause_for_manual" },
-  { code: "runtime.service_unavailable", category: "runtime", label: "创作服务暂时不可用", defaultAction: "auto_retry", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "pause_for_manual" },
-  { code: "runtime.token_budget_exceeded", category: "runtime", label: "AI 用量异常", defaultAction: "pause_for_manual", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "pause_for_manual", enforcedAction: "pause_for_manual", lockedReason: "异常用量必须先停止检查。" },
-  { code: "runtime.protected_content", category: "runtime", label: "操作可能覆盖受保护内容", defaultAction: "pause_for_manual", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "pause_for_manual", enforcedAction: "pause_for_manual", lockedReason: "用户保护内容必须人工确认。" },
-  { code: "runtime.data_integrity", category: "runtime", label: "运行数据完整性风险", defaultAction: "pause_for_manual", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "pause_for_manual", enforcedAction: "pause_for_manual", lockedReason: "数据完整性风险不可自动放行。" },
-  { code: "runtime.persistence_failed", category: "runtime", label: "关键创作结果保存失败", defaultAction: "fail_task", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "fail_task", enforcedAction: "fail_task", lockedReason: "无法确认保存结果时必须终止当前任务。" },
-  { code: "runtime.worker_stale", category: "runtime", label: "后台执行失去响应", defaultAction: "auto_retry", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "pause_for_manual" },
-  { code: "runtime.background_prefetch_failed", category: "runtime", label: "下一章后台预取失败", defaultAction: "continue_with_warning", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "continue_with_warning", lockedReason: "正式执行时会重新准备，不阻断当前章节。" },
-  { code: "runtime.unclassified", category: "runtime", label: "尚未识别的运行问题", defaultAction: "pause_for_manual", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "pause_for_manual" },
+  { code: "planning.prerequisite_missing", category: "planning", label: "Required writing materials are missing", defaultAction: "pause_for_manual", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "pause_for_manual" },
+  { code: "planning.volume_strategy_high_risk", category: "planning", label: "Volume strategy is too risky", defaultAction: "pause_for_manual", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "pause_for_manual" },
+  { code: "planning.execution_contract_invalid", category: "planning", label: "Chapter execution contract is unavailable", defaultAction: "auto_retry", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "pause_for_manual" },
+  { code: "planning.route_window_unavailable", category: "planning", label: "The route for upcoming chapters is not ready", defaultAction: "auto_retry", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "pause_for_manual" },
+  { code: "generation.empty_content", category: "generation", label: "The model returned no manuscript", defaultAction: "auto_retry", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "fail_task" },
+  { code: "generation.output_unusable", category: "generation", label: "The manuscript cannot be saved", defaultAction: "fail_task", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "fail_task", enforcedAction: "fail_task", lockedReason: "The task cannot continue without a usable manuscript." },
+  { code: "generation.runtime_failed", category: "generation", label: "Chapter run failed", defaultAction: "auto_retry", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "pause_for_manual" },
+  { code: "quality.chapter_below_threshold", category: "quality", label: "Chapter quality score is below threshold", defaultAction: "continue_with_warning", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "continue_with_warning", lockedReason: "Book mode records local chapter quality debt and continues." },
+  { code: "quality.acceptance_unavailable", category: "quality", label: "Chapter acceptance check is unavailable", defaultAction: "continue_with_warning", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "continue_with_warning", lockedReason: "Book mode keeps the usable manuscript and schedules a later review." },
+  { code: "quality.obligation_gap", category: "quality", label: "This chapter still has unmet obligations", defaultAction: "continue_with_warning", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "continue_with_warning", lockedReason: "Book mode records local obligation gaps as quality debt and continues." },
+  { code: "quality.local_repair_failed", category: "quality", label: "Local revision could not be safely applied", defaultAction: "continue_with_warning", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "continue_with_warning", lockedReason: "Book mode records quality debt and continues when a usable manuscript exists." },
+  { code: "quality.local_replan_failed", category: "quality", label: "Upcoming chapters could not be adjusted", defaultAction: "continue_with_warning", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "continue_with_warning", lockedReason: "Quality debt is retained and the task continues when the current chapter has a usable manuscript." },
+  { code: "quality.loop_exhausted", category: "quality", label: "All repairs for this quality issue have been exhausted", defaultAction: "continue_with_warning", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "pause_for_manual" },
+  { code: "quality.replan_required", category: "quality", label: "Upcoming chapters must be replanned", defaultAction: "pause_for_manual", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "pause_for_manual", enforcedAction: "pause_for_manual", lockedReason: "Explicit replanning must pause at a safe checkpoint." },
+  { code: "quality.replan_loop", category: "quality", label: "Replanning is stuck in a loop", defaultAction: "continue_with_warning", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "pause_for_manual" },
+  { code: "runtime.model_unavailable", category: "runtime", label: "Writing model is unavailable", defaultAction: "auto_retry", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "pause_for_manual" },
+  { code: "runtime.service_unavailable", category: "runtime", label: "Writing service is temporarily unavailable", defaultAction: "auto_retry", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "pause_for_manual" },
+  { code: "runtime.token_budget_exceeded", category: "runtime", label: "Abnormal AI usage", defaultAction: "pause_for_manual", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "pause_for_manual", enforcedAction: "pause_for_manual", lockedReason: "Stop and investigate abnormal usage before continuing." },
+  { code: "runtime.protected_content", category: "runtime", label: "The operation may overwrite protected content", defaultAction: "pause_for_manual", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "pause_for_manual", enforcedAction: "pause_for_manual", lockedReason: "Protected user content requires manual confirmation." },
+  { code: "runtime.data_integrity", category: "runtime", label: "Runtime data integrity risk", defaultAction: "pause_for_manual", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "pause_for_manual", enforcedAction: "pause_for_manual", lockedReason: "Data integrity risks cannot be automatically bypassed." },
+  { code: "runtime.persistence_failed", category: "runtime", label: "A critical writing result failed to save", defaultAction: "fail_task", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "fail_task", enforcedAction: "fail_task", lockedReason: "End the current task if the save result cannot be confirmed." },
+  { code: "runtime.worker_stale", category: "runtime", label: "Background execution stopped responding", defaultAction: "auto_retry", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "pause_for_manual" },
+  { code: "runtime.background_prefetch_failed", category: "runtime", label: "Background prefetch for the next chapter failed", defaultAction: "continue_with_warning", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "continue_with_warning", lockedReason: "Preparation will be retried during execution and will not block the current chapter." },
+  { code: "runtime.unclassified", category: "runtime", label: "Unrecognized runtime issue", defaultAction: "pause_for_manual", allowedActions: DIRECTOR_ISSUE_ACTIONS, exhaustedAction: "pause_for_manual" },
 ] as const;
 
 export const DIRECTOR_ISSUE_CATALOG_BY_CODE = Object.fromEntries(
@@ -115,7 +115,7 @@ export const directorIssuePolicySchema = z.object({
   for (const [code, action] of Object.entries(policy.issueActions)) {
     const entry = DIRECTOR_ISSUE_CATALOG_BY_CODE[code as DirectorIssueCode];
     if (entry && action && !entry.allowedActions.includes(action)) {
-      context.addIssue({ code: "custom", path: ["issueActions", code], message: `${entry.label}不允许使用该处理动作。` });
+      context.addIssue({ code: "custom", path: ["issueActions", code], message: `${entry.label} does not allow this action.` });
     }
   }
 });
@@ -130,7 +130,7 @@ export const directorIssuePolicyOverrideSchema = z.object({
   for (const [code, action] of Object.entries(override.issueActions ?? {})) {
     const entry = DIRECTOR_ISSUE_CATALOG_BY_CODE[code as DirectorIssueCode];
     if (entry && action && !entry.allowedActions.includes(action)) {
-      context.addIssue({ code: "custom", path: ["issueActions", code], message: `${entry.label}不允许使用该处理动作。` });
+      context.addIssue({ code: "custom", path: ["issueActions", code], message: `${entry.label} does not allow this action.` });
     }
   }
 });
@@ -149,8 +149,8 @@ function buildPresetIssueActions(
 export const DIRECTOR_ISSUE_POLICY_PRESETS = [
   {
     id: "finish_full_book",
-    name: "优先完成整本书",
-    description: "局部问题处理一次后保留正文并继续，统一留到后续优化。",
+    name: "Finish the whole book",
+    description: "Handle local issues once, keep the manuscript, and continue; optimize them later.",
     policy: {
       maxAutomaticRetries: 1,
       chapterReviewRetryPolicy: { maxRetries: 1, onExhausted: "continue_with_warning" },
@@ -167,8 +167,8 @@ export const DIRECTOR_ISSUE_POLICY_PRESETS = [
   },
   {
     id: "quality_first",
-    name: "质量优先",
-    description: "局部问题处理一次后仍未解决会暂停，等待你确认后再继续。",
+    name: "Quality first",
+    description: "Pause for your confirmation if a local issue remains unresolved after one attempt.",
     policy: {
       maxAutomaticRetries: 1,
       chapterReviewRetryPolicy: { maxRetries: 1, onExhausted: "pause_for_manual" },
@@ -261,24 +261,24 @@ export function resolveDirectorIssueDecision(input: {
   const configured = input.policy.issueActions[input.occurrence.issueCode];
   let action = configured && entry.allowedActions.includes(configured) ? configured : entry.defaultAction;
   let locked = false;
-  let reason = `按${configured ? "当前" : "默认"}治理规则处理。`;
+  let reason = `Handled according to the ${configured ? "current" : "default"} governance rules.`;
 
   if (entry.enforcedAction) {
     action = entry.enforcedAction;
     locked = true;
-    reason = entry.lockedReason ?? "安全保护规则优先于用户偏好。";
+    reason = entry.lockedReason ?? "Safety rules take precedence over user preferences.";
   }
 
   const maxAttempts = input.policy.maxAutomaticRetries ?? DEFAULT_DIRECTOR_ISSUE_POLICY.maxAutomaticRetries;
   if (action === "auto_retry" && input.occurrence.attempt >= maxAttempts) {
     action = entry.exhaustedAction;
-    reason = `自动重试已达到 ${maxAttempts} 次上限。`;
+    reason = `The automatic retry limit of ${maxAttempts} has been reached.`;
   }
 
   if (action === "continue_with_warning" && !input.occurrence.hasUsableOutput) {
     action = entry.exhaustedAction === "continue_with_warning" ? "pause_for_manual" : entry.exhaustedAction;
     locked = true;
-    reason = "当前没有可用正文或已保存产物，不能仅记录警告后继续。";
+    reason = "There is no usable manuscript or saved artifact, so the task cannot continue with a warning alone.";
   }
 
   return {

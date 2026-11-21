@@ -16,27 +16,27 @@ export default function AccessTokenGate({ children }: { children: ReactNode }) {
         headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
       });
       if (response.ok) { setToken(""); setState("ready"); setMessage(""); }
-      else { setState("required"); setMessage((await response.json()).error ?? "连接失败，请重新输入访问令牌。"); }
+      else { setState("required"); setMessage((await response.json()).error ?? "Connection failed. Enter the access token again."); }
     } catch (error) {
-      if (!signal?.aborted) { setState("required"); setMessage("无法连接创作服务，请检查地址后重试。"); }
+      if (!signal?.aborted) { setState("required"); setMessage("Could not connect to the writing service. Check the address and try again."); }
     } finally { setBusy(false); }
   }
   useEffect(() => {
     const controller = new AbortController();
     void connect(undefined, controller.signal);
-    const requireAccess = () => { setState("required"); setMessage("请输入有效的访问令牌。"); };
+    const requireAccess = () => { setState("required"); setMessage("Enter a valid access token."); };
     window.addEventListener("ai-novel:access-required", requireAccess);
     return () => { controller.abort(); window.removeEventListener("ai-novel:access-required", requireAccess); };
   }, []);
   if (state === "ready") return children;
   return <main className="flex min-h-dvh items-center justify-center bg-background p-6">
     <form className="w-full max-w-sm space-y-4" onSubmit={event => { event.preventDefault(); void connect(token.trim()); }}>
-      <h1 className="text-xl font-semibold">连接写作工作台</h1>
-      {state === "checking" ? <p role="status">正在连接创作服务…</p> : <>
-        <p className="text-sm text-muted-foreground">输入部署者提供的访问令牌，查看小说并继续创作。</p>
-        <label className="block space-y-2 text-sm">访问令牌<Input autoComplete="current-password" type="password" required value={token} onChange={event => setToken(event.target.value)} /></label>
+      <h1 className="text-xl font-semibold">Connect to the writing workspace</h1>
+      {state === "checking" ? <p role="status">Connecting to the writing service…</p> : <>
+        <p className="text-sm text-muted-foreground">Enter the access token provided by your administrator to view your novels and continue writing.</p>
+        <label className="block space-y-2 text-sm">Access token<Input autoComplete="current-password" type="password" required value={token} onChange={event => setToken(event.target.value)} /></label>
         {message ? <p role="alert" className="text-sm text-destructive">{message}</p> : null}
-        <Button disabled={busy} type="submit">{busy ? "连接中…" : "连接工作台"}</Button>
+        <Button disabled={busy} type="submit">{busy ? "Connecting…" : "Connect to workspace"}</Button>
       </>}
     </form>
   </main>;

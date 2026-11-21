@@ -12,18 +12,18 @@ import { Button } from "@/components/ui/button";
 import { findOutlineNodeTitle, formatOutlineValue, outlineFieldLabels } from "./outlineNodes";
 
 const sourceTypeLabels: Record<string, string> = {
-  manual: "手动编辑",
-  proposal: "AI 提案采纳",
-  import: "导入",
-  restore: "历史恢复",
-  initial_generation: "初始大纲采纳",
+  manual: "Manual edit",
+  proposal: "Applied AI suggestion",
+  import: "Import",
+  restore: "Restored revision",
+  initial_generation: "Accepted initial outline",
 };
 
 const changeKindLabels = {
-  added: "新增节点",
-  removed: "移除节点",
-  updated: "修改字段",
-  moved: "移动节点",
+  added: "Node added",
+  removed: "Node removed",
+  updated: "Field updated",
+  moved: "Node moved",
 } as const;
 
 interface OutlineRevisionPanelProps {
@@ -61,7 +61,7 @@ function VersionSelector({ label, value, versions, onChange }: {
         value={value}
         onChange={event => onChange(Number(event.target.value))}
       >
-        {versions.map(revision => <option key={revision.id} value={revision.version}>修订 v{revision.version}</option>)}
+        {versions.map(revision => <option key={revision.id} value={revision.version}>Revision v{revision.version}</option>)}
       </select>
     </label>
   );
@@ -72,8 +72,8 @@ function FieldDiff({ field, before, after, beforeDocument, afterDocument }: { fi
     <div>
       <p className="text-xs font-medium text-muted-foreground">{outlineFieldLabels[field] ?? field}</p>
       <dl className="outline-comparison mt-1">
-        <div className="bg-muted/40 p-2"><dt className="text-xs text-muted-foreground">起始版本</dt><dd className="mt-1 whitespace-pre-wrap break-words text-xs">{formatOutlineValue(before, field, beforeDocument)}</dd></div>
-        <div className="bg-muted/40 p-2"><dt className="text-xs text-muted-foreground">目标版本</dt><dd className="mt-1 whitespace-pre-wrap break-words text-xs">{formatOutlineValue(after, field, afterDocument)}</dd></div>
+        <div className="bg-muted/40 p-2"><dt className="text-xs text-muted-foreground">Previous version</dt><dd className="mt-1 whitespace-pre-wrap break-words text-xs">{formatOutlineValue(before, field, beforeDocument)}</dd></div>
+        <div className="bg-muted/40 p-2"><dt className="text-xs text-muted-foreground">Selected version</dt><dd className="mt-1 whitespace-pre-wrap break-words text-xs">{formatOutlineValue(after, field, afterDocument)}</dd></div>
       </dl>
     </div>
   );
@@ -83,8 +83,8 @@ function ChangeDetails({ change, beforeDocument, afterDocument }: { change: Outl
   if (change.kind === "moved") {
     const before = asRecord(change.before);
     const after = asRecord(change.after);
-    const beforeParent = typeof before.parent === "string" && before.parent !== "story" ? findOutlineNodeTitle(beforeDocument, before.parent) : "总纲";
-    const afterParent = typeof after.parent === "string" && after.parent !== "story" ? findOutlineNodeTitle(afterDocument, after.parent) : "总纲";
+    const beforeParent = typeof before.parent === "string" && before.parent !== "story" ? findOutlineNodeTitle(beforeDocument, before.parent) : "Story";
+    const afterParent = typeof after.parent === "string" && after.parent !== "story" ? findOutlineNodeTitle(afterDocument, after.parent) : "Story";
     return (
       <div className="mt-2 space-y-2">
         {before.parent !== after.parent ? <FieldDiff field="parent" before={beforeParent} after={afterParent} /> : null}
@@ -143,12 +143,12 @@ export function OutlineRevisionPanel({ outlineId, currentVersion, document, onRe
   return (
     <section className="space-y-4 border-t border-border/50 pt-4">
       <div>
-        <h3 className="font-medium">修订历史</h3>
-        <p className="mt-1 text-xs text-muted-foreground">选择任意两版查看差异，或把旧版内容恢复为一个新修订。</p>
+        <h3 className="font-medium">Revision history</h3>
+        <p className="mt-1 text-xs text-muted-foreground">Compare any two revisions or restore an older version as a new revision.</p>
       </div>
 
-      {revisions.isLoading ? <p className="text-sm text-muted-foreground">正在读取修订历史…</p> : null}
-      {revisions.isError ? <p role="alert" className="text-sm text-destructive">修订历史读取失败，请稍后重试。</p> : null}
+      {revisions.isLoading ? <p className="text-sm text-muted-foreground">Loading revision history…</p> : null}
+      {revisions.isError ? <p role="alert" className="text-sm text-destructive">Failed to load revision history. Try again later.</p> : null}
 
       {ordered.length ? (
         <>
@@ -156,21 +156,21 @@ export function OutlineRevisionPanel({ outlineId, currentVersion, document, onRe
             {ordered.map(revision => (
               <li key={revision.id} className="flex items-baseline justify-between gap-3">
                 <span>v{revision.version} · {sourceTypeLabels[revision.sourceType] ?? revision.sourceType}</span>
-                <time className="shrink-0 text-xs text-muted-foreground" dateTime={revision.createdAt}>{new Date(revision.createdAt).toLocaleDateString()}</time>
+                <time className="shrink-0 text-xs text-muted-foreground" dateTime={revision.createdAt}>{new Date(revision.createdAt).toLocaleDateString("en-US")}</time>
               </li>
             ))}
           </ol>
 
           <div className="grid grid-cols-2 gap-2 border-t border-border/50 pt-4">
-            <VersionSelector label="起始版本" value={fromVersion} versions={ordered} onChange={setFromSelection} />
-            <VersionSelector label="目标版本" value={toVersion} versions={ordered} onChange={setToSelection} />
+            <VersionSelector label="Previous version" value={fromVersion} versions={ordered} onChange={setFromSelection} />
+            <VersionSelector label="Selected version" value={toVersion} versions={ordered} onChange={setToSelection} />
           </div>
 
-          {fromVersion === toVersion ? <p className="text-xs text-muted-foreground">请选择两个不同版本进行比较。</p> : null}
-          {ordered.length < 2 ? <p className="text-xs text-muted-foreground">保存另一个修订后，就可以比较两版内容。</p> : null}
-          {diff.isLoading || before.isLoading || after.isLoading ? <p className="text-sm text-muted-foreground">正在比较所选修订…</p> : null}
-          {diff.isError || before.isError || after.isError ? <p role="alert" className="text-sm text-destructive">差异读取失败，请重新选择版本。</p> : null}
-          {diff.data && !diff.data.length ? <p className="text-sm text-muted-foreground">两版之间没有内容差异。</p> : null}
+          {fromVersion === toVersion ? <p className="text-xs text-muted-foreground">Select two different revisions to compare.</p> : null}
+          {ordered.length < 2 ? <p className="text-xs text-muted-foreground">Save another revision to compare versions.</p> : null}
+          {diff.isLoading || before.isLoading || after.isLoading ? <p className="text-sm text-muted-foreground">Comparing selected revisions…</p> : null}
+          {diff.isError || before.isError || after.isError ? <p role="alert" className="text-sm text-destructive">Failed to load differences. Select the revisions again.</p> : null}
+          {diff.data && !diff.data.length ? <p className="text-sm text-muted-foreground">No differences between these revisions.</p> : null}
           {diff.data?.length && before.data && after.data ? (
             <ul className="space-y-4">
               {diff.data.map(change => (
@@ -189,11 +189,11 @@ export function OutlineRevisionPanel({ outlineId, currentVersion, document, onRe
               disabled={!fromRevision || fromVersion === currentVersion || restore.isPending}
               onClick={() => fromRevision && restore.mutate(fromRevision.id)}
             >
-              将 v{fromVersion} 恢复为新修订
+              Restore v{fromVersion} as a new revision
             </Button>
-            <p className="text-xs text-muted-foreground">恢复会保留当前内容和全部历史，不会删除中间修订。</p>
-            {restore.isError ? <p role="alert" className="text-xs text-destructive">{restore.error instanceof Error ? restore.error.message : "恢复失败，请刷新后重试。"}</p> : null}
-            {restore.isSuccess ? <p className="text-xs text-green-700 dark:text-green-400">旧版内容已恢复为新的当前修订。</p> : null}
+            <p className="text-xs text-muted-foreground">Restoring preserves the current content and full history; intermediate revisions are not deleted.</p>
+            {restore.isError ? <p role="alert" className="text-xs text-destructive">{restore.error instanceof Error ? restore.error.message : "Failed to restore revision. Refresh and try again."}</p> : null}
+            {restore.isSuccess ? <p className="text-xs text-green-700 dark:text-green-400">Older content restored as the new current revision.</p> : null}
           </div>
         </>
       ) : null}

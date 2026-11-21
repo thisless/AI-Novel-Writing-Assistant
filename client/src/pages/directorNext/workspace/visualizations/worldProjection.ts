@@ -35,7 +35,7 @@ export function projectSavedWorldVisualization(world: DirectorWorldMaterials | n
           relation:relation.connectionType, distanceHint:relation.distanceHint, risk:relation.narrativeUse})),
     },
     powerTree: structure.rules.axioms.map(rule=>({level:rule.name, description:[rule.summary,
-      rule.cost ? `代价：${rule.cost}` : "", rule.boundary ? `边界：${rule.boundary}` : ""].filter(Boolean).join("；")})),
+      rule.cost ? `Cost: ${rule.cost}` : "", rule.boundary ? `Limits: ${rule.boundary}` : ""].filter(Boolean).join("; ")})),
     // The structure has no dated event collection. A conflict or rule is not a historical event.
     timeline: [],
   };

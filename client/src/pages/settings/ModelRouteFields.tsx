@@ -44,7 +44,7 @@ export default function ModelRouteFields({
   return (
     <div className={`grid gap-3 ${showProtocolFields ? "md:grid-cols-6" : "md:grid-cols-4"}`}>
       <div className="space-y-1">
-        <div className="text-xs text-muted-foreground">服务商</div>
+        <div className="text-xs text-muted-foreground">Provider</div>
         <Select
           value={draft.provider}
           onValueChange={(value) => {
@@ -56,7 +56,7 @@ export default function ModelRouteFields({
           }}
         >
           <SelectTrigger>
-            <SelectValue placeholder="选择服务商" />
+            <SelectValue placeholder="Select a provider" />
           </SelectTrigger>
           <SelectContent>
             {providerOptions.map((provider) => (
@@ -69,13 +69,13 @@ export default function ModelRouteFields({
       </div>
 
       <div className="space-y-1">
-        <div className="text-xs text-muted-foreground">模型</div>
+        <div className="text-xs text-muted-foreground">Model</div>
         <SearchableSelect
           value={draft.model || undefined}
           onValueChange={(value) => onPatch({ model: value })}
           options={modelOptions.map((model) => ({ value: model }))}
-          placeholder="选择模型"
-          searchPlaceholder="搜索模型"
+          placeholder="Select a model"
+          searchPlaceholder="Search models"
           emptyText={modelEmptyText}
         />
         <Input
@@ -86,7 +86,7 @@ export default function ModelRouteFields({
       </div>
 
       <div className="space-y-1">
-        <div className="text-xs text-muted-foreground">温度</div>
+        <div className="text-xs text-muted-foreground">Temperature</div>
         <Input
           value={draft.temperature}
           placeholder={temperaturePlaceholder}
@@ -95,22 +95,22 @@ export default function ModelRouteFields({
       </div>
 
       <div className="space-y-1">
-        <div className="text-xs text-muted-foreground">最大输出长度</div>
+        <div className="text-xs text-muted-foreground">Maximum output length</div>
         <Input
           value={draft.maxTokens}
           type="number"
           min={1}
           step={1}
-          aria-label="单次最大输出 Tokens"
+          aria-label="Maximum output tokens per request"
           placeholder={maxTokensPlaceholder}
           onChange={(event) => onPatch({ maxTokens: event.target.value })}
         />
-        <p className="text-xs text-muted-foreground">默认 {DEFAULT_MODEL_OUTPUT_TOKENS}，可自行调整。</p>
+        <p className="text-xs text-muted-foreground">Default: {DEFAULT_MODEL_OUTPUT_TOKENS}. You can adjust this value.</p>
       </div>
 
       {showProtocolFields ? (
         <div className="space-y-1">
-          <div className="text-xs text-muted-foreground">请求协议</div>
+          <div className="text-xs text-muted-foreground">Request protocol</div>
           <Select
             value={draft.requestProtocol}
             onValueChange={(value) => {
@@ -124,11 +124,11 @@ export default function ModelRouteFields({
             }}
           >
             <SelectTrigger>
-              <SelectValue placeholder="自动选择" />
+              <SelectValue placeholder="Automatic" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="auto">自动选择</SelectItem>
-              <SelectItem value="openai_compatible">OpenAI 兼容</SelectItem>
+              <SelectItem value="auto">Automatic</SelectItem>
+              <SelectItem value="openai_compatible">OpenAI-compatible</SelectItem>
               <SelectItem value="anthropic">Anthropic</SelectItem>
             </SelectContent>
           </Select>
@@ -137,7 +137,7 @@ export default function ModelRouteFields({
 
       {showProtocolFields ? (
         <div className="space-y-1">
-          <div className="text-xs text-muted-foreground">结构化格式</div>
+          <div className="text-xs text-muted-foreground">Structured format</div>
           <Select
             value={draft.structuredResponseFormat}
             onValueChange={(value) => onPatch({
@@ -145,12 +145,22 @@ export default function ModelRouteFields({
             })}
           >
             <SelectTrigger>
-              <SelectValue placeholder="自动选择" />
+              <SelectValue placeholder="Automatic" />
             </SelectTrigger>
             <SelectContent>
               {getStructuredResponseFormatOptions(draft.requestProtocol).map((format) => (
                 <SelectItem key={format} value={format}>
-                  {format === "auto" ? "自动选择" : format === "tool_calling" ? "工具调用" : format}
+                  {format === "auto"
+                    ? "Automatic"
+                    : format === "tool_calling"
+                      ? "Tool calling"
+                      : format === "json_schema"
+                        ? "JSON Schema"
+                        : format === "json_object"
+                          ? "JSON object"
+                          : format === "prompt_json"
+                            ? "JSON prompt"
+                            : format}
                 </SelectItem>
               ))}
             </SelectContent>

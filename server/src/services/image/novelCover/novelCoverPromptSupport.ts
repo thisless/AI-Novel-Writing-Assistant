@@ -40,21 +40,21 @@ interface NovelCoverNovelRecord {
 }
 
 const NARRATIVE_POV_LABELS: Record<string, string> = {
-  first_person: "第一人称",
-  third_person: "第三人称",
-  mixed: "混合视角",
+  first_person: "First person",
+  third_person: "Third person",
+  mixed: "Mixed perspective",
 };
 
 const PACE_PREFERENCE_LABELS: Record<string, string> = {
-  slow: "慢节奏",
-  balanced: "均衡节奏",
-  fast: "快节奏",
+  slow: "Slow-paced",
+  balanced: "Balanced",
+  fast: "Fast-paced",
 };
 
 const EMOTION_INTENSITY_LABELS: Record<string, string> = {
-  low: "低情绪浓度",
-  medium: "中情绪浓度",
-  high: "高情绪浓度",
+  low: "Low emotional intensity",
+  medium: "Medium emotional intensity",
+  high: "High emotional intensity",
 };
 
 function normalizeOptionalText(value: string | null | undefined): string | null {
@@ -85,13 +85,13 @@ function buildWorldSummaryFromContext(block: WorldContextBlock | null | undefine
   const parts = [
     normalizeOptionalText(block.summaryText),
     block.activeForces.length > 0
-      ? `活跃势力：${block.activeForces.slice(0, 3).map((force) => force.name).join("、")}`
+      ? `Active forces: ${block.activeForces.slice(0, 3).map((force) => force.name).join(", ")}`
       : null,
     block.activeLocations.length > 0
-      ? `本书舞台：${block.activeLocations.slice(0, 3).map((location) => location.name).join("、")}`
+      ? `Story locations: ${block.activeLocations.slice(0, 3).map((location) => location.name).join(", ")}`
       : null,
   ].filter((item): item is string => Boolean(item));
-  return normalizeOptionalText(parts.join("；"));
+  return normalizeOptionalText(parts.join("; "));
 }
 
 function buildNarrativeLabel(mapping: Record<string, string>, value: string | null | undefined): string | null {

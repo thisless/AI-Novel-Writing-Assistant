@@ -239,13 +239,13 @@ function AutoDirectorCreatePage() {
       }
       const created = await createStyleProfileFromBookAnalysis({
         bookAnalysisId: referenceBookAnalysisId,
-        name: `${referenceTitle || "参考小说"}参考写法`,
+        name: `${referenceTitle || "Reference novel"} reference style`,
         provider: llm.provider || undefined,
         model: llm.model || undefined,
         temperature: llm.temperature,
       });
       if (!created.data) {
-        throw new Error("参考写法准备失败。");
+        throw new Error("Failed to prepare the reference style.");
       }
       return created.data;
     },
@@ -265,7 +265,7 @@ function AutoDirectorCreatePage() {
       return;
     }
     referenceAppliedRef.current = referenceKey;
-    const sourceLabel = referenceTitle ? `《${referenceTitle}》` : "这份拆书";
+    const sourceLabel = referenceTitle ? `“${referenceTitle}”` : "this analysis";
     setBasicForm((current) => patchNovelBasicForm(current, referenceMode === "continuation"
       ? {
         writingMode: "continuation",
@@ -273,13 +273,13 @@ function AutoDirectorCreatePage() {
         sourceKnowledgeDocumentId: referenceDocumentId,
         continuationBookAnalysisId: referenceBookAnalysisId,
         continuationBookAnalysisSections: [...ALL_BOOK_ANALYSIS_SECTIONS],
-        description: current.description || `基于${sourceLabel}现有角色、世界规则、终局状态和未完线索，继续创作后续故事。`,
+        description: current.description || `Continue the story using the existing characters, world rules, endgame state, and unresolved threads from ${sourceLabel}.`,
       }
       : {
         writingMode: "original",
         referenceBookAnalysisId,
         referenceBookAnalysisSections: [...TRANSFERABLE_BOOK_ANALYSIS_SECTIONS],
-        description: current.description || `参考${sourceLabel}的结构机制、节奏和写法，创作一部拥有全新角色、世界和剧情的独立小说。`,
+        description: current.description || `Use the structure, pacing, and style of ${sourceLabel} as a reference to create a standalone novel with new characters, a new world, and a new plot.`,
       }));
   }, [referenceBookAnalysisId, referenceDocumentId, referenceMode, referenceTitle]);
 
@@ -351,7 +351,7 @@ function AutoDirectorCreatePage() {
       }
     },
     onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "恢复自动导演任务失败。");
+      toast.error(error instanceof Error ? error.message : "Failed to restore the Auto Director task.");
     },
   });
 
@@ -435,12 +435,12 @@ function AutoDirectorCreatePage() {
   const enterSimpleMutation = useMutation({
     mutationFn: () => setNovelCreationExperience(createdNovelId, "simple"),
     onSuccess: () => navigate(`/novels/${createdNovelId}/simple`, { replace: true }),
-    onError: (error) => toast.error(error instanceof Error ? error.message : "进入简易模式失败，请重试。"),
+    onError: (error) => toast.error(error instanceof Error ? error.message : "Failed to open Simple mode. Try again."),
   });
   const enterProfessionalMutation = useMutation({
     mutationFn: () => setNovelCreationExperience(createdNovelId, "professional"),
     onSuccess: () => navigate(`/novels/${createdNovelId}/edit`, { replace: true }),
-    onError: (error) => toast.error(error instanceof Error ? error.message : "进入专业模式失败，请重试。"),
+    onError: (error) => toast.error(error instanceof Error ? error.message : "Failed to open Professional mode. Try again."),
   });
 
   useEffect(() => {
@@ -489,10 +489,10 @@ function AutoDirectorCreatePage() {
       postGenerationStyleReviewEnabled: controller.directorBasicForm.postGenerationStyleReviewEnabled,
     }),
     candidates: controller.batches.length > 0
-      ? `已生成 ${controller.batches.length} 批方向候选`
+      ? `${controller.batches.length} batches of story ideas generated`
       : controller.hasActiveDirectorTask
-        ? "导演任务进行中"
-        : "等待生成方向候选",
+        ? "Director task in progress"
+        : "Waiting for story ideas",
   }), [
     controller.batches.length,
     controller.directorBasicForm,
@@ -536,7 +536,7 @@ function AutoDirectorCreatePage() {
         temperature: llm.temperature,
       });
       if (!response.data) {
-        throw new Error(response.error || "创作承接方案生成失败。");
+        throw new Error(response.error || "Failed to generate the story carryover plan.");
       }
       if (!isCurrentRequest()) return;
       const result = response.data;
@@ -550,14 +550,14 @@ function AutoDirectorCreatePage() {
         return;
       }
       if (!matchesCreativeCarryoverSource(result.contract, selection.mode, selection.bookAnalysisId)) {
-        setCarryoverPanelState({ kind: "error", message: "承接方案与当前参考作品不一致，请重新生成。", hasPrevious: Boolean(activeCarryoverContract) });
+        setCarryoverPanelState({ kind: "error", message: "The carryover plan does not match the current reference work. Generate it again.", hasPrevious: Boolean(activeCarryoverContract) });
         return;
       }
       setCarryoverContract(result.contract);
       setCarryoverPanelState({ kind: "ready", contract: result.contract });
     } catch (error) {
       if (!isCurrentRequest()) return;
-      const message = error instanceof Error ? error.message : "创作承接方案生成失败。";
+      const message = error instanceof Error ? error.message : "Failed to generate the story carryover plan.";
       setCarryoverPanelState({
         kind: "error",
         message,
@@ -607,7 +607,7 @@ function AutoDirectorCreatePage() {
           },
         });
         if (!response.data) {
-          throw new Error(response.error || "保存承接方案失败。");
+          throw new Error(response.error || "Failed to save the story carryover plan.");
         }
       }
       if (carryoverSelectionRef.current !== selectionKey) return;
@@ -618,7 +618,7 @@ function AutoDirectorCreatePage() {
       }
       setCarryoverDialogOpen(false);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "保存承接方案失败。");
+      toast.error(error instanceof Error ? error.message : "Failed to save the story carryover plan.");
     } finally {
       setIsCarryoverAdopting(false);
     }
@@ -650,17 +650,17 @@ function AutoDirectorCreatePage() {
       ? { kind: "loading" }
       : carryoverPanelState;
   const isCarryoverGenerating = carryoverGeneratingKey === currentCarryoverKey;
-  const carryoverModeLabel = resolvedCarryoverMode === "continuation" ? "续写原作" : "参考创作新书";
-  const carryoverTitle = referenceTitle || activeCarryoverContract?.documentTitle || "参考作品";
+  const carryoverModeLabel = resolvedCarryoverMode === "continuation" ? "Continue the original" : "Create a new story from a reference";
+  const carryoverTitle = referenceTitle || activeCarryoverContract?.documentTitle || "Reference work";
   const carryoverStatus = isCarryoverGenerating || visibleCarryoverPanelState.kind === "loading"
-    ? "AI 正在整理方案，你可以先完善开书想法。"
+    ? "AI is preparing the plan. You can refine your story idea in the meantime."
     : visibleCarryoverPanelState.kind === "insufficient"
-      ? "拆书材料不足，请查看需要补齐的结论。"
+      ? "The analysis has insufficient material. Review the findings that need more information."
       : visibleCarryoverPanelState.kind === "error"
-        ? activeCarryoverContract ? "新方案生成失败，可查看并采用保留的方案。" : "方案生成失败，可打开后重试。"
+        ? activeCarryoverContract ? "Failed to generate a new plan. You can review and use the saved plan." : "Failed to generate the plan. Open it to try again."
         : activeCarryoverContract?.adopted
-          ? "方案已采用，将用于后续故事规划。"
-          : "方案已准备好，查看并采用后即可生成整书方向。";
+          ? "Plan adopted. It will guide future story planning."
+          : "Plan ready. Review and adopt it to generate story directions.";
   const regenerateCarryoverContract = () => {
     if (!resolvedCarryoverMode || !resolvedCarryoverAnalysisId || isCarryoverGenerating || isCarryoverAdopting) return;
     void generateCarryoverContract({
@@ -679,7 +679,7 @@ function AutoDirectorCreatePage() {
       </div>
       <DialogTrigger asChild>
         <Button type="button" variant="secondary" size="sm" className="shrink-0 self-start sm:self-auto">
-          {activeCarryoverContract?.adopted ? "查看已采用方案" : "查看创作方案"}
+          {activeCarryoverContract?.adopted ? "View adopted plan" : "View story plan"}
         </Button>
       </DialogTrigger>
     </div>
@@ -711,13 +711,13 @@ function AutoDirectorCreatePage() {
           storyModeTree={storyModeTree}
           selectedGenreId={controller.directorBasicForm.genreId}
           selectedGenreLabel={selectedGenre
-            ? `故事类型：${selectedGenre.path}`
-            : controller.directorBasicForm.genreId ? "故事类型：选择已失效" : ""}
+            ? `Genre: ${selectedGenre.path}`
+            : controller.directorBasicForm.genreId ? "Genre: selection unavailable" : ""}
           selectedGenreSource={selectedGenreSource}
           selectedStoryModeId={controller.directorBasicForm.primaryStoryModeId}
           selectedStoryModeLabel={selectedStoryMode
-            ? `推进方式：${selectedStoryMode.path}`
-            : controller.directorBasicForm.primaryStoryModeId ? "推进方式：选择已失效" : ""}
+            ? `Story direction: ${selectedStoryMode.path}`
+            : controller.directorBasicForm.primaryStoryModeId ? "Story direction: selection unavailable" : ""}
           selectedStoryModeSource={selectedStoryModeSource}
           genreLoading={genreTreeQuery.isPending}
           genreError={genreTreeQuery.isError}
@@ -809,24 +809,24 @@ function AutoDirectorCreatePage() {
       <ReferenceNovelStartDialog open={referenceStartOpen} onOpenChange={setReferenceStartOpen} />
       {showCarryoverPanel ? (
         <AppDialogContent
-          title="创作承接方案"
-          description="查看参考作品如何延续到你的故事，采用后继续完成开书设置。"
+          title="Story carryover plan"
+          description="Review how the reference work can carry over into your story. Adopt the plan to continue setup."
           className="max-w-5xl"
           footerClassName="flex-row flex-wrap items-center gap-2 sm:space-x-0"
           footer={(
             <>
               <DialogClose asChild>
-                <Button type="button" variant="secondary" className="mr-auto">返回开书设置</Button>
+                <Button type="button" variant="secondary" className="mr-auto">Back to story setup</Button>
               </DialogClose>
               {visibleCarryoverPanelState.kind === "ready" ? (
                 <Button type="button" variant="ghost" onClick={regenerateCarryoverContract} disabled={isCarryoverGenerating || isCarryoverAdopting}>
-                  {isCarryoverGenerating ? "正在生成…" : "重新生成"}
+                  {isCarryoverGenerating ? "Generating…" : "Regenerate"}
                 </Button>
               ) : null}
               {activeCarryoverContract && !activeCarryoverContract.adopted
                 && (visibleCarryoverPanelState.kind === "ready" || visibleCarryoverPanelState.kind === "error") ? (
                 <Button type="button" onClick={() => void adoptCarryoverContract()} disabled={isCarryoverGenerating || isCarryoverAdopting}>
-                  {isCarryoverAdopting ? "正在采用…" : "采用推荐方案"}
+                  {isCarryoverAdopting ? "Applying…" : "Adopt recommended plan"}
                 </Button>
               ) : null}
             </>
@@ -843,39 +843,39 @@ function AutoDirectorCreatePage() {
         />
         <div className="mt-5 border-t border-border/60 pt-4 text-xs leading-5 text-muted-foreground">
           {referenceStyleProfileQuery.isFetching
-            ? "参考写法正在后台准备，不影响继续设置。"
+            ? "The reference style is being prepared in the background. You can continue setup."
             : referenceStyleProfileQuery.isError
-              ? "拆书结论已带入；参考写法暂未完成，可继续开书并稍后补充。"
+              ? "Analysis findings have been added. The reference style is not ready yet; continue setup and add it later."
               : resolvedInitialStyleProfileId
-                ? "参考写法会随项目进入后续正文生成。"
-                : "拆书结论已带入，可以继续设置。"}
+                ? "The reference style will be used in future drafting."
+                : "Analysis findings have been added. You can continue setup."}
         </div>
         </AppDialogContent>
       ) : null}
       {showSummaryBar ? (
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <div className="text-2xl font-semibold tracking-normal text-foreground">AI 自动导演创建</div>
+            <div className="text-2xl font-semibold tracking-normal text-foreground">AI Auto Director setup</div>
             <div className="mt-1 text-sm leading-6 text-muted-foreground">
-              从一个起始想法开始，AI 会持续准备创作资源；项目建立后即可打开查看已完成成果。
+              Start with an idea and let AI prepare your creative resources. Once the project is created, open it to review the results.
             </div>
           </div>
           <div className="flex flex-wrap items-end gap-3 sm:justify-end">
               {createdNovelId ? (
                 <div className="space-y-1.5">
-                  <div className="text-xs font-medium text-muted-foreground">选择创作界面</div>
-                  <div className="flex items-center gap-1 rounded-lg bg-muted/55 p-1" role="group" aria-label="选择创作模式">
+                  <div className="text-xs font-medium text-muted-foreground">Choose an editing experience</div>
+                  <div className="flex items-center gap-1 rounded-lg bg-muted/55 p-1" role="group" aria-label="Choose editing experience">
                     <Button type="button" size="sm" variant="secondary" disabled={enterSimpleMutation.isPending} onClick={() => enterSimpleMutation.mutate()}>
-                      {enterSimpleMutation.isPending ? "正在打开…" : "简易模式"}
+                      {enterSimpleMutation.isPending ? "Opening…" : "Simple"}
                     </Button>
                     <Button type="button" size="sm" variant="secondary" disabled={enterProfessionalMutation.isPending} onClick={() => enterProfessionalMutation.mutate()}>
-                      {enterProfessionalMutation.isPending ? "正在打开…" : "专业模式"}
+                      {enterProfessionalMutation.isPending ? "Opening…" : "Professional"}
                     </Button>
                   </div>
               </div>
             ) : null}
             <Button type="button" size="sm" variant="ghost" asChild>
-              <Link to="/novels/create">手动创建</Link>
+              <Link to="/novels/create">Create manually</Link>
             </Button>
           </div>
         </div>
@@ -908,7 +908,7 @@ function AutoDirectorCreatePage() {
 
       {restoreWorkflowMutation.isPending && normalizedTaskId ? (
         <div className="rounded-lg bg-muted/20 px-4 py-3 text-sm text-muted-foreground">
-          正在恢复自动导演现场。
+          Restoring the Auto Director session…
         </div>
       ) : null}
 
@@ -918,19 +918,19 @@ function AutoDirectorCreatePage() {
             <div className="min-w-0">
               <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
                 <span className="h-2 w-2 rounded-full bg-primary" aria-hidden="true" />
-                雷达开书参考
+                Radar story brief
                 {marketBriefQuery.data?.data?.selectedSignals.length ? (
                   <span className="font-normal text-muted-foreground">
-                    {marketBriefQuery.data.data.selectedSignals.length} 项信号
+                    {marketBriefQuery.data.data.selectedSignals.length} signals
                   </span>
                 ) : null}
               </div>
               <p className="mt-1 max-w-4xl text-sm leading-6 text-muted-foreground">
-                {marketBriefQuery.data?.data?.summary || (marketBriefQuery.isPending ? "正在读取市场创作简报。" : "市场简报暂时无法读取，仍可继续按你的想法开书。")}
+                {marketBriefQuery.data?.data?.summary || (marketBriefQuery.isPending ? "Loading market-informed creative brief…" : "The market brief is temporarily unavailable. You can still start a story based on your own idea.")}
               </p>
             </div>
             <Button type="button" variant="ghost" size="sm" className="shrink-0" asChild>
-              <Link to="/market-radar">调整雷达信号</Link>
+              <Link to="/market-radar">Adjust radar signals</Link>
             </Button>
           </div>
 
@@ -947,36 +947,36 @@ function AutoDirectorCreatePage() {
           {marketBriefQuery.data?.data?.creativeSeed ? (
             <div className="mt-4 grid gap-4 border-t border-border/50 pt-4 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.35fr)]">
               <div className="min-w-0">
-                <div className="text-xs font-medium text-muted-foreground">金手指 / 核心优势</div>
+                <div className="text-xs font-medium text-muted-foreground">Special advantage / core strength</div>
                 <p className="mt-1 line-clamp-2 text-sm leading-6 text-foreground">
                   {marketBriefQuery.data.data.creativeSeed.coreAdvantage}
                 </p>
               </div>
               <div className="min-w-0">
-                <div className="text-xs font-medium text-muted-foreground">开书思路</div>
+                <div className="text-xs font-medium text-muted-foreground">Story opening idea</div>
                 <p className="mt-1 line-clamp-2 text-sm leading-6 text-foreground">
                   {marketBriefQuery.data.data.creativeSeed.openingIdea}
                 </p>
               </div>
               <details className="lg:col-span-2">
                 <summary className="w-fit cursor-pointer list-none text-xs font-medium text-muted-foreground hover:text-foreground [&::-webkit-details-marker]:hidden">
-                  查看完整雷达设定
+                  View full radar brief
                 </summary>
                 <div className="mt-3 grid gap-4 text-sm leading-6 sm:grid-cols-2">
                   <div>
-                    <div className="text-xs text-muted-foreground">完整核心优势</div>
+                    <div className="text-xs text-muted-foreground">Full core strength</div>
                     <p className="mt-1 text-foreground">{marketBriefQuery.data.data.creativeSeed.coreAdvantage}</p>
                   </div>
                   <div>
-                    <div className="text-xs text-muted-foreground">完整开书思路</div>
+                    <div className="text-xs text-muted-foreground">Full story opening idea</div>
                     <p className="mt-1 text-foreground">{marketBriefQuery.data.data.creativeSeed.openingIdea}</p>
                   </div>
                   <div>
-                    <div className="text-xs text-muted-foreground">核心卖点</div>
+                    <div className="text-xs text-muted-foreground">Core selling point</div>
                     <p className="mt-1 text-foreground">{marketBriefQuery.data.data.creativeSeed.bookSellingPoint}</p>
                   </div>
                   <div>
-                    <div className="text-xs text-muted-foreground">前 30 章承诺</div>
+                    <div className="text-xs text-muted-foreground">Promise of the first 30 chapters</div>
                     <p className="mt-1 text-foreground">{marketBriefQuery.data.data.creativeSeed.first30ChapterPromise}</p>
                   </div>
                 </div>
@@ -984,26 +984,26 @@ function AutoDirectorCreatePage() {
             </div>
           ) : marketBriefQuery.data?.data ? (
             <div className="mt-3 text-sm leading-6 text-amber-700 dark:text-amber-300">
-              这份简报缺少完整开书思路，请返回雷达重新确认信号。
+              This brief is missing a complete story opening idea. Return to the radar and review your selected signals.
             </div>
           ) : null}
 
           {marketProductionFoundation ? (
             <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-xs text-muted-foreground">
-              <span><span className="text-foreground">题材基底</span> {marketProductionFoundation.genre.path}</span>
-              <span><span className="text-foreground">主要推进</span> {marketProductionFoundation.primaryStoryMode.path}</span>
+              <span><span className="text-foreground">Genre foundation</span> {marketProductionFoundation.genre.path}</span>
+              <span><span className="text-foreground">Primary story direction</span> {marketProductionFoundation.primaryStoryMode.path}</span>
               {marketProductionFoundation.secondaryStoryMode ? (
-                <span><span className="text-foreground">辅助推进</span> {marketProductionFoundation.secondaryStoryMode.path}</span>
+                <span><span className="text-foreground">Secondary story direction</span> {marketProductionFoundation.secondaryStoryMode.path}</span>
               ) : null}
             </div>
           ) : null}
         </section>
       ) : activeStage === "idea" && !showCarryoverPanel ? (
         <div className="flex flex-col gap-3 rounded-xl bg-muted/35 px-4 py-3 text-sm sm:flex-row sm:items-center sm:justify-between">
-          <span className="text-muted-foreground">也可以从一部参考小说或近期热门方向开始。</span>
+          <span className="text-muted-foreground">You can also start from a reference novel or a current trend.</span>
           <div className="flex flex-wrap gap-2">
-            <Button type="button" variant="secondary" size="sm" onClick={() => setReferenceStartOpen(true)}>照着一本书写</Button>
-            <Button type="button" variant="outline" size="sm" asChild><Link to="/market-radar">参考热门题材</Link></Button>
+            <Button type="button" variant="secondary" size="sm" onClick={() => setReferenceStartOpen(true)}>Use a novel as a reference</Button>
+            <Button type="button" variant="outline" size="sm" asChild><Link to="/market-radar">Explore trending topics</Link></Button>
           </div>
         </div>
       ) : null}
@@ -1050,12 +1050,12 @@ class AutoDirectorCreateErrorBoundary extends Component<
     return (
       <div className="flex min-h-[60vh] items-center justify-center px-4 py-12">
         <div className="w-full max-w-lg text-center">
-          <h1 className="text-2xl font-semibold text-foreground">创建页遇到问题</h1>
+          <h1 className="text-2xl font-semibold text-foreground">Something went wrong</h1>
           <p className="mt-3 text-sm leading-6 text-muted-foreground">
-            重新加载后，系统会尝试恢复保存在本机的开书草稿；已创建的任务和小说不会受影响。
+            After reloading, the system will try to restore the story setup draft saved on this device. Existing tasks and novels will not be affected.
           </p>
           <Button type="button" className="mt-6" onClick={() => window.location.reload()}>
-            重新加载创建页
+            Reload setup
           </Button>
         </div>
       </div>

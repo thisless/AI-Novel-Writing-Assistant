@@ -23,15 +23,15 @@ export function useCandidateAcceptance(input: {
       const { chapter, candidate, session, selectedChangeIds } = input;
       const sourceContent = input.content;
       if (!chapter || !candidate || !session.targetRange || session.status !== "ready") {
-        throw new Error("当前没有可应用的候选版本。");
+        throw new Error("There is no candidate ready to apply.");
       }
-      if (selectedChangeIds.size === 0) throw new Error("请先选择要采纳的修改。");
-      if (input.sourceSnapshot !== sourceContent) throw new Error("正文已变化，请重新生成修改建议。");
+      if (selectedChangeIds.size === 0) throw new Error("Select at least one change to accept.");
+      if (input.sourceSnapshot !== sourceContent) throw new Error("The manuscript has changed. Generate a new revision.");
       const replacement = applySelectedChapterEditorDiff(session.targetRange.text, candidate.content, candidate.diffChunks, selectedChangeIds);
       const nextContent = session.mode === "continuation"
         ? insertChapterContinuation(sourceContent, session.targetRange.from, replacement)
         : replaceChapterSelection(sourceContent, session.targetRange, replacement);
-      if (nextContent === sourceContent) throw new Error("所选修改与原文相同，无需再次保存。");
+      if (nextContent === sourceContent) throw new Error("The selected changes match the original text. Nothing to save.");
       await createNovelSnapshot(input.novelId, {
         triggerType: "manual", label: `chapter-editor:${chapter.order}:${session.scope}:${Date.now()}`,
       });
@@ -45,8 +45,8 @@ export function useCandidateAcceptance(input: {
       const savedUpdatedAt = String(saved?.updatedAt ?? Date.now());
       input.acknowledgeSave(sourceContent, { content: saved?.content ?? nextContent, updatedAt: savedUpdatedAt });
       await input.onAccepted({ nextContent: saved?.content ?? nextContent, savedUpdatedAt, fullyAccepted });
-      toast.success("所选修改已保存，修改前版本可在历史中查看。");
+      toast.success("Selected changes saved. You can view the previous version in the history.");
     },
-    onError: (error) => toast.error(error instanceof Error ? error.message : "应用候选版本失败。"),
+    onError: (error) => toast.error(error instanceof Error ? error.message : "Could not apply the candidate."),
   });
 }

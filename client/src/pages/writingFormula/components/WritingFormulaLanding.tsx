@@ -67,7 +67,7 @@ export default function WritingFormulaLanding(props: WritingFormulaLandingProps)
       )}>
         <div className="flex flex-wrap items-start justify-between gap-x-6 gap-y-3">
           <button type="button" aria-expanded={showDetails} aria-controls={showDetails ? detailsId : undefined}
-            aria-label={(showDetails ? "收起写法详情：" : "查看写法详情：") + profile.name}
+            aria-label={(showDetails ? "Collapse style details: " : "View style details: ") + profile.name}
             className="min-w-0 flex-1 basis-80 rounded text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             onClick={() => {
               // Folding a preview must not change the active profile or clear its test draft.
@@ -91,23 +91,23 @@ export default function WritingFormulaLanding(props: WritingFormulaLandingProps)
             {!showDetails ? <span className="mt-2 line-clamp-2 text-sm leading-6 text-muted-foreground">{profile.summaryLine}</span> : null}
           </button>
 
-          <div className="flex flex-wrap items-center gap-1" role="group" aria-label={profile.name + "的操作"}>
+          <div className="flex flex-wrap items-center gap-1" role="group" aria-label={profile.name + " actions"}>
             <Button type="button" size="sm" variant="ghost" className="h-8 px-2 text-xs"
-              title="编辑写法说明、规则和反 AI 约束" onClick={() => props.onEditProfile(profile.id)}>
-              <Edit3 aria-hidden="true" className="h-3.5 w-3.5" />编辑设定
+              title="Edit the style description, rules, and anti-AI constraints" onClick={() => props.onEditProfile(profile.id)}>
+              <Edit3 aria-hidden="true" className="h-3.5 w-3.5" />Edit settings
             </Button>
             <Button type="button" size="sm" variant={isSelected ? "default" : "secondary"} className="h-8 px-2.5 text-xs"
-              title="绑定目标或用这套写法试写" onClick={() => props.onOpenWorkbench(profile.id)}>
-              <FlaskConical aria-hidden="true" className="h-3.5 w-3.5" />应用与测试
+              title="Bind a target or try a sample with this style" onClick={() => props.onOpenWorkbench(profile.id)}>
+              <FlaskConical aria-hidden="true" className="h-3.5 w-3.5" />Apply and test
             </Button>
             <Button type="button" size="sm" variant="ghost" className="h-8 px-2 text-xs"
-              title="检查正文并预览局部修订" onClick={() => props.onUseProfileForClean(profile.id)}>
-              <Sparkles aria-hidden="true" className="h-3.5 w-3.5" />去 AI 味
+              title="Check prose and preview a focused revision" onClick={() => props.onUseProfileForClean(profile.id)}>
+              <Sparkles aria-hidden="true" className="h-3.5 w-3.5" />Reduce AI-like writing
             </Button>
             <Button type="button" size="sm" variant="ghost" disabled={props.deletePending}
               className="h-8 px-2 text-xs text-destructive hover:bg-destructive/10 hover:text-destructive"
-              aria-label={"删除写法：" + profile.name} onClick={() => props.onDeleteProfile(profile.id)}>
-              <Trash2 aria-hidden="true" className="h-3.5 w-3.5" />{props.deletePending ? "删除中…" : "删除"}
+              aria-label={"Delete style: " + profile.name} onClick={() => props.onDeleteProfile(profile.id)}>
+              <Trash2 aria-hidden="true" className="h-3.5 w-3.5" />{props.deletePending ? "Deleting…" : "Delete"}
             </Button>
           </div>
         </div>
@@ -118,7 +118,7 @@ export default function WritingFormulaLanding(props: WritingFormulaLandingProps)
               <span key={tag} className="rounded bg-muted/60 px-2 py-1 text-xs text-muted-foreground">{tag}</span>
             ))}
             {!showDetails && profile.recentNovelTitle ? (
-              <span className="text-xs text-muted-foreground">最近绑定：{profile.recentNovelTitle}</span>
+              <span className="text-xs text-muted-foreground">Recently bound: {profile.recentNovelTitle}</span>
             ) : null}
           </div>
         ) : null}
@@ -127,53 +127,53 @@ export default function WritingFormulaLanding(props: WritingFormulaLandingProps)
           <div id={detailsId} className="mt-5 grid gap-6 border-t border-border/60 pt-5 xl:grid-cols-[minmax(0,1fr)_280px]">
             <div className="min-w-0 space-y-5">
               <section className="space-y-2">
-                <h3 className="text-sm font-semibold">读感与定位</h3>
+                <h3 className="text-sm font-semibold">Reading experience and positioning</h3>
                 <p className="whitespace-pre-wrap break-words text-sm leading-7">{profile.description}</p>
               </section>
               <section>
-                <h3 className="mb-1 text-sm font-semibold">规则摘要</h3>
+                <h3 className="mb-1 text-sm font-semibold">Rule summaries</h3>
                 <div className="divide-y divide-border/60">
-                  <RuleDisclosure title="剧情推进" summary={profile.narrativeSummary} />
-                  <RuleDisclosure title="人物表达" summary={profile.characterSummary} />
-                  <RuleDisclosure title="语言质感" summary={profile.languageSummary} />
-                  <RuleDisclosure title="节奏控制" summary={profile.rhythmSummary} />
+                  <RuleDisclosure title="Narrative progression" summary={profile.narrativeSummary} />
+                  <RuleDisclosure title="Character expression" summary={profile.characterSummary} />
+                  <RuleDisclosure title="Language and texture" summary={profile.languageSummary} />
+                  <RuleDisclosure title="Pacing" summary={profile.rhythmSummary} />
                 </div>
               </section>
               {profile.sourceContentPreview ? (
                 <details className="group border-t border-border/60 pt-3">
                   <summary className="flex cursor-pointer list-none items-center justify-between gap-3 rounded text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&::-webkit-details-marker]:hidden">
-                    原文样本片段<ChevronDown aria-hidden="true" className="h-4 w-4 text-muted-foreground transition-transform group-open:rotate-180 motion-reduce:transition-none" />
+                    Source text sample<ChevronDown aria-hidden="true" className="h-4 w-4 text-muted-foreground transition-transform group-open:rotate-180 motion-reduce:transition-none" />
                   </summary>
                   <blockquote className="mt-3 whitespace-pre-wrap break-words rounded-lg bg-muted/30 p-4 text-sm leading-7 text-muted-foreground">{profile.sourceContentPreview}</blockquote>
                 </details>
               ) : null}
             </div>
 
-            <aside aria-label={profile.name + "的资产信息"} className="min-w-0 space-y-5 xl:border-l xl:border-border/60 xl:pl-6">
+            <aside aria-label={profile.name + " asset information"} className="min-w-0 space-y-5 xl:border-l xl:border-border/60 xl:pl-6">
               <section className="space-y-3">
-                <h3 className="text-sm font-semibold">资产概览</h3>
+                <h3 className="text-sm font-semibold">Profile overview</h3>
                 <dl className="space-y-2">
-                  <DetailStatRow label="最近更新" value={profile.updatedAtLabel} />
-                  <DetailStatRow label="已绑定目标" value={profile.bindingCount + " 个"} />
-                  <DetailStatRow label="最近小说" value={profile.recentNovelTitle || "尚未绑定小说"} />
-                  <DetailStatRow label="适用题材" value={profile.applicableGenres.join(" / ") || "未填写"} />
+                  <DetailStatRow label="Last updated" value={profile.updatedAtLabel} />
+                  <DetailStatRow label="Bound targets" value={String(profile.bindingCount)} />
+                  <DetailStatRow label="Most recent novel" value={profile.recentNovelTitle || "No novel bound yet"} />
+                  <DetailStatRow label="Applicable genres" value={profile.applicableGenres.join(" / ") || "Not specified"} />
                 </dl>
                 <details className="group">
                   <summary className="flex cursor-pointer list-none items-center justify-between gap-2 rounded py-1 text-xs text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&::-webkit-details-marker]:hidden">
-                    来源与提取信息<ChevronDown aria-hidden="true" className="h-3.5 w-3.5 transition-transform group-open:rotate-180 motion-reduce:transition-none" />
+                    Source and extraction details<ChevronDown aria-hidden="true" className="h-3.5 w-3.5 transition-transform group-open:rotate-180 motion-reduce:transition-none" />
                   </summary>
                   <dl className="mt-2 space-y-2">
-                    <DetailStatRow label="来源" value={profile.sourceTypeLabel} />
-                    <DetailStatRow label="启用特征" value={profile.extractedFeatureCount + " 项"} />
-                    <DetailStatRow label="需留意的原文特征" value={profile.highRiskFeatureCount + " 项"} />
-                    <DetailStatRow label="选用预设" value={profile.selectedPresetLabel || "未选择"} />
-                    <DetailStatRow label="可选预设" value={profile.presetLabels.join(" / ") || "暂无"} />
+                    <DetailStatRow label="Source" value={profile.sourceTypeLabel} />
+                    <DetailStatRow label="Enabled features" value={String(profile.extractedFeatureCount)} />
+                    <DetailStatRow label="High-risk source features" value={String(profile.highRiskFeatureCount)} />
+                    <DetailStatRow label="Selected preset" value={profile.selectedPresetLabel || "None selected"} />
+                    <DetailStatRow label="Available presets" value={profile.presetLabels.join(" / ") || "None"} />
                   </dl>
-                  <p className="mt-2 text-xs leading-5 text-muted-foreground">提取信息用于核对可复用的写法特征，数量不代表写法质量。</p>
+                  <p className="mt-2 text-xs leading-5 text-muted-foreground">Extraction details help you review reusable style features. The count is not a measure of quality.</p>
                 </details>
               </section>
               <section className="space-y-3 border-t border-border/60 pt-4">
-                <h3 className="text-sm font-semibold">反 AI 约束</h3>
+                <h3 className="text-sm font-semibold">Anti-AI constraints</h3>
                 {profile.antiAiFocus.length > 0 ? (
                   <ul className="space-y-2 text-sm leading-6 text-muted-foreground">
                     {profile.antiAiFocus.map((line) => <li key={line} className="break-words">{line}</li>)}
@@ -185,13 +185,13 @@ export default function WritingFormulaLanding(props: WritingFormulaLandingProps)
                   </div>
                 ) : null}
                 {profile.extractionAntiAiRecommendationCount > 0 ? (
-                  <p className="text-xs leading-5 text-muted-foreground">提取结果建议了 {profile.extractionAntiAiRecommendationCount} 条补充规则，可在编辑设定中核对。</p>
+                  <p className="text-xs leading-5 text-muted-foreground">Extraction suggested {profile.extractionAntiAiRecommendationCount} additional rules. Review them in Edit settings.</p>
                 ) : null}
                 {!profile.antiAiFocus.length && !profile.antiAiRuleNames.length && !profile.extractionAntiAiRecommendationCount ? (
-                  <p className="text-sm leading-6 text-muted-foreground">尚未配置反 AI 约束，可在编辑设定中选择适合这套写法的规则。</p>
+                  <p className="text-sm leading-6 text-muted-foreground">No anti-AI constraints configured. Choose suitable rules in Edit settings.</p>
                 ) : null}
               </section>
-              <p className="border-t border-border/60 pt-4 text-xs leading-6 text-muted-foreground">建议先用“应用与测试”试写一小段，再决定是否绑定到作品。</p>
+              <p className="border-t border-border/60 pt-4 text-xs leading-6 text-muted-foreground">Try a short sample under “Apply and test” before binding this style to a work.</p>
             </aside>
           </div>
         ) : null}
@@ -203,7 +203,7 @@ export default function WritingFormulaLanding(props: WritingFormulaLandingProps)
     <section className="overflow-hidden rounded-xl bg-card text-card-foreground">
       <div className="flex items-center justify-between gap-3 px-5 py-4 sm:px-6">
         <h2 className="text-base font-semibold">{title}</h2>
-        <span className="text-xs tabular-nums text-muted-foreground">{profiles.length} 套</span>
+        <span className="text-xs tabular-nums text-muted-foreground">{profiles.length} profiles</span>
       </div>
       <div className="divide-y divide-border/60">{profiles.map(renderProfileCard)}</div>
     </section>
@@ -214,44 +214,44 @@ export default function WritingFormulaLanding(props: WritingFormulaLandingProps)
       <div className="space-y-4">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="space-y-1.5">
-            <h2 className="text-lg font-semibold">写法资产</h2>
-            <p className="text-sm leading-6 text-muted-foreground">先选一套写法，再决定要编辑、应用还是去 AI 味。</p>
+            <h2 className="text-lg font-semibold">Style profiles</h2>
+            <p className="text-sm leading-6 text-muted-foreground">Choose a style profile, then edit it, apply it, or reduce AI-like writing.</p>
           </div>
           <div className="flex flex-wrap gap-2">
-            <Button type="button" variant="ghost" onClick={props.onOpenPromptLab}>正文效果实验室</Button>
-            <Button type="button" onClick={props.onOpenCreate}><Plus aria-hidden="true" className="h-4 w-4" />新建一套写法</Button>
+            <Button type="button" variant="ghost" onClick={props.onOpenPromptLab}>Prose prompt lab</Button>
+            <Button type="button" onClick={props.onOpenCreate}><Plus aria-hidden="true" className="h-4 w-4" />New style profile</Button>
           </div>
         </div>
         <div className="relative max-w-xl">
           <Search aria-hidden="true" className="pointer-events-none absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
           <Input type="search" value={search} onChange={(event) => setSearch(event.target.value)}
-            aria-label="搜索写法名称、说明或标签" placeholder="搜索写法名称、说明或标签" className="bg-background pl-9" />
+            aria-label="Search style profile names, descriptions, or tags" placeholder="Search style profiles, descriptions, or tags" className="bg-background pl-9" />
         </div>
-        <p className="border-b border-border/60 pb-4 text-xs leading-6 text-muted-foreground">从小说基础信息设置书级默认写法；在“应用与测试”中绑定目标或试写。</p>
+        <p className="border-b border-border/60 pb-4 text-xs leading-6 text-muted-foreground">Set a novel's default style in its basic information. Bind targets or generate samples under “Apply and test.”</p>
       </div>
 
-      {props.loading ? <p role="status" className="py-8 text-sm text-muted-foreground">正在加载写法资产…</p> : null}
+      {props.loading ? <p role="status" className="py-8 text-sm text-muted-foreground">Loading style profiles…</p> : null}
       {props.error ? (
         <div role="alert" className="rounded-lg bg-destructive/10 p-4 text-sm">
           <p>{props.error}</p>
-          <Button type="button" variant="ghost" size="sm" className="mt-2" onClick={props.onRetry}>重新加载</Button>
+          <Button type="button" variant="ghost" size="sm" className="mt-2" onClick={props.onRetry}>Reload</Button>
         </div>
       ) : null}
       {!props.loading && !props.error && props.profileItems.length === 0 ? (
         <div className="rounded-xl bg-card px-6 py-10">
-          <h3 className="text-base font-semibold">创建第一套写法</h3>
-          <p className="mt-2 text-sm leading-6 text-muted-foreground">描述你喜欢的读感，或从模板和样本文本开始，AI 会帮你整理成可编辑的规则。</p>
-          <Button type="button" className="mt-4" onClick={props.onOpenCreate}>开始创建</Button>
+          <h3 className="text-base font-semibold">Create your first style profile</h3>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">Describe the reading experience you want, or start with a template or sample text. AI will organize it into editable rules.</p>
+          <Button type="button" className="mt-4" onClick={props.onOpenCreate}>Get started</Button>
         </div>
       ) : null}
       {!props.loading && !props.error && props.profileItems.length > 0 && visibleProfiles.length === 0 ? (
         <div className="py-10 text-center text-sm text-muted-foreground">
-          <p>没有找到匹配的写法，试试其他名称或标签。</p>
-          <Button type="button" variant="ghost" size="sm" className="mt-2" onClick={() => setSearch("")}>清空搜索</Button>
+          <p>No matching style profiles. Try another name or tag.</p>
+          <Button type="button" variant="ghost" size="sm" className="mt-2" onClick={() => setSearch("")}>Clear search</Button>
         </div>
       ) : null}
-      {customProfiles.length > 0 ? renderProfileSection("我的写法", customProfiles) : null}
-      {starterProfiles.length > 0 ? renderProfileSection("起步写法 · 可直接使用或修改", starterProfiles) : null}
+      {customProfiles.length > 0 ? renderProfileSection("My style profiles", customProfiles) : null}
+      {starterProfiles.length > 0 ? renderProfileSection("Starter styles · Ready to use or customize", starterProfiles) : null}
     </div>
   );
 }

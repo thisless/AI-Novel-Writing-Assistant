@@ -11,7 +11,7 @@ import { VisualTemplateEditor, type TemplateRole } from "./VisualTemplateEditor"
 type TemplateState = ReturnType<typeof usePromptTemplateEditor>;
 
 function formatDiagnosticKeys(keys: string[], kind: Extract<PromptTemplateTokenKind, "context" | "input" | "slot">) {
-  return keys.map((key) => labelTemplateToken({ kind, key })).join("、") || "无";
+  return keys.map((key) => labelTemplateToken({ kind, key })).join(", ") || "None";
 }
 
 function VersionRow(props: {
@@ -25,13 +25,13 @@ function VersionRow(props: {
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border py-3">
       <div>
-        <span className="text-sm font-medium">版本 {props.version.versionNo}{active ? " · 使用中" : ""}</span>
+        <span className="text-sm font-medium">Version {props.version.versionNo}{active ? " · Active" : ""}</span>
         <span className="ml-3 text-xs text-muted-foreground">{new Date(props.version.createdAt).toLocaleString()}</span>
         {props.version.notes ? <p className="mt-1 text-sm text-muted-foreground">{props.version.notes}</p> : null}
       </div>
       <div className="flex gap-2">
-        <Button variant="ghost" size="sm" disabled={props.disabled} onClick={() => props.onLoad(props.version)}>载入编辑</Button>
-        <Button variant="outline" size="sm" disabled={props.disabled || active} onClick={() => props.onActivate(props.version.id)}>应用此版本</Button>
+        <Button variant="ghost" size="sm" disabled={props.disabled} onClick={() => props.onLoad(props.version)}>Load into editor</Button>
+        <Button variant="outline" size="sm" disabled={props.disabled || active} onClick={() => props.onActivate(props.version.id)}>Activate version</Button>
       </div>
     </div>
   );
@@ -57,33 +57,33 @@ export function AdvancedPromptTemplateEditor(props: {
 
   if (state.overrideQuery.isError) return (
     <div role="alert" className="rounded-md bg-destructive/10 p-4 text-sm">
-      <p>模板读取失败，请重试。</p>
-      <Button variant="outline" className="mt-2" onClick={() => void state.overrideQuery.refetch()}>重新读取</Button>
+      <p>Could not load the template. Try again.</p>
+      <Button variant="outline" className="mt-2" onClick={() => void state.overrideQuery.refetch()}>Reload</Button>
     </div>
   );
-  if (!state.isReady) return <p role="status" className="py-6 text-sm text-muted-foreground">正在读取完整模板…</p>;
+  if (!state.isReady) return <p role="status" className="py-6 text-sm text-muted-foreground">Loading complete template…</p>;
 
   return (
     <div className="mx-auto max-w-5xl space-y-5">
       <div className="rounded-md bg-muted/40 px-4 py-3 text-sm">
         <p className="font-medium">{state.canPersist
-          ? (state.view?.mode === "custom" ? "本书使用自定义模板" : "本书使用官方模板")
-          : "从官方模板开始编辑"}</p>
+          ? (state.view?.mode === "custom" ? "This novel uses a custom template" : "This novel uses the official template")
+          : "Start with the official template"}</p>
         <p className="mt-1 leading-relaxed text-muted-foreground">
-          优先调整“写作规则”中的表达要求；“任务与资料”负责章节任务和背景引用。保留引用标签，让 AI 获得必要资料。
-          {!state.canPersist ? " 草稿仅在当前页面保留，点击“保存到小说”后应用。" : " 保存后用于本书后续生成，不改动已有正文。"}
+          Prioritize changes to expression guidance under “Writing rules.” Use “Tasks and references” for chapter tasks and background context. Keep reference tags so AI receives the required information.
+          {!state.canPersist ? " Draft changes remain on this page until you choose “Save to novel.”" : " Saved changes apply to future generations for this novel and do not alter existing prose."}
         </p>
       </div>
       <Tabs value={role} onValueChange={(value) => { setRole(value as TemplateRole); setTokenMenuRole(null); state.setFocusedRole(value as TemplateRole); }}>
         <TabsList>
-          <TabsTrigger value="system">写作规则 · 主要调整</TabsTrigger>
-          <TabsTrigger value="human">任务与资料</TabsTrigger>
+          <TabsTrigger value="system">Writing rules · Main adjustments</TabsTrigger>
+          <TabsTrigger value="human">Tasks and references</TabsTrigger>
         </TabsList>
       </Tabs>
       <VisualTemplateEditor
         key={role}
         role={role}
-        label={role === "system" ? "写作规则（System）" : "任务与资料（User）"}
+        label={role === "system" ? "Writing rules (System)" : "Tasks and references (User)"}
         value={role === "system" ? state.systemContent : state.humanContent}
         disabled={busy}
         textareaRef={role === "system" ? state.systemRef : state.humanRef}
@@ -99,25 +99,25 @@ export function AdvancedPromptTemplateEditor(props: {
         onChange={role === "system" ? state.setSystemContent : state.setHumanContent}
       />
       {state.referenceQuery.isError ? <div role="alert" className="text-sm text-destructive">
-        资料引用列表读取失败，模板内容仍可编辑。
-        <Button variant="ghost" size="sm" onClick={() => void state.referenceQuery.refetch()}>重试引用列表</Button>
+        Could not load the reference list. You can still edit the template.
+        <Button variant="ghost" size="sm" onClick={() => void state.referenceQuery.refetch()}>Retry loading references</Button>
       </div> : null}
       <div>
-        <label className="text-sm font-medium" htmlFor="prompt-template-notes">版本备注（选填）</label>
+        <label className="text-sm font-medium" htmlFor="prompt-template-notes">Version notes (optional)</label>
         <Input id="prompt-template-notes" value={state.notes} onChange={(event) => state.setNotes(event.target.value)}
-          maxLength={2000} placeholder="例如：对白更简短，减少旁白解释" className="mt-2 shadow-none" disabled={busy} />
+          maxLength={2000} placeholder="For example: Shorter dialogue and less explanatory narration" className="mt-2 shadow-none" disabled={busy} />
       </div>
       {props.showTestResult !== false ? <PromptTestRunResultPanel result={props.testRun ?? null}
         isPending={props.testRunPending} error={props.testRunError} streamOutput={props.testRunStreamOutput} /> : null}
       {preview ? (
         <details open className="border-t border-border pt-4">
-          <summary className="cursor-pointer text-sm font-medium">预览内容与资料检查</summary>
+          <summary className="cursor-pointer text-sm font-medium">Preview content and reference checks</summary>
           {diagnostics ? <div className="mt-3 space-y-1 text-xs text-muted-foreground">
-            <p>引用资料：{formatDiagnosticKeys(diagnostics.referencedContextGroups, "context")}</p>
-            <p>自动补齐的必需资料：{formatDiagnosticKeys(diagnostics.fallbackRequiredGroups, "context")}</p>
-            <p>任务变量：{formatDiagnosticKeys(diagnostics.referencedInputFields, "input")}</p>
-            <p>常用设置：{formatDiagnosticKeys(diagnostics.referencedSlotKeys, "slot")}</p>
-            {diagnostics.unknownTokens.length ? <p className="text-destructive">无法识别的引用：{diagnostics.unknownTokens.join("、")}</p> : null}
+            <p>Referenced context: {formatDiagnosticKeys(diagnostics.referencedContextGroups, "context")}</p>
+            <p>Automatically added required context: {formatDiagnosticKeys(diagnostics.fallbackRequiredGroups, "context")}</p>
+            <p>Task variables: {formatDiagnosticKeys(diagnostics.referencedInputFields, "input")}</p>
+            <p>Common settings: {formatDiagnosticKeys(diagnostics.referencedSlotKeys, "slot")}</p>
+            {diagnostics.unknownTokens.length ? <p className="text-destructive">Unrecognized references: {diagnostics.unknownTokens.join(", ")}</p> : null}
           </div> : null}
           {preview.messages.map((message, index) => <div key={index} className="mt-3 rounded-md bg-muted/40 p-3">
             <div className="mb-2 text-xs font-medium">{message.role}</div>
@@ -126,11 +126,11 @@ export function AdvancedPromptTemplateEditor(props: {
         </details>
       ) : null}
       {state.canPersist ? <details className="border-t border-border pt-4">
-        <summary className="cursor-pointer text-sm font-medium">本书版本历史 · {state.view?.versions.length ?? 0} 个版本</summary>
+        <summary className="cursor-pointer text-sm font-medium">Version history for this novel · {state.view?.versions.length ?? 0} versions</summary>
         {state.view?.versions.length ? state.view.versions.map((version) => <VersionRow key={version.id}
           version={version} activeVersionId={state.view?.activeVersionId} disabled={busy}
           onLoad={state.loadVersionToDraft} onActivate={(id) => state.activateMutation.mutate(id)} />)
-          : <p className="pt-3 text-sm text-muted-foreground">保存模板后，可在这里找回历史版本。</p>}
+          : <p className="pt-3 text-sm text-muted-foreground">Saved template versions will be available here.</p>}
       </details> : null}
     </div>
   );

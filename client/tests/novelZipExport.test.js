@@ -19,7 +19,7 @@ test("ZIP downloads retain the extension when Content-Disposition is unavailable
 test("list and editor export controls offer chapter ZIP alongside the existing formats", () => {
   const list = read("../src/pages/novels/NovelList.tsx");
   const editor = read("../src/pages/novels/components/NovelEditView.tsx");
-  assert.match(list, /\["zip", "分章 ZIP"\]/);
+  assert.match(list, /\["zip", "ZIP by chapter"\]/);
   assert.match(list, /input\.novelId,\s*input\.format/);
   assert.match(editor, /onExportFull\("zip"\)/);
   for (const format of ["txt", "markdown", "json"]) assert.match(editor, new RegExp(`onExportFull\\("${format}"\\)`));

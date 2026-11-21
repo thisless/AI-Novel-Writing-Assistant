@@ -257,7 +257,7 @@ export default function PromptWorkbenchPage() {
             prompt={selectedPrompt}
             simplified={writingLab}
             advanced={isAdvancedMode}
-            heading={writingLab ? "正文效果实验室" : undefined}
+            heading={writingLab ? "Manuscript preview lab" : undefined}
             immersive={immersiveMode}
             onImmersiveChange={setImmersiveMode}
             entrypoint={entrypoint}
@@ -281,24 +281,24 @@ export default function PromptWorkbenchPage() {
                   <div>
                     <Tabs value={activeEditMode} onValueChange={(value) => setEditMode(value as PromptEditMode)}>
                       <TabsList>
-                        <TabsTrigger value="slots">常用调整</TabsTrigger>
-                        {advancedTemplateSupported ? <TabsTrigger value="advanced">完整模板</TabsTrigger> : null}
+                        <TabsTrigger value="slots">Quick adjustments</TabsTrigger>
+                        {advancedTemplateSupported ? <TabsTrigger value="advanced">Full template</TabsTrigger> : null}
                       </TabsList>
                     </Tabs>
                     <p className="mt-2 text-sm text-muted-foreground">{isAdvancedMode
-                      ? "直接编辑完整指令，适合需要深入定制的写法。"
-                      : "从主要调整开始；只改需要的部分，默认设置即可使用。"}</p>
+                      ? "Edit the full prompt directly for more advanced customization."
+                      : "Start with the main adjustments. Change only what you need; the defaults are ready to use."}</p>
                   </div>
                   {isAdvancedMode ? <Button variant="ghost" size="sm" aria-expanded={showContext}
-                    onClick={() => setShowContext((value) => !value)}>{showContext ? "收起资料引用" : "查看资料引用"}</Button> : null}
+                    onClick={() => setShowContext((value) => !value)}>{showContext ? "Hide context sources" : "View context sources"}</Button> : null}
                 </div>
                 {!isAdvancedMode && slotState.isNovelScopeDisabled ? (
                   <div className="rounded-md bg-muted/[0.35] px-4 py-3 text-sm text-muted-foreground">
-                    选择小说以单独设置本书要求，或切换到“所有小说”调整默认要求。
+                    Select a novel to customize its instructions, or switch to “All novels” to change the defaults.
                   </div>
                 ) : null}
                 {previewState.previewMutation.isError ? <p role="alert" className="text-sm text-destructive">
-                  {previewState.previewMutation.error instanceof Error ? previewState.previewMutation.error.message : "预览失败，请重试。"}
+                  {previewState.previewMutation.error instanceof Error ? previewState.previewMutation.error.message : "Preview failed. Please try again."}
                 </p> : null}
                 {isAdvancedMode ? (
                   <AdvancedPromptTemplateEditor
@@ -380,11 +380,11 @@ export default function PromptWorkbenchPage() {
                 onTestLlmChange={setTestLlm}
                 resetDisabled={effectiveResetDisabled}
                 officialVersionDisabled={effectiveOfficialDisabled}
-                officialVersionLabel={isAdvancedMode ? "恢复官方模板" : "官方版本"}
-                saveLabel={isAdvancedMode ? (templateState.canPersist ? "保存本书模板" : "保存到小说") : "保存设置"}
+                officialVersionLabel={isAdvancedMode ? "Restore official template" : "Official version"}
+                saveLabel={isAdvancedMode ? (templateState.canPersist ? "Save novel template" : "Save to novel") : "Save settings"}
                 scopeHint={isAdvancedMode
-                  ? (templateState.canPersist ? `应用到《${activeNovel?.title || "所选小说"}》` : "模板草稿 · 尚未应用到小说")
-                  : slotState.scope === "global" ? "所有小说的默认要求" : `仅应用到《${activeNovel?.title || "请选择小说"}》`}
+                  ? (templateState.canPersist ? `Apply to “${activeNovel?.title || "Selected novel"}”` : "Template draft · Not yet applied")
+                  : slotState.scope === "global" ? "Default instructions for all novels" : `Only apply to “${activeNovel?.title || "Select a novel"}”`}
                 usesSample={!slotState.activeNovelId}
                 onGeneratePreview={previewState.generatePreview}
                 onRunTest={handleRunTest}
@@ -409,33 +409,33 @@ export default function PromptWorkbenchPage() {
         ) : (
           <div className="flex h-full items-center justify-center p-8">
             <div className="rounded-md border border-dashed bg-background/80 p-6 text-sm text-muted-foreground">
-              请选择一个提示词。
+              Select a prompt.
             </div>
           </div>
         )}
       </main>
       <Dialog open={saveDialogOpen} onOpenChange={(open) => { if (!templateState.saveMutation.isPending) setSaveDialogOpen(open); }}>
-        <AppDialogContent title="将模板应用到小说" description="保存为所选小说的新版本，用于后续生成；已有章节正文保持原样。"
+        <AppDialogContent title="Apply template to novel" description="Save this as a new version for the selected novel's future generations. Existing chapter text will remain unchanged."
           footer={<>
-            <Button variant="ghost" disabled={templateState.saveMutation.isPending} onClick={() => setSaveDialogOpen(false)}>取消</Button>
+            <Button variant="ghost" disabled={templateState.saveMutation.isPending} onClick={() => setSaveDialogOpen(false)}>Cancel</Button>
             <Button disabled={!saveTargetNovelId || templateState.saveMutation.isPending} onClick={() => {
               templateState.saveMutation.mutate(saveTargetNovelId, { onSuccess: () => {
                 setSaveDialogOpen(false);
                 slotState.setScope("novel");
                 slotState.setSelectedNovelId(saveTargetNovelId);
               } });
-            }}>{templateState.saveMutation.isPending ? "保存中…" : "保存并应用"}</Button>
+            }}>{templateState.saveMutation.isPending ? "Saving…" : "Save and apply"}</Button>
           </>}>
           <SelectControl value={saveTargetNovelId} onChange={(event) => setSaveTargetNovelId(event.target.value)}
-            aria-label="保存模板的目标小说" disabled={templateState.saveMutation.isPending}
+            aria-label="Novel to apply template to" disabled={templateState.saveMutation.isPending}
             className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm">
-            <option value="">选择小说</option>
+            <option value="">Select a novel</option>
             {slotState.novels.map((novel) => <option key={novel.id} value={novel.id}>{novel.title || novel.id}</option>)}
           </SelectControl>
-          {slotState.novelsQuery.isLoading ? <p className="mt-3 text-sm text-muted-foreground">正在读取小说列表…</p>
-            : slotState.novelsQuery.isError ? <p role="alert" className="mt-3 text-sm text-destructive">小说列表读取失败。
-              <Button variant="ghost" onClick={() => void slotState.novelsQuery.refetch()}>重试</Button></p>
-            : slotState.novels.length === 0 ? <p className="mt-3 text-sm text-muted-foreground">创建小说后即可应用模板，草稿可以继续编辑和预览。</p> : null}
+          {slotState.novelsQuery.isLoading ? <p className="mt-3 text-sm text-muted-foreground">Loading novel list…</p>
+            : slotState.novelsQuery.isError ? <p role="alert" className="mt-3 text-sm text-destructive">Could not load the novel list.
+              <Button variant="ghost" onClick={() => void slotState.novelsQuery.refetch()}>Retry</Button></p>
+            : slotState.novels.length === 0 ? <p className="mt-3 text-sm text-muted-foreground">Create a novel to apply the template. You can continue editing and previewing the draft.</p> : null}
           {templateSaveError ? <p role="alert" className="mt-3 text-sm text-destructive">{templateSaveError}</p> : null}
         </AppDialogContent>
       </Dialog>

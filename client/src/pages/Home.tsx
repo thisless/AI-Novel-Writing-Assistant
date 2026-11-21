@@ -77,8 +77,8 @@ export default function Home() {
         error instanceof Error
           ? error.message
           : input.mode === "auto_execute_range"
-            ? "继续自动执行当前章节范围失败。"
-            : "继续自动导演失败。",
+            ? "Could not continue the current chapter range."
+            : "Could not continue Auto Director.",
       );
     },
   });
@@ -122,8 +122,8 @@ export default function Home() {
     const directorRoute = getDirectorWorkspaceHref(novel);
     if (novel.narrativeForm !== "short_story" && (novel.directorVersion === "v2" || directorRoute)) {
       return directorRoute ? (
-        <Button asChild size={size}><Link to={directorRoute} onClick={stopPropagation ? stopCardClick : undefined}>打开导演台</Link></Button>
-      ) : <Button size={size} onClick={() => void novelQuery.refetch()}>重新读取创作入口</Button>;
+        <Button asChild size={size}><Link to={directorRoute} onClick={stopPropagation ? stopCardClick : undefined}>Open Auto Director</Link></Button>
+      ) : <Button size={size} onClick={() => void novelQuery.refetch()}>Reload writing workspace</Button>;
     }
 
     if (novel.narrativeForm === "short_story") {
@@ -133,7 +133,7 @@ export default function Home() {
             to={`/novels/${novel.id}/story`}
             onClick={stopPropagation ? stopCardClick : undefined}
           >
-            打开作品
+            Open story
           </Link>
         </Button>
       );
@@ -155,7 +155,7 @@ export default function Home() {
           }}
           disabled={isWorkflowPending}
         >
-          {isWorkflowPending ? "继续执行中..." : (task?.resumeAction ?? `继续自动执行${task?.executionScopeLabel ?? "当前章节范围"}`)}
+          {isWorkflowPending ? "Continuing…" : (task?.resumeAction ?? `Continue automatic execution${task?.executionScopeLabel ?? " for the current chapter range"}`)}
         </Button>
       );
     }
@@ -175,7 +175,7 @@ export default function Home() {
           }}
           disabled={isWorkflowPending}
         >
-          {isWorkflowPending ? "继续中..." : (task?.resumeAction ?? "继续导演")}
+          {isWorkflowPending ? "Continuing…" : (task?.resumeAction ?? "Continue Auto Director")}
         </Button>
       );
     }
@@ -187,7 +187,7 @@ export default function Home() {
             to={getCandidateSelectionLink(task!.id)}
             onClick={stopPropagation ? stopCardClick : undefined}
           >
-            {task!.resumeAction ?? "继续确认书级方向"}
+            {task!.resumeAction ?? "Confirm the novel's direction"}
           </Link>
         </Button>
       );
@@ -200,7 +200,7 @@ export default function Home() {
             to={`/novels/${novel.id}/edit`}
             onClick={stopPropagation ? stopCardClick : undefined}
           >
-            进入章节执行
+            Start writing chapters
           </Link>
         </Button>
       );
@@ -213,7 +213,7 @@ export default function Home() {
             to={getNovelEditHref(novel.id)}
             onClick={stopPropagation ? stopCardClick : undefined}
           >
-            查看推进状态
+            View progress
           </Link>
         </Button>
       );
@@ -225,7 +225,7 @@ export default function Home() {
           to={`/novels/${novel.id}/edit`}
           onClick={stopPropagation ? stopCardClick : undefined}
         >
-          编辑小说
+          Edit novel
         </Link>
       </Button>
     );

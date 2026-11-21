@@ -2,47 +2,47 @@ import type { ModelRouteTaskType } from "@ai-novel/shared/types/novel";
 
 export const MODEL_ROUTE_LABELS: Record<ModelRouteTaskType, { title: string; description: string }> = {
   planner: {
-    title: "大纲策划",
-    description: "先理解创作目标，再安排这一段创作该怎样推进。",
+    title: "Outline planning",
+    description: "Understand the writing goal, then plan how this part should progress.",
   },
   writer: {
-    title: "主笔写作",
-    description: "生成章节正文，把章节内容完整写出来。",
+    title: "Lead writing",
+    description: "Generate the chapter manuscript in full.",
   },
   review: {
-    title: "通用审校",
-    description: "检查剧情、节奏和文风，找出草稿里的质量问题。",
+    title: "General review",
+    description: "Review plot, pacing, and style to identify quality issues in the draft.",
   },
   light_review: {
-    title: "基础快审",
-    description: "快速判断章节是否能继续推进，用于正文后的轻量质量检查。",
+    title: "Quick review",
+    description: "Quickly check whether a chapter is ready to proceed with a lightweight post-draft review.",
   },
   critical_review: {
-    title: "严格审校",
-    description: "处理会影响整本连续性的质量检查，适合高风险审校和复检。",
+    title: "Critical review",
+    description: "Check for issues that could affect book-wide continuity; suited to high-risk reviews and rechecks.",
   },
   repair: {
-    title: "章节修复",
-    description: "根据审校问题修正文稿，让章节回到可继续推进的状态。",
+    title: "Chapter revision",
+    description: "Revise the manuscript based on review findings so the chapter can move forward.",
   },
   replan: {
-    title: "窗口重规划",
-    description: "当局部修复不能收敛时，重新安排受影响章节的目标和衔接。",
+    title: "Window replanning",
+    description: "When a local revision is not enough, reset the goals and transitions for affected chapters.",
   },
   state_resolution: {
-    title: "状态解析",
-    description: "判断章节状态提案是否可信，帮助自动导演减少人工确认。",
+    title: "State resolution",
+    description: "Assess whether a proposed chapter state is reliable and reduce manual confirmations by Auto Director.",
   },
   summary: {
-    title: "剧情摘要",
-    description: "把长章节整理成回顾、摘要和关键变化。",
+    title: "Story summary",
+    description: "Turn long chapters into recaps, summaries, and key developments.",
   },
   fact_extraction: {
-    title: "设定考据",
-    description: "整理设定、时间线和关键事实，减少前后矛盾。",
+    title: "Continuity check",
+    description: "Organize worldbuilding, timelines, and key facts to reduce inconsistencies.",
   },
   chat: {
-    title: "灵感陪写",
-    description: "处理日常对话，并把结果整理成创作时能直接理解的内容。",
+    title: "Writing companion",
+    description: "Handle everyday conversations and turn the results into practical writing guidance.",
   },
 };

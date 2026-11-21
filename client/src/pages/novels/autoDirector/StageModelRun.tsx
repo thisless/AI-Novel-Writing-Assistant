@@ -48,74 +48,74 @@ export default function StageModelRun({
 }: StageModelRunProps) {
   const [issuePolicyDialogOpen, setIssuePolicyDialogOpen] = useState(false);
   const issuePolicySummary = issuePolicy
-    ? findDirectorIssuePolicyPreset(issuePolicy)?.name ?? "已调整本次开书规则"
-    : "使用默认规则";
+    ? findDirectorIssuePolicyPreset(issuePolicy)?.name ?? "Custom rules for this setup"
+    : "Using default rules";
 
   return (
     <section className="mx-auto w-full max-w-5xl space-y-7 py-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <div className="text-2xl font-semibold tracking-normal text-foreground">确认模型与生产准备</div>
+          <div className="text-2xl font-semibold tracking-normal text-foreground">Confirm model and production setup</div>
           <div className={`mt-2 max-w-2xl text-sm leading-6 text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>
-            确认后，AI 会先给出两套整书方向，再自动完成开写前的角色和卷章准备。
+            After confirmation, AI will suggest two story directions, then prepare the characters, volumes, and chapters before drafting.
           </div>
         </div>
         <div className="rounded-full bg-muted/55 px-3 py-1 text-xs text-muted-foreground">
-          启动前最后一步
+          Final step before starting
         </div>
       </div>
 
       <div className="space-y-6">
         <section className="space-y-2">
-          <label htmlFor="opening-director-version" className="block text-sm font-medium">导演版本</label>
+          <label htmlFor="opening-director-version" className="block text-sm font-medium">Director version</label>
           <select id="opening-director-version" value={directorVersion} disabled={versionLocked || isGenerating}
             onChange={event => onDirectorVersionChange(event.target.value as "v1" | "v2")}
             className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm sm:max-w-sm">
-            {availableDirectorVersions.map(version => <option key={version} value={version}>{version === "v2" ? "导演 V2 · 新导演" : "导演 V1 · 原导演"}</option>)}
-            {!availableDirectorVersions.includes(directorVersion) ? <option value={directorVersion}>{availableDirectorVersions.length ? `导演 ${directorVersion.toUpperCase()} · 未启用` : directorVersionsError ? "导演版本读取失败" : "正在读取导演版本…"}</option> : null}
+            {availableDirectorVersions.map(version => <option key={version} value={version}>{version === "v2" ? "Director V2 · New" : "Director V1 · Original"}</option>)}
+            {!availableDirectorVersions.includes(directorVersion) ? <option value={directorVersion}>{availableDirectorVersions.length ? `Director ${directorVersion.toUpperCase()} · Disabled` : directorVersionsError ? "Failed to load director versions" : "Loading director versions…"}</option> : null}
           </select>
-          <p className="text-xs leading-5 text-muted-foreground">选择本书使用的创作流程。全自动或按阶段确认可在对应导演台设置。</p>
-          {versionLocked ? <p className="text-xs text-muted-foreground">结束当前开书任务后可选择其他版本。</p> : null}
+          <p className="text-xs leading-5 text-muted-foreground">Choose the workflow for this book. Configure full automation or stage-by-stage approval in the corresponding director workspace.</p>
+          {versionLocked ? <p className="text-xs text-muted-foreground">Finish the current setup task before choosing another version.</p> : null}
         </section>
         <section className="overflow-hidden rounded-2xl border border-border/70 bg-background shadow-[0_20px_55px_-45px_hsl(var(--foreground)/0.5)]">
           <div className="border-b border-border/60 bg-muted/15 px-5 py-4">
             <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
               <GitBranch className="h-4 w-4 text-primary" />
-              自动导演会这样推进
+              How Auto Director works
             </div>
           </div>
           <div className="grid gap-px bg-border/60 md:grid-cols-3">
             <div className="bg-background p-5">
               <Sparkles className="h-5 w-5 text-primary" />
-              <div className="mt-3 text-sm font-semibold text-foreground">1. 选择整书方向</div>
-              <div className="mt-1 text-xs leading-5 text-muted-foreground">AI 生成两套差异明确的方向，由你二选一。</div>
+              <div className="mt-3 text-sm font-semibold text-foreground">1. Choose a story direction</div>
+              <div className="mt-1 text-xs leading-5 text-muted-foreground">AI generates two distinct directions for you to choose from.</div>
             </div>
             <div className="bg-background p-5">
               <BookOpen className="h-5 w-5 text-primary" />
-              <div className="mt-3 text-sm font-semibold text-foreground">2. 自动准备到可开写</div>
-              <div className="mt-1 text-xs leading-5 text-muted-foreground">系统完成角色、卷战略、拆章和章节执行资源。</div>
+              <div className="mt-3 text-sm font-semibold text-foreground">2. Prepare everything for drafting</div>
+              <div className="mt-1 text-xs leading-5 text-muted-foreground">The system prepares characters, volume strategy, chapter outlines, and execution resources.</div>
             </div>
             <div className="bg-background p-5">
               <Settings2 className="h-5 w-5 text-primary" />
-              <div className="mt-3 text-sm font-semibold text-foreground">3. 选择正文生产方式</div>
-              <div className="mt-1 text-xs leading-5 text-muted-foreground">简易创作由 AI 写完整本书；专业创作进入完整工作台。</div>
+              <div className="mt-3 text-sm font-semibold text-foreground">3. Choose how to draft</div>
+              <div className="mt-1 text-xs leading-5 text-muted-foreground">Simple mode lets AI write the entire book; Professional mode opens the full workspace.</div>
             </div>
           </div>
           <div className="flex flex-wrap items-center justify-between gap-3 border-t border-primary/10 bg-primary/[0.05] px-5 py-3 text-xs">
-            <span className="font-medium text-foreground">正文会停在开写前等待你的选择</span>
-            <span className="text-muted-foreground">不会提前生成章节正文</span>
+            <span className="font-medium text-foreground">Drafting will wait for your choice</span>
+            <span className="text-muted-foreground">No chapter prose will be generated in advance</span>
           </div>
         </section>
 
         <div className="flex flex-col gap-3 pt-1 sm:flex-row sm:items-start sm:justify-between">
           <div className="space-y-1">
-            <div className="text-sm font-medium text-foreground">正文后去 AI 检测与修正</div>
+            <div className="text-sm font-medium text-foreground">Check and revise prose with AI</div>
             <div className={`text-xs leading-5 text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>
-              开启后，章节检查会核对写法与 AI 味风险；需要修正的问题按本次创作策略局部修文，普通建议保留为质量提醒。
+              When enabled, chapter reviews will check style and signs of AI-generated prose. Issues that require changes will be revised according to this setup; other suggestions will remain as quality notes.
             </div>
           </div>
           <Switch
-            aria-label="正文后去 AI 检测与修正"
+            aria-label="Check and revise prose with AI"
             checked={basicForm.postGenerationStyleReviewEnabled}
             onCheckedChange={(checked) => onBasicFormChange({ postGenerationStyleReviewEnabled: checked })}
           />
@@ -123,9 +123,9 @@ export default function StageModelRun({
 
         <details className="group rounded-2xl border border-border/70 bg-background px-5 py-4">
           <summary className="cursor-pointer list-none">
-            <div className="text-sm font-medium text-foreground">模型设置</div>
+            <div className="text-sm font-medium text-foreground">Model settings</div>
             <div className={`mt-1 text-xs leading-5 text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>
-              调整本次开书使用的模型、温度与输出上限。结构规划建议将温度保持在 0.3～0.7。
+              Configure the model, temperature, and output limit for this setup. A temperature of 0.3–0.7 is recommended for structural planning.
             </div>
           </summary>
           <div className="mt-4">
@@ -135,22 +135,22 @@ export default function StageModelRun({
 
         <section className="flex flex-col gap-3 rounded-2xl border border-border/70 bg-background px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <div className="text-sm font-medium text-foreground">本书问题管理</div>
+            <div className="text-sm font-medium text-foreground">Issue handling for this book</div>
             <div className={`mt-1 text-xs leading-5 text-muted-foreground ${AUTO_DIRECTOR_MOBILE_CLASSES.wrapText}`}>
-              {issuePolicyLoading ? "正在读取默认规则。" : `${issuePolicySummary}；不调整也可以直接开书。`}
+              {issuePolicyLoading ? "Loading default rules." : `${issuePolicySummary}. You can start without making changes.`}
             </div>
           </div>
           <Button type="button" variant="outline" className="shrink-0" onClick={() => setIssuePolicyDialogOpen(true)}>
             <Settings2 className="mr-2 h-4 w-4" />
-            本书问题管理
+            Manage issues for this book
           </Button>
         </section>
 
         <Dialog open={issuePolicyDialogOpen} onOpenChange={setIssuePolicyDialogOpen}>
           <DialogContent className="max-h-[88vh] max-w-3xl overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>本书问题管理</DialogTitle>
-              <DialogDescription>开书前确认这本书遇到问题时的处理方式；不调整即可沿用默认规则。</DialogDescription>
+              <DialogTitle>Manage issues for this book</DialogTitle>
+              <DialogDescription>Choose how issues should be handled before starting. Leave the defaults unchanged to continue with the standard rules.</DialogDescription>
             </DialogHeader>
             <AutoDirectorIssuePolicyCard
               policy={issuePolicy}
@@ -160,14 +160,14 @@ export default function StageModelRun({
                 onIssuePolicyChange(policy);
                 setIssuePolicyDialogOpen(false);
               }}
-              saveButtonLabel="应用到本书开书任务"
+              saveButtonLabel="Apply to this setup"
             />
           </DialogContent>
         </Dialog>
       </div>
 
       <div className="flex flex-col gap-2 pt-2 sm:flex-row sm:justify-between">
-        <Button type="button" variant="ghost" onClick={onBack}>返回世界与写法</Button>
+        <Button type="button" variant="ghost" onClick={onBack}>Back to world and style</Button>
         <div className="space-y-2 sm:max-w-md sm:text-right">
           {!canGenerate ? (
             <ul id="direction-generation-disabled-reasons" role="status" className="space-y-1 text-sm text-muted-foreground">
@@ -175,11 +175,11 @@ export default function StageModelRun({
             </ul>
           ) : null}
           {directorVersionsError ? (
-            <Button type="button" variant="ghost" size="sm" onClick={onRetryDirectorVersions}>重试读取导演版本</Button>
+            <Button type="button" variant="ghost" size="sm" onClick={onRetryDirectorVersions}>Retry loading director versions</Button>
           ) : null}
           <Button type="button" onClick={onGenerate} disabled={!canGenerate}
             aria-describedby={!canGenerate ? "direction-generation-disabled-reasons" : undefined}>
-            {isGenerating ? "生成中..." : "开始生成方向"}
+            {isGenerating ? "Generating..." : "Generate story directions"}
           </Button>
         </div>
       </div>

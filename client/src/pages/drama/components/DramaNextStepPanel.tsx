@@ -93,9 +93,9 @@ function buildNextStep(project: DramaProjectDetail): NextStep {
   if (!project.sourceBundle) {
     return {
       kind: "source",
-      title: "下一步：整理来源素材",
-      description: "先把小说、灵感或导入文本整理成短剧可用的梗概、节拍、角色和硬事实。",
-      button: "整理素材",
+      title: "Next: Organize source material",
+      description: "Turn a novel, idea, or imported text into a synopsis, beats, characters, and key facts for your drama.",
+      button: "Organize material",
       tab: "source",
       icon: "source",
     };
@@ -103,9 +103,9 @@ function buildNextStep(project: DramaProjectDetail): NextStep {
   if (!project.strategy) {
     return {
       kind: "strategy",
-      title: "下一步：生成短剧策略",
-      description: "根据素材和赛道生成受众定位、主爽点线、付费卡点和改编边界。",
-      button: "生成策略",
+      title: "Next: Generate a drama strategy",
+      description: "Use the source material and genre to define the target audience, main payoff arc, paywall hooks, and adaptation boundaries.",
+      button: "Generate strategy",
       tab: "strategy",
       icon: "strategy",
     };
@@ -113,9 +113,9 @@ function buildNextStep(project: DramaProjectDetail): NextStep {
   if (episodes.length === 0) {
     return {
       kind: "outline",
-      title: "下一步：生成前 12 集分集",
-      description: "先生成一段可检查的分集大纲，确认钩子、冲突和付费卡点方向。",
-      button: "生成前 12 集",
+      title: "Next: Outline the first 12 episodes",
+      description: "Generate an episode outline to review the hooks, conflicts, and paywall direction.",
+      button: "Outline first 12 episodes",
       tab: "episodes",
       icon: "outline",
     };
@@ -123,9 +123,9 @@ function buildNextStep(project: DramaProjectDetail): NextStep {
   if (unscripted) {
     return {
       kind: "script",
-      title: `下一步：生成第 ${unscripted.order} 集台本`,
-      description: "把本集大纲写成可拍摄、对白密集、开场有钩子、结尾有卡点的短剧台本。",
-      button: "生成台本",
+      title: `Next: Write the script for episode ${unscripted.order}`,
+      description: "Turn this episode's outline into a shootable, dialogue-rich drama script with an opening hook and a cliffhanger ending.",
+      button: "Write script",
       tab: "episodes",
       icon: "script",
       episodeOrder: unscripted.order,
@@ -134,9 +134,9 @@ function buildNextStep(project: DramaProjectDetail): NextStep {
   if (repairable) {
     return {
       kind: "repair",
-      title: `下一步：修复第 ${repairable.order} 集质量问题`,
-      description: "这集已有质量建议，先按建议修复，避免问题进入分镜和视频提示词。",
-      button: "修复台本",
+      title: `Next: Fix quality issues in episode ${repairable.order}`,
+      description: "This episode has quality recommendations. Apply them before issues carry into storyboards and video prompts.",
+      button: "Fix script",
       tab: "episodes",
       icon: "repair",
       episodeOrder: repairable.order,
@@ -145,9 +145,9 @@ function buildNextStep(project: DramaProjectDetail): NextStep {
   if (unreviewed) {
     return {
       kind: "review",
-      title: `下一步：检查第 ${unreviewed.order} 集质量`,
-      description: "检查黄金 3 秒、信息密度、付费卡点、时长、事实一致和角色一致。",
-      button: "质量检查",
+      title: `Next: Review episode ${unreviewed.order}`,
+      description: "Check the opening three seconds, information density, paywall hook, runtime, and consistency of facts and characters.",
+      button: "Run quality review",
       tab: "episodes",
       icon: "review",
       episodeOrder: unreviewed.order,
@@ -156,9 +156,9 @@ function buildNextStep(project: DramaProjectDetail): NextStep {
   if (unstagedStoryboard) {
     return {
       kind: "storyboard",
-      title: `下一步：生成第 ${unstagedStoryboard.order} 集分镜`,
-      description: "把已通过检查的台本拆成可拍摄镜头，保留角色视觉锚点和动作重点。",
-      button: "生成分镜",
+      title: `Next: Create a storyboard for episode ${unstagedStoryboard.order}`,
+      description: "Break the approved script into shootable shots while preserving character visual anchors and key actions.",
+      button: "Create storyboard",
       tab: "visual",
       icon: "video",
       episodeOrder: unstagedStoryboard.order,
@@ -167,9 +167,9 @@ function buildNextStep(project: DramaProjectDetail): NextStep {
   if (shotWithoutPrompt) {
     return {
       kind: "videoPrompt",
-      title: `下一步：生成第 ${shotWithoutPrompt.episode.order} 集视频提示词`,
-      description: "把一个分镜镜头转换成竖屏视频生成提示词，保留角色、动作和镜头语言。",
-      button: "生成视频提示词",
+      title: `Next: Create video prompts for episode ${shotWithoutPrompt.episode.order}`,
+      description: "Turn a storyboard shot into a vertical-video prompt while preserving the characters, actions, and camera language.",
+      button: "Create video prompt",
       tab: "visual",
       icon: "video",
       episodeOrder: shotWithoutPrompt.episode.order,
@@ -179,9 +179,9 @@ function buildNextStep(project: DramaProjectDetail): NextStep {
   if (promptWithoutTask) {
     return {
       kind: "providerTask",
-      title: "下一步：创建视频生成任务",
-      description: "把已生成的视频提示词提交给当前 provider，后续可在分镜视频页刷新状态。",
-      button: "创建视频任务",
+      title: "Next: Create a video generation task",
+      description: "Submit the video prompt to the selected provider. You can refresh its status on the storyboard and video page.",
+      button: "Create video task",
       tab: "visual",
       icon: "video",
       videoPrompt: promptWithoutTask,
@@ -189,9 +189,9 @@ function buildNextStep(project: DramaProjectDetail): NextStep {
   }
   return {
     kind: "export",
-    title: "下一步：导出短剧资料",
-    description: "导出当前角色、分集、台本、质量结果和后续生产资料，方便继续编辑或交付。",
-    button: "导出 Markdown",
+    title: "Next: Export drama materials",
+    description: "Export the characters, episodes, scripts, quality results, and production materials for further editing or delivery.",
+    button: "Export Markdown",
     tab: "export",
     icon: "export",
   };
@@ -249,20 +249,20 @@ export function DramaNextStepPanel(props: {
         <div className="space-y-2">
           <div className="flex flex-wrap items-center gap-2">
             <CardTitle className="text-lg">{step.title}</CardTitle>
-            <Badge variant="outline">{props.project.targetEpisodes} 集项目</Badge>
+            <Badge variant="outline">{props.project.targetEpisodes}-episode project</Badge>
           </div>
           <CardDescription>{step.description}</CardDescription>
         </div>
         <Button type="button" disabled={props.busy} onClick={runStep}>
           <StepIcon icon={step.icon} />
-          {props.busy ? "处理中..." : step.button}
+          {props.busy ? "Processing…" : step.button}
         </Button>
       </CardHeader>
       <CardContent className="flex flex-wrap gap-2 text-sm text-muted-foreground">
-        <span>已整理素材：{props.project.sourceBundle ? "是" : "否"}</span>
-        <span>策略：{props.project.strategy ? "已生成" : "未生成"}</span>
-        <span>分集：{props.project.episodes?.length ?? 0} 集</span>
-        <span>当前视频提示词：{(props.project.videoPrompts ?? []).filter(isActiveVideoPrompt).length} 条</span>
+        <span>Source material organized: {props.project.sourceBundle ? "Yes" : "No"}</span>
+        <span>Strategy: {props.project.strategy ? "Generated" : "Not generated"}</span>
+        <span>Episodes: {props.project.episodes?.length ?? 0}</span>
+        <span>Active video prompts: {(props.project.videoPrompts ?? []).filter(isActiveVideoPrompt).length}</span>
       </CardContent>
     </Card>
   );

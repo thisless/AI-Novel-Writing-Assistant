@@ -19,16 +19,16 @@ function CurrentTask({ novelId }: { novelId: string }) {
   const pause = useMutation({ mutationFn: () => submitDirectorCommand({ type: "pause", runId: view!.runId, expectedVersion: view!.sourceTrace.controlVersion, idempotencyKey: createDirectorCommandKey() }), onSuccess: () => { void query.refetch(); } });
   const needsDesktopRecovery = Boolean(view?.chapterBudget || view?.unknownClaims || view?.sourceTrace.pauseKind === "replan" || view?.sourceTrace.pauseKind === "safety");
   const availableActions = view?.availableActions.filter(action => action.kind === "command" && ["resume", "retry_start", "cancel"].includes(action.command ?? "") && !(needsDesktopRecovery && action.command === "resume")) ?? [];
-  return <section className="space-y-3 bg-muted/30 p-4" aria-label="本书任务">
-    <h2 className="font-medium">本书任务</h2>
-    {query.isError ? <p role="alert">任务状态读取失败。<Button variant="ghost" onClick={() => void query.refetch()}>重新读取</Button></p> : null}
+  return <section className="space-y-3 bg-muted/30 p-4" aria-label="Novel tasks">
+    <h2 className="font-medium">Novel tasks</h2>
+    {query.isError ? <p role="alert">Could not load task status. <Button variant="ghost" onClick={() => void query.refetch()}>Try again</Button></p> : null}
     {view ? <><p className="text-sm">{view.headline}</p><p className="text-sm text-muted-foreground">{view.detail ?? view.nextActionGuidance}</p>
-      <p className="text-sm">{view.progress.done} / {view.progress.total} 阶段 · {view.chapterProgress ? `${view.chapterProgress.done} / ${view.chapterProgress.total} 章` : "规划准备"}</p>
+      <p className="text-sm">{view.progress.done} / {view.progress.total} stages · {view.chapterProgress ? `${view.chapterProgress.done} / ${view.chapterProgress.total} chapters` : "Planning"}</p>
       <DirectorBadge view={{ ...view, availableActions }} novelId={novelId} onActionComplete={() => void query.refetch()} />
-      {view.mode === "running" ? <Button variant="outline" size="sm" disabled={pause.isPending} onClick={() => pause.mutate()}>{pause.isPending ? "正在暂停…" : "暂停任务"}</Button> : null}
-      {view.mode === "waiting_gate" ? <p className="text-sm text-muted-foreground">请在电脑端查看相关规划或章节检查结果，再确认下一步。</p> : null}
-      {needsDesktopRecovery ? <p className="text-sm text-muted-foreground">请在电脑端核对创作范围、调用结果或使用额度后继续。</p> : null}
-    </> : !query.isError ? <p className="text-sm text-muted-foreground">{query.isPending ? "正在读取任务…" : "暂无进行中的任务。"}</p> : null}
+      {view.mode === "running" ? <Button variant="outline" size="sm" disabled={pause.isPending} onClick={() => pause.mutate()}>{pause.isPending ? "Pausing…" : "Pause task"}</Button> : null}
+      {view.mode === "waiting_gate" ? <p className="text-sm text-muted-foreground">Review the relevant outline or chapter review results on desktop, then confirm the next step.</p> : null}
+      {needsDesktopRecovery ? <p className="text-sm text-muted-foreground">Review the creation scope, call results, or usage limits on desktop before continuing.</p> : null}
+    </> : !query.isError ? <p className="text-sm text-muted-foreground">{query.isPending ? "Loading task…" : "No active tasks."}</p> : null}
   </section>;
 }
 
@@ -39,17 +39,17 @@ function LegacyTask({ novelId }: { novelId: string }) {
   const actions = [projection?.primaryAction, ...(projection?.secondaryActions ?? [])].filter((action): action is DirectorBookAutomationAction => !!action && ["continue", "auto_execute_range", "retry", "cancel"].includes(action.type));
   const mutation = useMutation({ mutationFn: async (action: DirectorBookAutomationAction) => {
     const taskId = action.commandPayload?.taskId ?? action.target.taskId ?? projection?.latestTask?.id;
-    if (!taskId) throw new Error("任务已变化，请重新读取后操作。");
+    if (!taskId) throw new Error("The task has changed. Reload before continuing.");
     if (action.type === "cancel") await cancelTask("novel_workflow", taskId);
     else if (action.type === "retry") await retryTask("novel_workflow", taskId);
     else await continueNovelWorkflow(taskId, { continuationMode: getDirectorCockpitContinuationMode(action) });
   }, onSuccess: () => { void query.refetch(); } });
-  return <section aria-label="本书任务" className="space-y-3 bg-muted/30 p-4"><h2 className="font-medium">本书任务</h2>
-    {query.isError ? <p role="alert">任务状态读取失败。<Button variant="ghost" onClick={() => void query.refetch()}>重新读取</Button></p> : null}
+  return <section aria-label="Novel tasks" className="space-y-3 bg-muted/30 p-4"><h2 className="font-medium">Novel tasks</h2>
+    {query.isError ? <p role="alert">Could not load task status. <Button variant="ghost" onClick={() => void query.refetch()}>Try again</Button></p> : null}
     {projection ? <><p className="text-sm">{projection.userHeadline}</p><p className="text-sm text-muted-foreground">{projection.progressSummary ?? projection.detail}</p>
       {projection.latestTask?.lastError ? <p className="text-sm text-destructive">{projection.latestTask.lastError}</p> : null}
       <div className="flex flex-wrap gap-2">{actions.map(action => <Button key={action.type} variant={action.type === "cancel" ? "outline" : "default"} size="sm" disabled={mutation.isPending} onClick={() => mutation.mutate(action)}>{action.label}</Button>)}</div>
-      {projection.latestTask && (projection.dashboardView?.mode === "running" || projection.dashboardView?.mode === "queued") ? <Button variant="outline" size="sm" disabled={pause.isPending || mutation.isPending} onClick={() => pause.mutate()}>{pause.isPending ? "正在暂停…" : "暂停任务"}</Button> : null}
-    </> : !query.isError ? <p className="text-sm text-muted-foreground">{query.isPending ? "正在读取任务…" : "暂无任务。"}</p> : null}
+      {projection.latestTask && (projection.dashboardView?.mode === "running" || projection.dashboardView?.mode === "queued") ? <Button variant="outline" size="sm" disabled={pause.isPending || mutation.isPending} onClick={() => pause.mutate()}>{pause.isPending ? "Pausing…" : "Pause task"}</Button> : null}
+    </> : !query.isError ? <p className="text-sm text-muted-foreground">{query.isPending ? "Loading task…" : "No tasks."}</p> : null}
   </section>;
 }

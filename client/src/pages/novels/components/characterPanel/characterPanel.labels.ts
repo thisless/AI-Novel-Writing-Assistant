@@ -6,39 +6,39 @@ import type {
 } from "@ai-novel/shared/types/novel";
 
 export const CAST_ROLE_LABELS: Record<CharacterCastRole, string> = {
-  protagonist: "主角",
-  antagonist: "主对手",
-  ally: "同盟",
-  foil: "镜像角色",
-  mentor: "导师",
-  love_interest: "情感牵引",
-  pressure_source: "压力源",
-  catalyst: "催化者",
+  protagonist: "Protagonist",
+  antagonist: "Main antagonist",
+  ally: "Ally",
+  foil: "Foil",
+  mentor: "Mentor",
+  love_interest: "Love interest",
+  pressure_source: "Source of pressure",
+  catalyst: "Catalyst",
 };
 
 export const CHARACTER_GENDER_LABELS: Record<CharacterGender, string> = {
-  male: "男",
-  female: "女",
-  other: "其他",
-  unknown: "未知",
+  male: "Male",
+  female: "Female",
+  other: "Other",
+  unknown: "Unknown",
 };
 
 export const SUPPLEMENTAL_MODE_LABELS: Record<SupplementalCharacterGenerationMode, string> = {
-  auto: "AI 判断",
-  linked: "关系补位",
-  independent: "独立补位",
+  auto: "AI-selected",
+  linked: "Relationship-based",
+  independent: "Independent",
 };
 
 export function getCastRoleLabel(castRole?: CharacterCastRole | "auto" | null): string {
   if (!castRole || castRole === "auto") {
-    return "AI 判断";
+    return "AI-selected";
   }
   return CAST_ROLE_LABELS[castRole] ?? castRole;
 }
 
 export function getCharacterGenderLabel(gender?: CharacterGender | null): string {
   if (!gender) {
-    return "未知";
+    return "Unknown";
   }
   return CHARACTER_GENDER_LABELS[gender] ?? gender;
 }

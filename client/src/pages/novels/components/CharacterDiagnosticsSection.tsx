@@ -39,8 +39,8 @@ export default function CharacterDiagnosticsSection(props: CharacterDiagnosticsS
     >
       <summary className="cursor-pointer list-none">
         <CollapsibleSummary
-          title="角色阵容与关系诊断"
-          description="需要补位、查缺口或整理阵容方案时再展开；角色动态、候选和卷级职责集中在“动态”页。"
+          title="Character cast and relationship diagnostics"
+          description="Expand this section to fill cast gaps or organize a cast plan. Character dynamics, candidates, and volume responsibilities are on the Dynamics tab."
         />
       </summary>
 

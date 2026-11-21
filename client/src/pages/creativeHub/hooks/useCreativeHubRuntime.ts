@@ -138,7 +138,7 @@ async function requireCheckpointIdForBranch(
   if (checkpointId || parentMessages.length === 0) {
     return checkpointId;
   }
-  const message = "未能匹配到对应的历史检查点，当前消息无法生成新分支。";
+  const message = "Could not find the matching historical checkpoint. This message cannot create a new branch.";
   toast.error(message);
   throw new Error(message);
 }
@@ -198,7 +198,7 @@ export function useCreativeHubRuntime({
     () =>
       async function* streamCallback(messages, config) {
         if (!isThreadReady) {
-          throw new Error("创作中枢线程尚未初始化。");
+          throw new Error("Creative Hub thread has not been initialized.");
         }
         const streamSessionId = streamSessionRef.current;
         const streamThreadId = threadId;
@@ -288,7 +288,7 @@ export function useCreativeHubRuntime({
         const message = error && typeof error === "object" && "message" in error
           && typeof error.message === "string" && error.message.trim()
           ? error.message.trim()
-          : "创作中枢运行失败，请检查模型连接后重试。";
+          : "Creative Hub failed to run. Check your model connection and try again.";
         toast.error(message);
       },
     },
@@ -497,7 +497,7 @@ export function useCreativeHubRuntime({
           threadId,
           message: error instanceof Error && error.message.trim()
             ? error.message.trim()
-            : "当前线程内容加载失败。",
+            : "Failed to load current thread content.",
         });
       });
     return () => {

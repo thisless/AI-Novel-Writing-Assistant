@@ -6,34 +6,34 @@ import { SettingsShell } from "../components/SettingsShell";
 import { useTheme } from "@/components/theme/ThemeProvider";
 
 const palettes = [
-  { value: "ink", label: "墨砚", description: "克制的蓝灰色，适合日常创作。" },
-  { value: "paper", label: "暖纸", description: "柔和的米白色，适合阅读和章节编辑。" },
-  { value: "night", label: "夜航", description: "深靛蓝与青绿色，适合 AI 执行和日志查看。" },
+  { value: "ink", label: "Ink", description: "A restrained blue-gray palette for everyday writing." },
+  { value: "paper", label: "Warm Paper", description: "A soft off-white palette for reading and chapter editing." },
+  { value: "night", label: "Night Voyage", description: "Deep indigo and teal for AI runs and log review." },
 ] as const;
 
 export default function AppearanceSettingsPage() {
   const { mode, palette, density, setMode, setPalette, setDensity, reset } = useTheme();
   return (
-    <SettingsShell title="外观与主题" description="选择适合长时间创作的界面颜色和显示密度。">
+    <SettingsShell title="Appearance & Theme" description="Choose interface colors and display density for long writing sessions.">
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-base"><Palette className="h-4 w-4" />界面外观</CardTitle>
-          <CardDescription>主题只保存在当前设备，不会影响小说内容和任务状态。</CardDescription>
+          <CardTitle className="flex items-center gap-2 text-base"><Palette className="h-4 w-4" />Interface appearance</CardTitle>
+          <CardDescription>Your theme is saved on this device only and does not affect novel content or task status.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <label className="block space-y-2 text-sm font-medium">
-            <span>显示模式</span>
+            <span>Display mode</span>
             <Select value={mode} onValueChange={(value) => setMode(value as typeof mode)}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="system">跟随系统</SelectItem>
-                <SelectItem value="light">浅色</SelectItem>
-                <SelectItem value="dark">深色</SelectItem>
+                <SelectItem value="system">System</SelectItem>
+                <SelectItem value="light">Light</SelectItem>
+                <SelectItem value="dark">Dark</SelectItem>
               </SelectContent>
             </Select>
           </label>
           <label className="block space-y-2 text-sm font-medium">
-            <span>主题风格</span>
+            <span>Color theme</span>
             <Select value={palette} onValueChange={(value) => setPalette(value as typeof palette)}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
@@ -42,17 +42,17 @@ export default function AppearanceSettingsPage() {
             </Select>
           </label>
           <label className="block space-y-2 text-sm font-medium">
-            <span>界面密度</span>
+            <span>Interface density</span>
             <Select value={density} onValueChange={(value) => setDensity(value as typeof density)}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="comfortable">舒适</SelectItem>
-                <SelectItem value="compact">紧凑</SelectItem>
+                <SelectItem value="comfortable">Comfortable</SelectItem>
+                <SelectItem value="compact">Compact</SelectItem>
               </SelectContent>
             </Select>
           </label>
           <div className="flex justify-end">
-            <Button type="button" variant="outline" onClick={reset}><RotateCcw className="mr-2 h-4 w-4" />恢复默认主题</Button>
+            <Button type="button" variant="outline" onClick={reset}><RotateCcw className="mr-2 h-4 w-4" />Reset theme to default</Button>
           </div>
         </CardContent>
       </Card>

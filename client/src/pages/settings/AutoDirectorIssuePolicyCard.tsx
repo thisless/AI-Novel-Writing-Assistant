@@ -14,17 +14,17 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { ChapterReviewRetryFields } from "@/components/settings/ChapterReviewRetryFields";
 
 const ACTION_LABELS: Record<DirectorIssueAction, string> = {
-  auto_retry: "自动重试",
-  continue_with_warning: "记录提醒并继续",
-  pause_for_manual: "暂停等待处理",
-  fail_task: "结束当前任务",
+  auto_retry: "Retry automatically",
+  continue_with_warning: "Record a warning and continue",
+  pause_for_manual: "Pause for manual handling",
+  fail_task: "End the current task",
 };
 
 const CATEGORY_LABELS: Record<DirectorIssueCategory, string> = {
-  planning: "规划",
-  generation: "生成",
-  quality: "质量",
-  runtime: "运行",
+  planning: "Planning",
+  generation: "Generation",
+  quality: "Quality",
+  runtime: "Runtime",
 };
 
 export function AutoDirectorIssuePolicyCard(props: {
@@ -34,7 +34,7 @@ export function AutoDirectorIssuePolicyCard(props: {
   onSave: (policy: DirectorIssuePolicy) => void;
   saveButtonLabel?: string;
 }) {
-  const { policy, isLoading, isSaving, onSave, saveButtonLabel = "保存问题处理规则" } = props;
+  const { policy, isLoading, isSaving, onSave, saveButtonLabel = "Save issue handling rules" } = props;
   const [draft, setDraft] = useState<DirectorIssuePolicy | null>(null);
   const [category, setCategory] = useState<DirectorIssueCategory | "all">("all");
   const [action, setAction] = useState<DirectorIssueAction | "all">("all");
@@ -57,15 +57,15 @@ export function AutoDirectorIssuePolicyCard(props: {
 
   if (!current) {
     return (
-      <Card><CardHeader><CardTitle>问题处理规则</CardTitle><CardDescription>{isLoading ? "正在加载…" : "暂时无法加载规则。"}</CardDescription></CardHeader></Card>
+      <Card><CardHeader><CardTitle>Issue handling rules</CardTitle><CardDescription>{isLoading ? "Loading…" : "Rules are temporarily unavailable."}</CardDescription></CardHeader></Card>
     );
   }
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>问题处理规则</CardTitle>
-        <CardDescription>选择一套处理方案，或按问题逐项调整。安全保护触发时，系统仍会优先保护作品。</CardDescription>
+        <CardTitle>Issue handling rules</CardTitle>
+        <CardDescription>Choose a preset or adjust actions for individual issues. Safety protections will still prioritize protecting your work.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="grid gap-3 md:grid-cols-2">
@@ -87,10 +87,10 @@ export function AutoDirectorIssuePolicyCard(props: {
 
         <div className="max-w-sm">
           <label className="space-y-2 text-sm">
-            <span className="font-medium">章节运行自动重试</span>
+            <span className="font-medium">Automatic retries during chapter runs</span>
             <select className="h-10 w-full rounded-md border bg-background px-3 text-sm" value={current.maxAutomaticRetries} onChange={(event) => setDraft({ ...current, maxAutomaticRetries: Number(event.target.value) })}>
-              <option value={0}>不自动重试</option>
-              <option value={1}>最多 1 次</option>
+              <option value={0}>No automatic retries</option>
+              <option value={1}>Up to 1 retry</option>
             </select>
           </label>
         </div>
@@ -99,18 +99,18 @@ export function AutoDirectorIssuePolicyCard(props: {
 
         <div className="flex flex-wrap gap-2">
           <select className="h-9 rounded-md border bg-background px-3 text-sm" value={category} onChange={(event) => setCategory(event.target.value as DirectorIssueCategory | "all")}>
-            <option value="all">全部阶段</option>
+            <option value="all">All stages</option>
             {Object.entries(CATEGORY_LABELS).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
           </select>
           <select className="h-9 rounded-md border bg-background px-3 text-sm" value={action} onChange={(event) => setAction(event.target.value as DirectorIssueAction | "all")}>
-            <option value="all">全部动作</option>
+            <option value="all">All actions</option>
             {DIRECTOR_ISSUE_ACTIONS.map((value) => <option key={value} value={value}>{ACTION_LABELS[value]}</option>)}
           </select>
         </div>
 
         {hasChanges ? (
           <div className="rounded-md border border-amber-300 bg-amber-50 px-3 py-2 text-sm leading-6 text-amber-950" role="status">
-            你修改了问题处理规则。保存后会影响后续任务；触发安全保护时，系统会优先暂停或结束任务，并保留这次选择供复核。
+            You changed the issue handling rules. Saving affects future tasks. When a safety protection is triggered, the system will prioritize pausing or ending the task and retain your choices for review.
           </div>
         ) : null}
 
@@ -121,8 +121,8 @@ export function AutoDirectorIssuePolicyCard(props: {
               <div key={entry.code} className="grid gap-2 rounded-md border p-3 md:grid-cols-[minmax(0,1fr)_220px]">
                 <div className="min-w-0">
                   <div className="text-sm font-medium">{entry.label}</div>
-                  <div className="mt-1 break-all text-xs text-muted-foreground">{entry.code} · 默认：{ACTION_LABELS[entry.defaultAction]}</div>
-                  {entry.lockedReason ? <div className="mt-1 text-xs text-amber-700">安全提示：{entry.lockedReason}{entry.enforcedAction ? ` 当前触发时仍会${ACTION_LABELS[entry.enforcedAction]}。` : ""}</div> : null}
+                  <div className="mt-1 break-all text-xs text-muted-foreground">{entry.code} · Default: {ACTION_LABELS[entry.defaultAction]}</div>
+                  {entry.lockedReason ? <div className="mt-1 text-xs text-amber-700">Safety note: {entry.lockedReason}{entry.enforcedAction ? ` When triggered, this will still ${ACTION_LABELS[entry.enforcedAction].toLowerCase()}.` : ""}</div> : null}
                 </div>
                 <select
                   className="h-9 rounded-md border bg-background px-3 text-sm"
@@ -140,7 +140,7 @@ export function AutoDirectorIssuePolicyCard(props: {
         </div>
 
         <Button disabled={isSaving} onClick={() => onSave(current)}>
-          {isSaving ? "保存中…" : saveButtonLabel}
+          {isSaving ? "Saving…" : saveButtonLabel}
         </Button>
       </CardContent>
     </Card>

@@ -111,7 +111,7 @@ export default function NovelCreateResourceRecommendationCard(
       setMessage("");
     },
     onError: (error) => {
-      setMessage(error instanceof Error ? error.message : "AI 推荐资源组合失败，请稍后再试。");
+      setMessage(error instanceof Error ? error.message : "AI failed to recommend a resource combination. Try again later.");
     },
   });
 
@@ -119,9 +119,9 @@ export default function NovelCreateResourceRecommendationCard(
     <div className="space-y-4 pt-1">
       <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
         <div className="space-y-1">
-          <div className="text-sm font-semibold text-foreground">先让 AI 推荐一套开书底座</div>
+          <div className="text-sm font-semibold text-foreground">Get an AI recommendation for your story foundation</div>
           <div className="text-sm leading-6 text-muted-foreground">
-            你不用先理解题材基底库和推进模式库。先写一句灵感、卖点或前 30 章承诺，系统会帮你推荐一套更适合新手起步的默认组合。
+            You do not need to understand the genre and story-direction libraries first. Enter an idea, selling point, or promise for the first 30 chapters, and the system will recommend a beginner-friendly starting combination.
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -130,17 +130,17 @@ export default function NovelCreateResourceRecommendationCard(
             onClick={() => recommendMutation.mutate()}
             disabled={!canRecommend || recommendMutation.isPending}
           >
-            {recommendMutation.isPending ? "正在推荐..." : recommendation ? "重新推荐" : "AI 推荐资源组合"}
+            {recommendMutation.isPending ? "Recommending..." : recommendation ? "Recommend again" : "Recommend with AI"}
           </Button>
           {hasAppliedRecommendation ? (
-            <Badge variant="outline">已填入当前表单</Badge>
+            <Badge variant="outline">Added to current form</Badge>
           ) : null}
         </div>
       </div>
 
       {!canRecommend ? (
         <div className="text-sm text-muted-foreground">
-          先补一句灵感、概述、目标读者、卖点或前 30 章承诺中的任意一项，AI 才能更稳地判断你该从哪种题材和推进模式起步。
+          Add an idea, description, target audience, selling point, or first 30-chapter promise so AI can better recommend a genre and story direction.
         </div>
       ) : null}
 
@@ -152,25 +152,25 @@ export default function NovelCreateResourceRecommendationCard(
 
           {recommendationIsStale ? (
             <div className="rounded-md bg-amber-500/10 px-3 py-2 text-sm text-amber-800">
-              你刚刚改过开书信息，建议重新推荐一次，让题材和推进模式跟上最新方向。
+              Your setup details have changed. Get a new recommendation to keep the genre and story direction aligned with your latest idea.
             </div>
           ) : null}
 
           <div className="grid gap-3 lg:grid-cols-3">
             <div className="rounded-lg bg-muted/15 p-3">
-              <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">推荐题材基底</div>
+              <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Recommended genre foundation</div>
               <div className="mt-1 text-sm font-semibold text-foreground">{recommendation.genre.path}</div>
               <div className="mt-2 text-xs leading-5 text-muted-foreground">{recommendation.genre.reason}</div>
             </div>
 
             <div className="rounded-lg bg-muted/15 p-3">
-              <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">推荐主推进模式</div>
+              <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Recommended primary story direction</div>
               <div className="mt-1 text-sm font-semibold text-foreground">{recommendation.primaryStoryMode.path}</div>
               <div className="mt-2 text-xs leading-5 text-muted-foreground">{recommendation.primaryStoryMode.reason}</div>
             </div>
 
             <div className="rounded-lg bg-muted/15 p-3">
-              <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">推荐副推进模式</div>
+              <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Recommended secondary story direction</div>
               {recommendation.secondaryStoryMode ? (
                 <>
                   <div className="mt-1 text-sm font-semibold text-foreground">{recommendation.secondaryStoryMode.path}</div>
@@ -178,7 +178,7 @@ export default function NovelCreateResourceRecommendationCard(
                 </>
               ) : (
                 <div className="mt-2 text-xs leading-5 text-muted-foreground">
-                  当前更适合先把主推进模式跑稳，不建议一开始叠太多风味。
+                  Focus on establishing the primary story direction before adding more elements.
                 </div>
               )}
             </div>
@@ -186,7 +186,7 @@ export default function NovelCreateResourceRecommendationCard(
 
           {recommendation.caution ? (
             <div className="text-sm text-muted-foreground">
-              注意：{recommendation.caution}
+              Note: {recommendation.caution}
             </div>
           ) : null}
 
@@ -200,10 +200,10 @@ export default function NovelCreateResourceRecommendationCard(
                   primaryStoryModeId: recommendation.primaryStoryMode.id,
                   secondaryStoryModeId: recommendation.secondaryStoryMode?.id ?? "",
                 });
-                setMessage("已将 AI 推荐的题材基底和推进模式填入当前表单。你可以继续微调，也可以直接进入 AI 自动导演。");
+                setMessage("Added the AI-recommended genre foundation and story direction to the form. Fine-tune them or continue to Auto Director.");
               }}
             >
-              {hasAppliedRecommendation ? "当前已应用" : "应用到当前表单"}
+              {hasAppliedRecommendation ? "Applied" : "Apply to current form"}
             </Button>
           </div>
         </div>

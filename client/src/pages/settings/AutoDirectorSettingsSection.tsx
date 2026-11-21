@@ -58,49 +58,49 @@ export default function AutoDirectorSettingsSection(props: {
   const saveAutoDirectorChannelsMutation = useMutation({
     mutationFn: saveAutoDirectorChannelSettings,
     onSuccess: async (response) => {
-      onActionResult(response.message ?? "导演跟进通道配置已保存。");
+      onActionResult(response.message ?? "Auto Director channel settings saved.");
       if (response.data) {
         setAutoDirectorChannelDraft(buildAutoDirectorChannelDraft(response.data));
       }
       await queryClient.invalidateQueries({ queryKey: queryKeys.settings.autoDirectorChannels });
     },
     onError: (error) => {
-      onActionResult(error instanceof Error ? error.message : "保存导演跟进通道配置失败。");
+      onActionResult(error instanceof Error ? error.message : "Failed to save Auto Director channel settings.");
     },
   });
 
   const saveApprovalPreferenceMutation = useMutation({
     mutationFn: saveAutoDirectorApprovalPreferenceSettings,
     onSuccess: async (response) => {
-      onActionResult(response.message ?? "审批授权偏好已保存。");
+      onActionResult(response.message ?? "Approval preferences saved.");
       if (response.data) {
         setApprovalPreferenceDraft(response.data.approvalPointCodes);
       }
       await queryClient.invalidateQueries({ queryKey: queryKeys.settings.autoDirectorApprovalPreferences });
     },
     onError: (error) => {
-      onActionResult(error instanceof Error ? error.message : "保存审批授权偏好失败。");
+      onActionResult(error instanceof Error ? error.message : "Failed to save approval preferences.");
     },
   });
 
   const savePendingReviewAutoPromotionMutation = useMutation({
     mutationFn: savePendingReviewAutoPromotionSettings,
     onSuccess: async (response) => {
-      onActionResult(response.message ?? "待确认状态自动放行设置已保存。");
+      onActionResult(response.message ?? "Automatic promotion settings saved.");
       await queryClient.invalidateQueries({ queryKey: queryKeys.settings.pendingReviewAutoPromotion });
     },
     onError: (error) => {
-      onActionResult(error instanceof Error ? error.message : "保存待确认状态自动放行设置失败。");
+      onActionResult(error instanceof Error ? error.message : "Failed to save automatic promotion settings.");
     },
   });
   const saveIssuePolicyMutation = useMutation({
     mutationFn: saveAutoDirectorIssuePolicy,
     onSuccess: async (response) => {
-      onActionResult(response.message ?? "问题处理规则已保存。");
+      onActionResult(response.message ?? "Issue handling rules saved.");
       await queryClient.invalidateQueries({ queryKey: queryKeys.settings.autoDirectorIssuePolicy });
     },
     onError: (error) => {
-      onActionResult(error instanceof Error ? error.message : "保存问题处理规则失败。");
+      onActionResult(error instanceof Error ? error.message : "Failed to save issue handling rules.");
     },
   });
 
@@ -144,7 +144,7 @@ export default function AutoDirectorSettingsSection(props: {
 
       {collapseAdvanced ? (
         <details className="rounded-md border bg-muted/20 p-4">
-          <summary className="cursor-pointer text-sm font-medium">高级控制</summary>
+          <summary className="cursor-pointer text-sm font-medium">Advanced controls</summary>
           <div className="mt-4 space-y-4">
             <AdvancedControls />
           </div>

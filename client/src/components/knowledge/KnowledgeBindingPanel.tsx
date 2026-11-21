@@ -53,15 +53,15 @@ export default function KnowledgeBindingPanel(props: KnowledgeBindingPanelProps)
 
   return (
     <div className="space-y-3 rounded-md border p-3">
-      <div className="text-sm font-medium">{props.title ?? "参考知识"}</div>
+      <div className="text-sm font-medium">{props.title ?? "Reference knowledge"}</div>
       <KnowledgeDocumentPicker
         selectedIds={selectedIds}
         onChange={(next) => setSelectedIds(next ?? [])}
         queryStatus={undefined}
-        description="绑定后会成为该实体的默认知识文档来源。"
+        description="Once bound, this becomes the entity's default source of knowledge documents."
       />
       <Button onClick={() => saveMutation.mutate()} disabled={saveMutation.isPending}>
-        {saveMutation.isPending ? "保存中..." : "保存绑定"}
+        {saveMutation.isPending ? "Saving..." : "Save binding"}
       </Button>
     </div>
   );

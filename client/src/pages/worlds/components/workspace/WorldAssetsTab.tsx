@@ -63,33 +63,33 @@ type AssetTool = "visualAssets" | "references" | "library" | "snapshots" | "expo
 const WORLD_ASSET_PRESETS = [
   {
     icon: Map,
-    title: "世界地图",
-    description: "用区域、道路、边境和故事地点解释角色如何移动，冲突会在哪里爆发。",
-    readiness: "先补故事舞台、地点风险和势力控制区。",
+    title: "World map",
+    description: "Show how characters move through regions, roads, borders, and story locations—and where conflicts may erupt.",
+    readiness: "Add story settings, location risks, and areas controlled by major powers first.",
   },
   {
     icon: Network,
-    title: "势力图谱",
-    description: "把势力、阵营、盟友、敌对和附庸关系整理成可视化关系网。",
-    readiness: "先补主要势力、当前目标和彼此压力。",
+    title: "Power map",
+    description: "Visualize powers, factions, allies, enemies, and vassal relationships.",
+    readiness: "Add major powers, their current goals, and the pressures between them first.",
   },
   {
     icon: GitFork,
-    title: "世界时间线",
-    description: "记录重大事件、灾变、王朝更替和局势变化，让世界进展有轨迹。",
-    readiness: "先补核心冲突、共同后果和关键历史节点。",
+    title: "World timeline",
+    description: "Track major events, disasters, dynastic changes, and shifting conditions over time.",
+    readiness: "Add the core conflict, shared consequences, and key historical milestones first.",
   },
   {
     icon: GitCompareArrows,
-    title: "角色关系网",
-    description: "把角色与势力、地点、资源和禁忌关系连接起来，减少设定漂移。",
-    readiness: "先补角色归属、阵营压力和关键地点。",
+    title: "Character relationship map",
+    description: "Connect characters to powers, locations, resources, and taboos to reduce inconsistencies.",
+    readiness: "Add character affiliations, faction pressures, and key locations first.",
   },
   {
     icon: Workflow,
-    title: "力量体系树",
-    description: "把力量来源、升级路径、代价和禁忌边界整理成层级结构。",
-    readiness: "先补核心规则、代价和不可突破的边界。",
+    title: "Power system tree",
+    description: "Organize power sources, progression paths, costs, and taboo boundaries into a hierarchy.",
+    readiness: "Add the core rules, costs, and limits that cannot be crossed first.",
   },
 ];
 
@@ -163,44 +163,44 @@ export default function WorldAssetsTab(props: WorldAssetsTabProps) {
   return (
     <section className="space-y-6">
         <div>
-          <h2 className="text-xl font-semibold tracking-tight">世界资料与版本</h2>
-          <p className="mt-1 text-sm leading-6 text-muted-foreground">管理参考资料、可复用素材、版本备份以及导入导出，地图与图谱能力也从这里进入。</p>
+          <h2 className="text-xl font-semibold tracking-tight">World resources and versions</h2>
+          <p className="mt-1 text-sm leading-6 text-muted-foreground">Manage references, reusable assets, version snapshots, and imports and exports. World maps and graphs are also accessed here.</p>
         </div>
 
         <div className="flex gap-1 overflow-x-auto rounded-full bg-muted/30 p-1">
           <AssetToolButton
-            label="地图与图谱"
-            description="预留世界资产入口。"
+            label="Maps and graphs"
+            description="World visualization tools."
             selected={activeTool === "visualAssets"}
             onClick={() => setActiveTool("visualAssets")}
           />
           <AssetToolButton
-            label="参考资料"
-            description="关联能支撑世界设定的资料。"
+            label="References"
+            description="Link references that support the worldbuilding."
             selected={activeTool === "references"}
             onClick={() => setActiveTool("references")}
           />
           <AssetToolButton
-            label="世界素材"
-            description="复用地点、势力、资源等可沉淀内容。"
+            label="World library"
+            description="Reuse saved locations, powers, resources, and other assets."
             selected={activeTool === "library"}
             onClick={() => setActiveTool("library")}
           />
           <AssetToolButton
-            label="版本快照"
-            description="保存版本并比较两次设定差异。"
+            label="Snapshots"
+            description="Save versions and compare changes between snapshots."
             selected={activeTool === "snapshots"}
             onClick={() => setActiveTool("snapshots")}
           />
           <AssetToolButton
-            label="导出备份"
-            description="复制 Markdown 或 JSON。"
+            label="Export"
+            description="Copy as Markdown or JSON."
             selected={activeTool === "export"}
             onClick={() => setActiveTool("export")}
           />
           <AssetToolButton
-            label="导入文本"
-            description="从文本、Markdown 或 JSON 创建世界。"
+            label="Import"
+            description="Create a world from text, Markdown, or JSON."
             selected={activeTool === "import"}
             onClick={() => setActiveTool("import")}
           />
@@ -210,12 +210,12 @@ export default function WorldAssetsTab(props: WorldAssetsTabProps) {
           <div className="rounded-3xl border border-border/35 bg-card/70 p-5">
             <div className="flex flex-col gap-2 lg:flex-row lg:items-start lg:justify-between">
               <div>
-                <div className="font-medium">世界资产规划</div>
+                <div className="font-medium">World asset planning</div>
                 <div className="mt-1 text-sm leading-6 text-muted-foreground">
-                  地图、势力图谱、时间线和体系树都从世界手册延伸出来。先把规则、势力、地点和张力整理清楚，再生成可视化资产。
+                  Maps, power maps, timelines, and system trees build on the world handbook. Organize the rules, powers, locations, and tensions before creating visual assets.
                 </div>
               </div>
-              <Badge variant="secondary" className="border-0 bg-muted/60 font-normal">预留能力</Badge>
+              <Badge variant="secondary" className="border-0 bg-muted/60 font-normal">Planned</Badge>
             </div>
             <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
               {WORLD_ASSET_PRESETS.map((asset) => {
@@ -239,17 +239,17 @@ export default function WorldAssetsTab(props: WorldAssetsTabProps) {
 
         {activeTool === "references" ? (
           <div className="rounded-3xl border border-border/35 bg-card/70 p-5">
-            <div className="mb-3 font-medium">参考资料</div>
-            <KnowledgeBindingPanel targetType="world" targetId={props.worldId} title="参考资料" />
+            <div className="mb-3 font-medium">References</div>
+            <KnowledgeBindingPanel targetType="world" targetId={props.worldId} title="References" />
           </div>
         ) : null}
 
         {activeTool === "library" ? (
           <div className="space-y-4 rounded-3xl border border-border/35 bg-card/70 p-5">
-            <div className="font-medium">世界素材</div>
+            <div className="font-medium">World library</div>
             <div className="grid gap-2 md:grid-cols-3">
               <Input
-                placeholder="关键词"
+                placeholder="Search keywords"
                 value={libraryKeyword}
                 onChange={(event) => setLibraryKeyword(event.target.value)}
               />
@@ -258,27 +258,27 @@ export default function WorldAssetsTab(props: WorldAssetsTabProps) {
                 value={libraryCategory}
                 onChange={(event) => setLibraryCategory(event.target.value)}
               >
-                <option value="all">全部分类</option>
-                <option value="terrain">地理地貌</option>
-                <option value="race">种族</option>
-                <option value="power_system">力量体系</option>
-                <option value="organization">组织势力</option>
-                <option value="resource">资源</option>
-                <option value="event">事件</option>
-                <option value="artifact">道具奇物</option>
-                <option value="custom">自定义</option>
+                <option value="all">All categories</option>
+                <option value="terrain">Geography and terrain</option>
+                <option value="race">Species</option>
+                <option value="power_system">Power system</option>
+                <option value="organization">Organizations and powers</option>
+                <option value="resource">Resources</option>
+                <option value="event">Events</option>
+                <option value="artifact">Artifacts</option>
+                <option value="custom">Custom</option>
               </SelectControl>
               <Button variant="outline" onClick={onRefreshLibrary}>
-                刷新
+                Refresh
               </Button>
             </div>
             <div className="space-y-3 rounded-2xl bg-muted/20 p-4">
               <div className="text-xs font-semibold text-muted-foreground">
-                保存当前设定为世界素材
+                Save current settings to the world library
               </div>
               <div className="grid gap-2 md:grid-cols-3">
                 <Input
-                  placeholder="素材名称"
+                  placeholder="Asset name"
                   value={publishName}
                   onChange={(event) => setPublishName(event.target.value)}
                 />
@@ -287,24 +287,24 @@ export default function WorldAssetsTab(props: WorldAssetsTabProps) {
                   value={publishCategory}
                   onChange={(event) => setPublishCategory(event.target.value)}
                 >
-                  <option value="custom">自定义</option>
-                  <option value="terrain">地理地貌</option>
-                  <option value="race">种族</option>
-                  <option value="power_system">力量体系</option>
-                  <option value="organization">组织势力</option>
-                  <option value="resource">资源</option>
-                  <option value="event">事件</option>
-                  <option value="artifact">道具奇物</option>
+                  <option value="custom">Custom</option>
+                  <option value="terrain">Geography and terrain</option>
+                  <option value="race">Species</option>
+                  <option value="power_system">Power system</option>
+                  <option value="organization">Organizations and powers</option>
+                  <option value="resource">Resources</option>
+                  <option value="event">Events</option>
+                  <option value="artifact">Artifacts</option>
                 </SelectControl>
                 <Button onClick={onPublishLibrary} disabled={publishPending}>
-                  {publishPending ? "保存中..." : "保存素材"}
+                  {publishPending ? "Saving…" : "Save asset"}
                 </Button>
               </div>
               <textarea
                 className="min-h-[80px] w-full rounded-md border bg-background p-2 text-sm"
                 value={publishDescription}
                 onChange={(event) => setPublishDescription(event.target.value)}
-                placeholder="可选描述（留空时默认使用当前分层内容）"
+                placeholder="Optional description (defaults to the current layer if left blank)"
               />
             </div>
             {libraryItems.map((item) => (
@@ -313,19 +313,19 @@ export default function WorldAssetsTab(props: WorldAssetsTabProps) {
                   <div>
                     <div>{item.name}</div>
                     <div className="text-xs text-muted-foreground">
-                      {item.category} / 使用次数={item.usageCount}
+                      {item.category} / Uses: {item.usageCount}
                     </div>
                   </div>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   <Button size="sm" onClick={() => onInjectLibraryField(item.id)}>
-                    加入当前分层（{selectedLayerPrimaryField}）
+                    Add to current layer ({selectedLayerPrimaryField})
                   </Button>
                   <Button size="sm" variant="outline" onClick={() => onInjectLibraryStructure(item.id, "forces")}>
-                    加入势力手册
+                    Add to power handbook
                   </Button>
                   <Button size="sm" variant="outline" onClick={() => onInjectLibraryStructure(item.id, "locations")}>
-                    加入地点手册
+                    Add to location handbook
                   </Button>
                 </div>
               </div>
@@ -335,15 +335,15 @@ export default function WorldAssetsTab(props: WorldAssetsTabProps) {
 
         {activeTool === "snapshots" ? (
           <div className="space-y-4 rounded-3xl border border-border/35 bg-card/70 p-5">
-          <div className="font-medium">版本快照</div>
+          <div className="font-medium">Version snapshots</div>
           <div className="flex gap-2">
             <Input
-              placeholder="快照标签（可选）"
+              placeholder="Snapshot label (optional)"
               value={snapshotLabel}
               onChange={(event) => setSnapshotLabel(event.target.value)}
             />
             <Button onClick={onCreateSnapshot} disabled={createSnapshotPending}>
-              创建快照
+              Create snapshot
             </Button>
           </div>
           {snapshots.map((snapshot) => (
@@ -352,7 +352,7 @@ export default function WorldAssetsTab(props: WorldAssetsTabProps) {
                 {snapshot.label ?? snapshot.id.slice(0, 8)} / {new Date(snapshot.createdAt).toLocaleString()}
               </div>
               <Button size="sm" variant="outline" onClick={() => onRestoreSnapshot(snapshot.id)}>
-                恢复
+                Restore
               </Button>
             </div>
           ))}
@@ -362,7 +362,7 @@ export default function WorldAssetsTab(props: WorldAssetsTabProps) {
               value={diffFrom}
               onChange={(event) => setDiffFrom(event.target.value)}
             >
-              <option value="">起始快照</option>
+              <option value="">Starting snapshot</option>
               {snapshots.map((snapshot) => (
                 <option key={`from-${snapshot.id}`} value={snapshot.id}>
                   {snapshot.label ?? snapshot.id.slice(0, 8)}
@@ -374,7 +374,7 @@ export default function WorldAssetsTab(props: WorldAssetsTabProps) {
               value={diffTo}
               onChange={(event) => setDiffTo(event.target.value)}
             >
-              <option value="">目标快照</option>
+              <option value="">Target snapshot</option>
               {snapshots.map((snapshot) => (
                 <option key={`to-${snapshot.id}`} value={snapshot.id}>
                   {snapshot.label ?? snapshot.id.slice(0, 8)}
@@ -382,12 +382,12 @@ export default function WorldAssetsTab(props: WorldAssetsTabProps) {
               ))}
             </SelectControl>
             <Button onClick={onDiffSnapshots} disabled={!diffFrom || !diffTo}>
-              对比差异
+              Compare
             </Button>
           </div>
           {diffChanges.map((change) => (
             <div key={change.field} className="rounded-2xl bg-muted/20 p-3 text-xs">
-              {change.field}: {change.before ?? "空"} {"->"} {change.after ?? "空"}
+              {change.field}: {change.before ?? "Empty"} {"->"} {change.after ?? "Empty"}
             </div>
           ))}
           </div>
@@ -395,13 +395,13 @@ export default function WorldAssetsTab(props: WorldAssetsTabProps) {
 
         {activeTool === "export" ? (
           <div className="space-y-3 rounded-3xl border border-border/35 bg-card/70 p-5">
-          <div className="font-medium">导出备份</div>
+          <div className="font-medium">Export backup</div>
           <div className="flex gap-2">
             <Button variant="secondary" onClick={() => void onExport("markdown")}>
-              导出 Markdown（复制到剪贴板）
+              Export Markdown (copy to clipboard)
             </Button>
             <Button variant="secondary" onClick={() => void onExport("json")}>
-              导出 JSON（复制到剪贴板）
+              Export JSON (copy to clipboard)
             </Button>
           </div>
           </div>
@@ -409,13 +409,13 @@ export default function WorldAssetsTab(props: WorldAssetsTabProps) {
 
         {activeTool === "import" ? (
           <div className="space-y-3 rounded-3xl border border-border/35 bg-card/70 p-5">
-          <div className="font-medium">导入文本</div>
+          <div className="font-medium">Import text</div>
           <SelectControl
             className="w-full rounded-md border bg-background p-2 text-sm"
             value={importFormat}
             onChange={(event) => setImportFormat(event.target.value as "json" | "markdown" | "text")}
           >
-            <option value="text">纯文本</option>
+            <option value="text">Plain text</option>
             <option value="markdown">Markdown</option>
             <option value="json">JSON</option>
           </SelectControl>
@@ -423,10 +423,10 @@ export default function WorldAssetsTab(props: WorldAssetsTabProps) {
             className="min-h-[160px] w-full rounded-md border bg-background p-2 text-sm"
             value={importContent}
             onChange={(event) => setImportContent(event.target.value)}
-            placeholder="请粘贴要导入的内容"
+            placeholder="Paste content to import"
           />
           <Button onClick={onImport} disabled={importPending || !importContent.trim()}>
-            {importPending ? "导入中..." : "导入为新世界"}
+            {importPending ? "Importing…" : "Import as new world"}
           </Button>
           </div>
         ) : null}

@@ -63,43 +63,43 @@ const ASSET_ICON_BY_TYPE: Record<NovelWorldAssetSummary["assetType"], typeof Boo
 function labelSourceType(sourceType: string | null | undefined): string {
   switch (sourceType) {
     case "imported":
-      return "来自世界库";
+      return "Imported from world library";
     case "generated":
-      return "根据本书生成";
+      return "Generated for this novel";
     case "manual":
-      return "自定义世界";
+      return "Custom world";
     default:
-      return "未设置";
+      return "Not set";
   }
 }
 
 function labelSyncDirection(direction: string | null | undefined): string {
   switch (direction) {
     case "push":
-      return "只推送到世界库";
+      return "Push to world library only";
     case "pull":
-      return "只从世界库拉取";
+      return "Pull from world library only";
     case "bidirectional":
-      return "可双向同步";
+      return "Sync in both directions";
     default:
-      return "不同步";
+      return "No sync";
   }
 }
 
 function sectionLabel(section: string): string {
   switch (section) {
     case "profile":
-      return "世界概要";
+      return "World overview";
     case "rules":
-      return "核心规则";
+      return "Core rules";
     case "factions":
-      return "阵营";
+      return "Factions";
     case "forces":
-      return "势力";
+      return "Forces";
     case "locations":
-      return "地点";
+      return "Locations";
     case "relations":
-      return "关系网络";
+      return "Relationship network";
     default:
       return section;
   }
@@ -107,32 +107,32 @@ function sectionLabel(section: string): string {
 
 function labelAssetStatus(status: string, hasRenderData: boolean): string {
   if (hasRenderData || status === "ready") {
-    return "可查看";
+    return "View";
   }
   switch (status) {
     case "draft":
-      return "整理中";
+      return "In progress";
     case "archived":
-      return "已归档";
+      return "Archived";
     default:
-      return "待生成";
+      return "Pending generation";
   }
 }
 
 function assetReadinessHint(assetType: NovelWorldAssetSummary["assetType"]): string {
   switch (assetType) {
     case "map":
-      return "补足故事舞台和地点风险后，地图能呈现区域与冲突落点。";
+      return "Add story locations and location risks to show regions and conflict points on the map.";
     case "faction_diagram":
-      return "补足主要势力、目标和压力后，图谱能呈现阵营关系。";
+      return "Add main forces, goals, and pressures to show faction relationships in the graph.";
     case "timeline":
-      return "补足核心冲突和共同后果后，时间线能呈现局势变化。";
+      return "Add core conflicts and shared consequences to show how the situation changes over time.";
     case "character_network":
-      return "补足势力归属和阵营压力后，角色关系会更贴合世界。";
+      return "Add force affiliations and faction pressures to make character relationships fit the world.";
     case "power_system_tree":
-      return "补足核心规则、代价和边界后，体系树能避免变成等级表。";
+      return "Add core rules, costs, and limits to keep the system tree from becoming a simple ranking chart.";
     default:
-      return "先补世界手册，再整理可视化资产。";
+      return "Complete the world guide before organizing visual assets.";
   }
 }
 
@@ -183,18 +183,18 @@ function WorldOverviewTab(props: {
   return (
     <div className="space-y-8">
       <section>
-        <SectionTitle title="世界总览" description="这里展示本书世界的门面信息，帮助你判断它是否支撑当前故事。" />
+        <SectionTitle title="World overview" description="Review the key details of this novel's world and how well they support the story." />
         <div className="mt-4 rounded-2xl bg-muted/15 p-5">
           <div className="text-xs text-muted-foreground">
-            {novelWorld ? labelSourceType(novelWorld.sourceType) : "未设置来源"} · {novelWorld?.hasStorySlice ? "写作范围已整理" : "等待整理写作范围"}
+            {novelWorld ? labelSourceType(novelWorld.sourceType) : "No source selected"} · {novelWorld?.hasStorySlice ? "Writing scope configured" : "Writing scope not configured"}
           </div>
           <div className="mt-2 text-2xl font-semibold text-foreground">{props.activeWorldName}</div>
           <div className="mt-3 max-w-4xl text-base leading-8 text-muted-foreground">
-            {handbook?.summary ?? novelWorld?.coverSummary ?? "这本书的世界正在准备中。"}
+            {handbook?.summary ?? novelWorld?.coverSummary ?? "This novel's world is being prepared."}
           </div>
           <InlineMeta items={[
-            handbook?.identity ? `身份：${handbook.identity}` : null,
-            handbook?.tone ? `气质：${handbook.tone}` : null,
+            handbook?.identity ? `Identity: ${handbook.identity}` : null,
+            handbook?.tone ? `Tone: ${handbook.tone}` : null,
             ...(handbook?.themes.slice(0, 4) ?? []),
           ]} />
         </div>
@@ -202,7 +202,7 @@ function WorldOverviewTab(props: {
 
       <section className="grid gap-5 lg:grid-cols-2">
         <div>
-          <SectionTitle title="主要势力" />
+          <SectionTitle title="Main forces" />
           <div className="mt-3 space-y-3">
             {(handbook?.forces.length ? handbook.forces : handbook?.factions ?? []).slice(0, 8).map((item) => (
               <div key={item.name} className="border-t border-border/50 pt-3 text-sm">
@@ -215,22 +215,22 @@ function WorldOverviewTab(props: {
                 </div>
               </div>
             ))}
-            {(!handbook || (handbook.forces.length === 0 && handbook.factions.length === 0)) ? <EmptyLine>还没有明确的势力。</EmptyLine> : null}
+            {(!handbook || (handbook.forces.length === 0 && handbook.factions.length === 0)) ? <EmptyLine>No forces defined yet.</EmptyLine> : null}
           </div>
         </div>
         <div>
-          <SectionTitle title="故事舞台" />
+          <SectionTitle title="Story locations" />
           <div className="mt-3 space-y-3">
             {handbook?.locations.slice(0, 8).map((location) => (
               <div key={location.name} className="border-t border-border/50 pt-3 text-sm">
                 <div className="font-medium text-foreground">{location.name}</div>
                 <div className="mt-1 leading-6 text-muted-foreground">
-                  {location.narrativeFunction || location.summary || "暂无说明"}
-                  {location.risk ? ` · 风险：${location.risk}` : null}
+                  {location.narrativeFunction || location.summary || "No description"}
+                  {location.risk ? ` · Risk: ${location.risk}` : null}
                 </div>
               </div>
             ))}
-            {!handbook?.locations.length ? <EmptyLine>还没有明确的故事舞台。</EmptyLine> : null}
+            {!handbook?.locations.length ? <EmptyLine>No story locations defined yet.</EmptyLine> : null}
           </div>
         </div>
       </section>
@@ -244,27 +244,27 @@ function RulesTab(props: { handbook: NovelWorldHandbook | null }) {
   return (
     <div className="space-y-8">
       <section>
-        <SectionTitle title="规则与代价" description="章节生成会优先遵守这些硬规则，避免临时发明不一致的设定。" />
+        <SectionTitle title="Rules and costs" description="Chapter generation prioritizes these rules to avoid introducing inconsistent details." />
         <div className="mt-4 space-y-4">
           {handbook?.coreRules.length ? handbook.coreRules.map((rule) => (
             <div key={`${rule.name}-${rule.summary}`} className="border-t border-border/60 pt-4">
               <div className="text-sm font-medium text-foreground">{rule.name}</div>
-              <div className="mt-1 text-sm leading-6 text-muted-foreground">{rule.summary || "暂无说明"}</div>
+              <div className="mt-1 text-sm leading-6 text-muted-foreground">{rule.summary || "No description"}</div>
               <InlineMeta items={[
-                rule.cost ? `代价：${rule.cost}` : null,
-                rule.boundary ? `边界：${rule.boundary}` : null,
+                rule.cost ? `Cost: ${rule.cost}` : null,
+                rule.boundary ? `Limit: ${rule.boundary}` : null,
               ]} />
             </div>
-          )) : <EmptyLine>还没有明确的核心规则。</EmptyLine>}
+          )) : <EmptyLine>No core rules defined yet.</EmptyLine>}
         </div>
       </section>
 
       <section>
-        <SectionTitle title="关键张力" description="这些长期矛盾会帮助大纲和章节保持世界压力。" />
+        <SectionTitle title="Key tensions" description="These ongoing conflicts help maintain pressure in outlines and chapters." />
         <div className="mt-3 space-y-2 text-sm leading-6 text-muted-foreground">
           {handbook?.tensions.length ? handbook.tensions.map((tension) => (
             <div key={tension} className="border-t border-border/50 pt-2">{tension}</div>
-          )) : <EmptyLine>还没有明确的长期矛盾。</EmptyLine>}
+          )) : <EmptyLine>No ongoing tensions defined yet.</EmptyLine>}
         </div>
       </section>
     </div>
@@ -274,15 +274,15 @@ function RulesTab(props: { handbook: NovelWorldHandbook | null }) {
 function GuidanceTab(props: { handbook: NovelWorldHandbook | null }) {
   const guidance = props.handbook?.generationGuidance ?? null;
   const groups = [
-    { title: "角色身份边界", items: guidance?.characterUses ?? [] },
-    { title: "故事范围线索", items: guidance?.outlineUses ?? [] },
-    { title: "场景规则约束", items: guidance?.chapterUses ?? [] },
-    { title: "需要避开的越界", items: guidance?.avoidUses ?? [] },
+    { title: "Character boundaries", items: guidance?.characterUses ?? [] },
+    { title: "Story-scope guidance", items: guidance?.outlineUses ?? [] },
+    { title: "Scene and rule constraints", items: guidance?.chapterUses ?? [] },
+    { title: "Boundaries to avoid", items: guidance?.avoidUses ?? [] },
   ];
 
   return (
     <div className="space-y-6">
-      <SectionTitle title="生成约束" description="这些内容解释本书世界会怎样进入角色、大纲和章节生成。" />
+      <SectionTitle title="Generation constraints" description="These guidelines explain how the world shapes character, outline, and chapter generation." />
       <div className="grid gap-4 md:grid-cols-2">
         {groups.map((group) => (
           <section key={group.title} className="rounded-xl bg-muted/15 p-4">
@@ -291,7 +291,7 @@ function GuidanceTab(props: { handbook: NovelWorldHandbook | null }) {
               {group.items.length > 0 ? group.items.slice(0, 6).map((item) => (
                 <div key={item} className="text-sm leading-6 text-muted-foreground">{item}</div>
               )) : (
-                <div className="text-sm leading-6 text-muted-foreground">暂无明确提示。</div>
+                <div className="text-sm leading-6 text-muted-foreground">No guidance available.</div>
               )}
             </div>
           </section>
@@ -304,7 +304,7 @@ function GuidanceTab(props: { handbook: NovelWorldHandbook | null }) {
 function AssetsPanel(props: { worldAssets: NovelWorldAssetSummary[] }) {
   return (
     <section>
-      <SectionTitle title="世界资产" description="地图、势力图谱、时间线和体系树用于帮助你看见世界，不是章节生成的唯一来源。" />
+      <SectionTitle title="World assets" description="Maps, force graphs, timelines, and system trees help visualize the world; they are not the only source used for chapter generation." />
       {props.worldAssets.length > 0 ? (
         <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
           {props.worldAssets.map((asset) => {
@@ -324,7 +324,7 @@ function AssetsPanel(props: { worldAssets: NovelWorldAssetSummary[] }) {
         </div>
       ) : (
         <div className="mt-3">
-          <EmptyLine>世界资产入口会随本书世界手册一起整理。</EmptyLine>
+          <EmptyLine>World asset tools are organized with the novel's world guide.</EmptyLine>
         </div>
       )}
     </section>
@@ -349,28 +349,28 @@ function SyncPanel(props: Pick<NovelWorldHandbookDialogProps,
   return (
     <section id="novel-world-sync">
       <SectionTitle
-        title="同步管理"
-        description="先看本书世界和世界库样本差在哪里，再选择要同步的分区。系统不会自动覆盖两边内容。"
+        title="Sync management"
+        description="Review differences between this novel's world and the library source, then choose which sections to sync. Neither side is overwritten automatically."
       />
       <div className="mt-4 grid gap-3 md:grid-cols-3">
         <div className="rounded-xl bg-muted/15 p-3">
-          <div className="text-xs text-muted-foreground">差异检查</div>
+          <div className="text-xs text-muted-foreground">Difference check</div>
           <div className="mt-1 text-sm font-medium text-foreground">
-            {props.isLoadingSyncDiff ? "检查中" : syncDiff ? "检查完成" : "等待检查"}
+            {props.isLoadingSyncDiff ? "Checking" : syncDiff ? "Check complete" : "Waiting to check"}
           </div>
           <div className="mt-1 text-xs leading-5 text-muted-foreground">
-            {syncDiff?.differenceCount ? `${syncDiff.differenceCount} 个分区存在差异。` : syncDiff ? "没有发现需要处理的分区差异。" : "打开本书世界时会读取差异摘要。"}
+            {syncDiff?.differenceCount ? `${syncDiff.differenceCount} sections have differences.` : syncDiff ? "No section differences need attention." : "A difference summary is loaded when you open this novel's world."}
           </div>
         </div>
         <div className="rounded-xl bg-muted/15 p-3">
-          <div className="text-xs text-muted-foreground">选择分区</div>
-          <div className="mt-1 text-sm font-medium text-foreground">{hasSyncDiff ? `${selectedSectionCount} 个分区` : "无需选择"}</div>
-          <div className="mt-1 text-xs leading-5 text-muted-foreground">只同步你确认过的概要、规则、势力、地点或关系网络。</div>
+          <div className="text-xs text-muted-foreground">Select sections</div>
+          <div className="mt-1 text-sm font-medium text-foreground">{hasSyncDiff ? `${selectedSectionCount} sections` : "Nothing to select"}</div>
+          <div className="mt-1 text-xs leading-5 text-muted-foreground">Sync only the overview, rules, forces, locations, or relationships that you approve.</div>
         </div>
         <div className="rounded-xl bg-muted/15 p-3">
-          <div className="text-xs text-muted-foreground">手动同步</div>
-          <div className="mt-1 text-sm font-medium text-foreground">{novelWorld.syncEnabled ? labelSyncDirection(novelWorld.syncDirection) : "独立副本"}</div>
-          <div className="mt-1 text-xs leading-5 text-muted-foreground">推送会改世界库样本；拉取会改本书世界副本。</div>
+          <div className="text-xs text-muted-foreground">Manual sync</div>
+          <div className="mt-1 text-sm font-medium text-foreground">{novelWorld.syncEnabled ? labelSyncDirection(novelWorld.syncDirection) : "Independent copy"}</div>
+          <div className="mt-1 text-xs leading-5 text-muted-foreground">Push changes to the world library; pull changes to this novel's copy.</div>
         </div>
       </div>
 
@@ -382,13 +382,13 @@ function SyncPanel(props: Pick<NovelWorldHandbookDialogProps,
 
       {!novelWorld.syncEnabled ? (
         <div className="mt-3 rounded-md border border-dashed p-3 text-sm text-muted-foreground">
-          本书世界会作为独立副本使用。需要同步时，可以手动推送本书世界或拉取世界库内容。
+          This novel uses an independent copy. Push it to the world library or pull library content when you want to sync.
         </div>
       ) : null}
 
       {syncDiff?.canSync === false ? (
         <div className="mt-3 rounded-md border border-dashed p-3 text-sm text-muted-foreground">
-          {syncDiff.reason ?? "暂无法同步。"}
+          {syncDiff.reason ?? "Sync is temporarily unavailable."}
         </div>
       ) : syncDiff?.differences.length ? (
         <div className="mt-4 space-y-3">
@@ -420,37 +420,37 @@ function SyncPanel(props: Pick<NovelWorldHandbookDialogProps,
           </div>
           <div className="flex flex-wrap gap-2">
             <Button type="button" variant="outline" disabled={props.isSyncing || !effectiveSyncSections?.length} onClick={() => props.onSync({ direction: "pull", sections: effectiveSyncSections })}>
-              {props.isSyncing ? "同步中..." : "拉取世界库更新"}
+              {props.isSyncing ? "Syncing…" : "Pull world library updates"}
             </Button>
             <Button type="button" variant="secondary" disabled={props.isSyncing || !effectiveSyncSections?.length} onClick={() => props.onSync({ direction: "push", sections: effectiveSyncSections })}>
-              {props.isSyncing ? "同步中..." : "推送本书修改"}
+              {props.isSyncing ? "Syncing…" : "Push novel changes"}
             </Button>
             <Button type="button" variant="outline" disabled={props.isSyncing} onClick={() => props.onSync({ direction: "none" })}>
-              关闭同步
+              Disable sync
             </Button>
           </div>
         </div>
       ) : !novelWorld.syncEnabled ? (
         <div className="mt-3 flex flex-wrap gap-2">
           <Button type="button" variant="outline" disabled={props.isSyncing} onClick={() => props.onSync({ direction: "pull" })}>
-            {props.isSyncing ? "同步中..." : "拉取世界库内容"}
+            {props.isSyncing ? "Syncing…" : "Pull from world library"}
           </Button>
           <Button type="button" variant="secondary" disabled={props.isSyncing} onClick={() => props.onSync({ direction: "push" })}>
-            {props.isSyncing ? "同步中..." : "推送本书世界"}
+            {props.isSyncing ? "Syncing…" : "Push novel world"}
           </Button>
         </div>
       ) : (
         <div className="mt-3 rounded-md border border-dashed p-3 text-sm text-muted-foreground">
-          本书世界和世界库样本保持一致。
+          This novel's world and the library source are in sync.
         </div>
       )}
 
       {props.syncHistory.length > 0 ? (
-        <DetailDisclosure title="最近同步" description="查看最近几次主动同步记录。" className="mt-4">
+        <DetailDisclosure title="Recent syncs" description="View recent manual sync activity." className="mt-4">
           <div className="space-y-2">
             {props.syncHistory.map((record) => (
               <div key={record.id} className="text-xs leading-5 text-muted-foreground">
-                <span className="font-medium text-foreground">{record.direction === "pull" ? "拉取" : "推送"}</span>
+                <span className="font-medium text-foreground">{record.direction === "pull" ? "Pull" : "Push"}</span>
                 <span> · {formatSyncTime(record.createdAt) ?? record.createdAt}</span>
                 {record.syncedSections.length > 0 ? <span> · {record.syncedSections.map(sectionLabel).join("、")}</span> : null}
                 {record.diffSummary ? <span className="block">{record.diffSummary}</span> : null}
@@ -469,26 +469,26 @@ function SourceAndLibraryPanel(props: Pick<NovelWorldHandbookDialogProps,
 >) {
   return (
     <section>
-      <SectionTitle title="来源与世界库" description="从世界库导入、根据本书生成，或保存本书世界作为可复用样本。" />
+      <SectionTitle title="Source and world library" description="Import from the world library, generate a world for this novel, or save this world as a reusable sample." />
       {props.novelWorld && !props.novelWorld.sourceWorldId ? (
         <div className="mt-4 flex flex-col gap-3 rounded-xl bg-muted/15 p-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <div className="text-sm font-medium text-foreground">保存到世界库</div>
+            <div className="text-sm font-medium text-foreground">Save to world library</div>
             <div className="mt-1 text-sm leading-6 text-muted-foreground">
-              把本书世界保存为可复用样本，后续可以推送本书修改或拉取世界库内容。
+              Save this novel's world as a reusable sample. You can push future changes or pull updates from the library.
             </div>
           </div>
           <Button type="button" variant="secondary" disabled={props.isSavingToLibrary} onClick={() => props.onSaveToLibrary()}>
             <Library className="size-4" />
-            {props.isSavingToLibrary ? "保存中..." : "保存到世界库"}
+            {props.isSavingToLibrary ? "Saving…" : "Save to world library"}
           </Button>
         </div>
       ) : null}
 
       <DetailDisclosure
-        title="选择或更换本书世界来源"
-        description="从世界库导入、根据本书生成，或先创建一个自定义世界骨架。"
-        meta={props.novelWorld ? "按需更换" : "待选择"}
+        title="Select or change this novel's world source"
+        description="Import from the world library, generate a world for this novel, or create a custom outline."
+        meta={props.novelWorld ? "Change if needed" : "Selection required"}
         defaultOpen={!props.novelWorld}
         className="mt-4"
       >
@@ -514,7 +514,7 @@ export function NovelWorldHandbookDialog(props: NovelWorldHandbookDialogProps) {
     <Dialog open={props.open} onOpenChange={props.onOpenChange}>
       <AppDialogContent
         title={props.activeWorldName}
-        description="查看本书世界手册、生成约束和使用范围。这里的内容会服务角色、大纲和章节生成。"
+        description="Review this novel's world guide, generation constraints, and writing scope. These details inform character, outline, and chapter generation."
         className="h-[calc(100dvh-2rem)] max-w-[calc(100vw-2rem)] xl:max-w-7xl"
         bodyClassName="overflow-hidden p-0"
       >
@@ -524,11 +524,11 @@ export function NovelWorldHandbookDialog(props: NovelWorldHandbookDialogProps) {
             "lg:flex lg:flex-col lg:items-stretch lg:overflow-visible lg:border-b-0 lg:border-r",
           )}>
             {[
-              ["overview", "世界总览"],
-              ["rules", "规则与张力"],
-              ["guidance", "生成约束"],
-              ["usage", "使用范围"],
-              ["sync", "同步与资产"],
+              ["overview", "Overview"],
+              ["rules", "Rules and tensions"],
+              ["guidance", "Generation constraints"],
+              ["usage", "Writing scope"],
+              ["sync", "Sync and assets"],
             ].map(([value, label]) => (
               <TabsTrigger key={value} value={value} className="justify-start data-[state=active]:bg-muted">
                 {label}
@@ -551,7 +551,7 @@ export function NovelWorldHandbookDialog(props: NovelWorldHandbookDialogProps) {
             <TabsContent value="sync" className="mt-0 space-y-8">
               {props.novelWorld?.sourceWorldId ? (
                 <Button asChild size="sm" variant="outline">
-                  <Link to={`/worlds/${props.novelWorld.sourceWorldId}/workspace`}>打开来源世界手册</Link>
+                  <Link to={`/worlds/${props.novelWorld.sourceWorldId}/workspace`}>Open source world guide</Link>
                 </Button>
               ) : null}
               <AssetsPanel worldAssets={props.worldAssets} />

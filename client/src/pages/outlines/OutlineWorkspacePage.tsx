@@ -80,8 +80,8 @@ export default function OutlineWorkspacePage() {
     ].find(item => item.nodeId === node);
   }, [document, node]);
 
-  if (query.isLoading || (!document && !query.isError)) return <p className="text-sm text-muted-foreground">正在打开大纲…</p>;
-  if (query.isError || !document) return <p role="alert" className="text-sm text-destructive">大纲读取失败，请返回列表后重试。</p>;
+  if (query.isLoading || (!document && !query.isError)) return <p className="text-sm text-muted-foreground">Opening outline…</p>;
+  if (query.isError || !document) return <p role="alert" className="text-sm text-destructive">Failed to load outline. Return to the list and try again.</p>;
 
   const updateSelectedField = (field: string, value: string) => {
     setDocument(current => {
@@ -112,17 +112,17 @@ export default function OutlineWorkspacePage() {
   };
 
   const directory = [
-    { label: "总纲", items: [{ id: "story", label: document.story.title }] },
+    { label: "Story", items: [{ id: "story", label: document.story.title }] },
     {
-      label: "卷与章节",
+      label: "Volumes and chapters",
       items: [
         ...document.volumes.map(item => ({ id: item.nodeId, label: item.title })),
         ...document.chapters.map(item => ({ id: item.nodeId, label: `　${item.title}` })),
       ],
     },
-    { label: "人物", items: document.characters.map(item => ({ id: item.nodeId, label: item.name })) },
-    { label: "伏笔与钩子", items: document.payoffs.map(item => ({ id: item.nodeId, label: item.title })) },
-    { label: "固定设定", items: document.facts.map(item => ({ id: item.nodeId, label: item.title })) },
+    { label: "Characters", items: document.characters.map(item => ({ id: item.nodeId, label: item.name })) },
+    { label: "Foreshadowing and hooks", items: document.payoffs.map(item => ({ id: item.nodeId, label: item.title })) },
+    { label: "Fixed facts", items: document.facts.map(item => ({ id: item.nodeId, label: item.title })) },
   ];
   const selectedFields = selected
     ? Object.entries(selected as unknown as Record<string, unknown>).filter(([key, value]) => key !== "nodeId" && key !== "volumeNodeId" && typeof value === "string") as Array<[string, string]>
@@ -132,21 +132,21 @@ export default function OutlineWorkspacePage() {
     <div className="outline-workspace mx-auto max-w-[1800px]">
       <header className="flex shrink-0 flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-xl font-semibold">{query.data?.title} <span className="text-sm font-normal text-muted-foreground">· 修订 v{query.data?.currentVersion}</span></h1>
-          <p className="mt-1 text-xs text-muted-foreground">大纲内容独立保存；AI 建议需要你确认后才会成为新修订。</p>
+          <h1 className="text-xl font-semibold">{query.data?.title} <span className="text-sm font-normal text-muted-foreground">· Revision v{query.data?.currentVersion}</span></h1>
+          <p className="mt-1 text-xs text-muted-foreground">Outlines are saved separately. AI suggestions become a new revision only after you confirm them.</p>
         </div>
         <div className="flex gap-2">
-          {!isMobileViewport ? (!bindingQuery.isSuccess || (!bindingQuery.data && (!currentRevisionId || hasUnsavedChanges)) ? <Button disabled>按这份大纲开书</Button> : <Button asChild><Link to={bindingQuery.data ? bindingQuery.data.sourceRoute : `/outlines/${id}/open-book?revisionId=${encodeURIComponent(currentRevisionId)}`}>{bindingQuery.data ? "继续这本书" : "按这份大纲开书"}</Link></Button>) : null}
-          <Button variant="ghost" onClick={() => setShowHistory(current => !current)}>{showHistory ? "收起历史" : "历史"}</Button>
-          <Button variant="ghost" onClick={() => download("json")}>导出 JSON</Button>
-          <Button variant="ghost" onClick={() => download("markdown")}>导出 Markdown</Button>
+          {!isMobileViewport ? (!bindingQuery.isSuccess || (!bindingQuery.data && (!currentRevisionId || hasUnsavedChanges)) ? <Button disabled>Start novel from outline</Button> : <Button asChild><Link to={bindingQuery.data ? bindingQuery.data.sourceRoute : `/outlines/${id}/open-book?revisionId=${encodeURIComponent(currentRevisionId)}`}>{bindingQuery.data ? "Continue novel" : "Start novel from outline"}</Link></Button>) : null}
+          <Button variant="ghost" onClick={() => setShowHistory(current => !current)}>{showHistory ? "Hide history" : "History"}</Button>
+          <Button variant="ghost" onClick={() => download("json")}>Export JSON</Button>
+          <Button variant="ghost" onClick={() => download("markdown")}>Export Markdown</Button>
         </div>
       </header>
 
-      {bindingQuery.data ? <p className="shrink-0 text-xs leading-6 text-muted-foreground">已绑定《{bindingQuery.data.title}》 · 固定采用修订 v{bindingQuery.data.revisionVersion}{bindingQuery.data.currentVersion!==bindingQuery.data.revisionVersion ? ` · 源大纲当前为 v${bindingQuery.data.currentVersion}，本书不会自动同步` : ""}</p> : bindingQuery.isError ? <p role="alert" className="shrink-0 text-xs text-destructive">绑定信息读取失败，请刷新后再开书，避免重复创建。</p> : hasUnsavedChanges ? <p className="shrink-0 text-xs text-muted-foreground">先保存本地修改，再按这份修订开书。</p> : null}
+      {bindingQuery.data ? <p className="shrink-0 text-xs leading-6 text-muted-foreground">Linked to “{bindingQuery.data.title}” · Uses revision v{bindingQuery.data.revisionVersion}{bindingQuery.data.currentVersion!==bindingQuery.data.revisionVersion ? ` · The source outline is now v${bindingQuery.data.currentVersion}; this novel will not sync automatically` : ""}</p> : bindingQuery.isError ? <p role="alert" className="shrink-0 text-xs text-destructive">Failed to load binding information. Refresh before starting to avoid creating a duplicate novel.</p> : hasUnsavedChanges ? <p className="shrink-0 text-xs text-muted-foreground">Save local changes before starting a novel from this revision.</p> : null}
       <OutlineFeedbackPanel outlineId={id} bound={!!bindingQuery.data} />
       <div className="outline-workspace-grid">
-        <nav aria-label="大纲目录" className="outline-directory space-y-5 border-b border-border/50 pb-4 xl:border-b-0 xl:border-r xl:pr-3">
+        <nav aria-label="Outline contents" className="outline-directory space-y-5 border-b border-border/50 pb-4 xl:border-b-0 xl:border-r xl:pr-3">
           {directory.map(group => (
             <section key={group.label}>
               <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{group.label}</h2>
@@ -163,7 +163,7 @@ export default function OutlineWorkspacePage() {
           ))}
         </nav>
 
-        <section aria-label="大纲内容编辑" className="outline-editor min-w-0">
+        <section aria-label="Edit outline content" className="outline-editor min-w-0">
           {selected ? (
             <>
               <div className="outline-editor-fields space-y-4">
@@ -182,41 +182,41 @@ export default function OutlineWorkspacePage() {
               </div>
               <div className="outline-save-bar sticky bottom-0 z-10 border-t border-border/50 bg-background py-3">
                 <div className="flex flex-wrap items-center justify-end gap-3">
-                  {save.isSuccess ? <span className="text-xs text-muted-foreground">已保存为新修订</span> : null}
-                  <Button onClick={() => save.mutate()} disabled={save.isPending}>{save.isPending ? "保存中…" : "保存为新修订"}</Button>
+                  {save.isSuccess ? <span className="text-xs text-muted-foreground">Saved as a new revision</span> : null}
+                  <Button onClick={() => save.mutate()} disabled={save.isPending}>{save.isPending ? "Saving…" : "Save as new revision"}</Button>
                 </div>
-                {save.isError ? <p role="alert" className="mt-2 text-sm text-destructive">{save.error instanceof Error ? save.error.message : "保存失败，请重试。"}</p> : null}
+                {save.isError ? <p role="alert" className="mt-2 text-sm text-destructive">{save.error instanceof Error ? save.error.message : "Failed to save. Try again."}</p> : null}
               </div>
             </>
-          ) : <p className="text-sm text-muted-foreground">选择目录中的内容进行编辑。</p>}
+          ) : <p className="text-sm text-muted-foreground">Select an item from the outline to edit it.</p>}
         </section>
 
-        <aside aria-label="大纲建议与历史" className="outline-inspector space-y-4 border-t border-border/50 pt-4 xl:border-l xl:border-t-0 xl:pl-4 xl:pt-0">
+        <aside aria-label="Outline suggestions and history" className="outline-inspector space-y-4 border-t border-border/50 pt-4 xl:border-l xl:border-t-0 xl:pl-4 xl:pt-0">
           <div>
-            <h2 className="font-semibold">AI 协作</h2>
-            <p className="mt-1 text-sm text-muted-foreground">告诉 AI 你希望调整什么，建议会先展示给你检查。</p>
+            <h2 className="font-semibold">AI collaboration</h2>
+            <p className="mt-1 text-sm text-muted-foreground">Tell AI what you'd like to change. You can review suggestions before applying them.</p>
           </div>
           <select
-            aria-label="AI 建议类型"
+            aria-label="AI suggestion type"
             className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
             value={proposalKind}
             onChange={event => setProposalKind(event.target.value as OutlineProposalKind)}
           >
-            <option value="edit">调整当前大纲</option>
-            <option value="initial_generation">从想法生成初版</option>
+            <option value="edit">Revise current outline</option>
+            <option value="initial_generation">Generate a first draft from an idea</option>
           </select>
           <textarea
-            aria-label="给 AI 的修改要求"
+            aria-label="Instructions for AI"
             rows={4}
             className="outline-textarea min-h-28 w-full rounded-md border border-input bg-background px-3 py-2.5 text-sm leading-6"
-            placeholder={proposalKind === "initial_generation" ? "用一句话描述你想写的故事" : "例如：让第二卷的节奏更紧凑，并加入一条感情线"}
+            placeholder={proposalKind === "initial_generation" ? "Describe the story you want to write in one sentence" : "For example: Tighten the pacing in volume two and add a romance arc"}
             value={request}
             onChange={event => setRequest(event.target.value)}
           />
           <Button className="w-full" onClick={() => propose.mutate()} disabled={!request.trim() || propose.isPending}>
-            {propose.isPending ? "正在生成建议…" : proposalKind === "initial_generation" ? "生成大纲建议" : "提出修改建议"}
+            {propose.isPending ? "Generating suggestions…" : proposalKind === "initial_generation" ? "Generate outline suggestions" : "Suggest revisions"}
           </Button>
-          {propose.isError ? <p role="alert" className="text-sm text-destructive">{propose.error instanceof Error ? propose.error.message : "建议生成失败，请重试。"}</p> : null}
+          {propose.isError ? <p role="alert" className="text-sm text-destructive">{propose.error instanceof Error ? propose.error.message : "Failed to generate suggestions. Try again."}</p> : null}
           {proposal ? (
             <OutlineProposalPanel
               key={proposal.id}
@@ -229,10 +229,10 @@ export default function OutlineWorkspacePage() {
           ) : null}
           {apply.isError ? (
             <div role="alert" className="space-y-2 text-sm text-destructive">
-              <p>{apply.error instanceof Error ? apply.error.message : "采纳失败，请刷新大纲后重试。"}</p>
-              <p className="text-xs text-muted-foreground">请根据当前大纲重新生成建议，再检查并采纳。</p>
+              <p>{apply.error instanceof Error ? apply.error.message : "Failed to apply suggestions. Refresh the outline and try again."}</p>
+              <p className="text-xs text-muted-foreground">Generate suggestions for the current outline, then review and apply them.</p>
               <Button type="button" size="sm" variant="secondary" onClick={() => { setProposal(null); apply.reset(); }}>
-                重新生成建议
+                Regenerate suggestions
               </Button>
             </div>
           ) : null}

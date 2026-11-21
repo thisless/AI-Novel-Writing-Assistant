@@ -6,7 +6,7 @@ export default function WorldInjectionHint({ worldInjectionSummary }: WorldInjec
   if (!worldInjectionSummary) {
     return (
       <div className="rounded-md bg-muted/40 px-3 py-2 text-xs text-muted-foreground">
-        缺少可用的本书世界，生成过程会先根据小说基础信息推进。
+        No world information is available for this novel. Generation will proceed using the novel's basic details.
       </div>
     );
   }
@@ -14,9 +14,9 @@ export default function WorldInjectionHint({ worldInjectionSummary }: WorldInjec
   return (
     <details className="group rounded-md bg-muted/40 px-3 py-2 text-xs">
       <summary className="flex cursor-pointer list-none items-center justify-between gap-3 font-medium">
-        <span>本书世界已用于本次生成</span>
-        <span className="text-muted-foreground group-open:hidden">查看详情</span>
-        <span className="hidden text-muted-foreground group-open:inline">收起详情</span>
+        <span>World information used for this generation</span>
+        <span className="text-muted-foreground group-open:hidden">Show details</span>
+        <span className="hidden text-muted-foreground group-open:inline">Hide details</span>
       </summary>
       <pre className="mt-3 max-h-48 overflow-auto whitespace-pre-wrap border-t pt-3 text-muted-foreground">
         {worldInjectionSummary}

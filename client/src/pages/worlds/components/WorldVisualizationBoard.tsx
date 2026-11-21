@@ -12,12 +12,12 @@ interface WorldVisualizationBoardProps {
 }
 
 const FACTION_TYPE_LABELS: Record<string, string> = {
-  all: "全部类型",
-  state: "政权",
-  faction: "阵营",
-  race: "种族",
-  organization: "组织",
-  other: "其他",
+  all: "All types",
+  state: "State",
+  faction: "Faction",
+  race: "Species",
+  organization: "Organization",
+  other: "Other",
 };
 
 const FACTION_TYPE_COLORS: Record<string, string> = {
@@ -92,14 +92,14 @@ export default function WorldVisualizationBoard({ payload, initialMode = "factio
   }, [keyword, payload?.timeline, timelineLimit]);
 
   return (
-    <section className="space-y-4 border-t border-border/30 pt-6" aria-label="世界图谱">
+    <section className="space-y-4 border-t border-border/30 pt-6" aria-label="World visualizations">
       <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex gap-1 overflow-x-auto rounded-full bg-muted/30 p-1">
           {[
-            { value: "faction", label: "势力图谱" },
-            { value: "geography", label: "地理地图" },
-            { value: "power", label: "力量体系" },
-            { value: "timeline", label: "世界时间线" },
+            { value: "faction", label: "Faction graph" },
+            { value: "geography", label: "Geographic map" },
+            { value: "power", label: "Power system" },
+            { value: "timeline", label: "World timeline" },
           ].map((item) => (
             <Button
               key={item.value}
@@ -119,7 +119,7 @@ export default function WorldVisualizationBoard({ payload, initialMode = "factio
             className="w-full rounded-full sm:w-72"
             value={keyword}
             onChange={(event) => setKeyword(event.target.value)}
-            placeholder="筛选名称或关键词"
+            placeholder="Filter by name or keyword"
           />
           {mode === "faction" ? (
             <SelectControl
@@ -134,7 +134,7 @@ export default function WorldVisualizationBoard({ payload, initialMode = "factio
           ) : null}
           {mode === "timeline" ? (
             <label className="flex items-center gap-2 rounded-full bg-muted/30 px-4 text-xs text-muted-foreground">
-              <span>显示</span>
+              <span>Show</span>
               <input type="range" min={3} max={20} step={1} value={timelineLimit} onChange={(event) => setTimelineLimit(Number(event.target.value))} />
               <span className="tabular-nums">{timelineLimit}</span>
             </label>
@@ -153,7 +153,7 @@ export default function WorldVisualizationBoard({ payload, initialMode = "factio
             ))}
           </div>
           <WorldGraphCanvas
-            title={`势力图谱 · ${factionNodes.length} 个节点 · ${factionEdges.length} 条关系`}
+            title={`Faction graph · ${factionNodes.length} nodes · ${factionEdges.length} ${factionEdges.length === 1 ? "relationship" : "relationships"}`}
             nodes={factionNodes}
             edges={factionEdges}
             colorByType={(type) => FACTION_TYPE_COLORS[type ?? "other"] ?? FACTION_TYPE_COLORS.other}
@@ -163,7 +163,7 @@ export default function WorldVisualizationBoard({ payload, initialMode = "factio
 
       {mode === "geography" ? (
         <WorldGraphCanvas
-          title={`世界地图 · ${geographyNodes.length} 个地点 · ${geographyEdges.length} 条路线`}
+          title={`World map · ${geographyNodes.length} ${geographyNodes.length === 1 ? "location" : "locations"} · ${geographyEdges.length} ${geographyEdges.length === 1 ? "route" : "routes"}`}
           nodes={geographyNodes}
           edges={geographyEdges}
           layout="map"
@@ -172,7 +172,7 @@ export default function WorldVisualizationBoard({ payload, initialMode = "factio
 
       {mode === "power" ? (
         <div className="rounded-3xl bg-muted/20 p-5">
-          <div className="mb-3 font-medium">力量体系 · {filteredPower.length} 项</div>
+          <div className="mb-3 font-medium">Power system · {filteredPower.length} items</div>
           <div className="grid gap-3 md:grid-cols-2">
             {filteredPower.map((item) => (
               <div key={`${item.level}-${item.description}`} className="rounded-2xl bg-muted/20 p-4">
@@ -180,7 +180,7 @@ export default function WorldVisualizationBoard({ payload, initialMode = "factio
                 <div className="mt-1 text-sm leading-6">{item.description}</div>
               </div>
             ))}
-            {filteredPower.length === 0 ? <div className="text-sm text-muted-foreground">暂无匹配内容</div> : null}
+            {filteredPower.length === 0 ? <div className="text-sm text-muted-foreground">No matching content.</div> : null}
           </div>
         </div>
       ) : null}

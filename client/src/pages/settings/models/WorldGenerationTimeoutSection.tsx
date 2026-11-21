@@ -44,25 +44,25 @@ export function WorldGenerationTimeoutSection() {
       timeoutMs: nextMinutes * MS_PER_MINUTE,
     }),
     onSuccess: async (response) => {
-      setFeedback(response.message ?? "世界观生成等待时间保存成功。");
+      setFeedback(response.message ?? "World generation timeout saved.");
       await queryClient.invalidateQueries({ queryKey: queryKeys.settings.worldGenerationTimeout });
     },
     onError: (error) => {
-      setFeedback(error instanceof Error ? error.message : "世界观生成等待时间保存失败。");
+      setFeedback(error instanceof Error ? error.message : "Failed to save the world generation timeout.");
     },
   });
 
   return (
     <section className="space-y-3" aria-labelledby="world-generation-timeout-title">
       <div className="space-y-1">
-        <h2 id="world-generation-timeout-title" className="text-base font-medium">单次生成最长等待</h2>
+        <h2 id="world-generation-timeout-title" className="text-base font-medium">Maximum wait per generation</h2>
         <p className="text-sm text-muted-foreground">
-          本地模型较慢时，可以调高世界观生成的单次等待。云端模型保持 2 分钟即可。保存后，下一次世界观生成按这个时间等待。失败后系统可能再自动试一次。
+          Increase the per-request wait for world generation when using a slower local model. Two minutes is usually sufficient for cloud models. The next world generation will use this timeout after saving. If it fails, the system may retry once automatically.
         </p>
       </div>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
         <label className="space-y-1 text-sm">
-          <span>等待时间（分钟）</span>
+          <span>Wait time (minutes)</span>
           <Input
             type="number"
             min={minMinutes}
@@ -81,13 +81,13 @@ export function WorldGenerationTimeoutSection() {
           onClick={() => saveMutation.mutate(parsedMinutes)}
           disabled={settingsQuery.isLoading || saveMutation.isPending || !isValidTimeout}
         >
-          {saveMutation.isPending ? "保存中..." : "保存"}
+          {saveMutation.isPending ? "Saving…" : "Save"}
         </Button>
       </div>
       {!isValidTimeout ? (
-        <p className="text-sm text-amber-700">请输入 {minMinutes} 到 {maxMinutes} 分钟之间的整数。</p>
+        <p className="text-sm text-amber-700">Enter a whole number between {minMinutes} and {maxMinutes} minutes.</p>
       ) : (
-        <p className="text-sm text-muted-foreground">可设置 {minMinutes} 到 {maxMinutes} 分钟。</p>
+        <p className="text-sm text-muted-foreground">Allowed range: {minMinutes}–{maxMinutes} minutes.</p>
       )}
       {feedback ? <p className="text-sm text-muted-foreground">{feedback}</p> : null}
     </section>

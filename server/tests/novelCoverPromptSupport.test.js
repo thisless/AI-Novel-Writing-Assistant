@@ -191,7 +191,7 @@ test("createNovelCoverTask applies novel-cover defaults without coupling to nove
     assert.equal(task.size, DEFAULT_NOVEL_COVER_IMAGE_SIZE);
     assert.equal(task.imageCount, DEFAULT_NOVEL_COVER_IMAGE_COUNT);
     assert.ok(task.prompt.includes("Required title text: 雾港审判局"));
-    assert.ok(task.prompt.includes("禁止改字、漏字、增字或乱码"));
+    assert.ok(task.prompt.includes("without changing, omitting, adding, or corrupting any characters"));
     assert.ok(task.prompt.includes("Project title: 雾港审判局"));
     assert.ok(task.prompt.includes("本书世界雾港"));
     assert.ok(task.negativePrompt.includes("过度拥挤"));
@@ -282,8 +282,8 @@ test("novel cover prompt includes the author pen name when it is configured", as
       model: "gpt-image-2",
     });
 
-    assert.ok(task.prompt.includes('书名“雾港审判局”'));
-    assert.ok(task.prompt.includes("作者笔名“雾港夜行”"));
+    assert.ok(task.prompt.includes('title "雾港审判局"'));
+    assert.ok(task.prompt.includes('author pen name "雾港夜行"'));
     assert.ok(task.prompt.includes("Required author pen name text: 雾港夜行"));
     assert.ok(task.negativePrompt.includes("过度拥挤"));
     assert.ok(!task.negativePrompt.includes("作者名"));
@@ -368,10 +368,10 @@ test("novel cover prompt stays title-only when pen name is empty", async () => {
       model: "gpt-image-2",
     });
 
-    assert.ok(task.prompt.includes('书名“雾港审判局”'));
-    assert.ok(!task.prompt.includes("作者笔名"));
+    assert.ok(task.prompt.includes('title "雾港审判局"'));
+    assert.ok(!task.prompt.includes("author pen name"));
     assert.ok(!task.prompt.includes("Required author pen name text"));
-    assert.ok(task.negativePrompt.includes("作者名"));
+    assert.ok(task.negativePrompt.includes("author name"));
   } finally {
     prisma.novel.findUnique = originalNovelFindUnique;
     prisma.imageGenerationTask.create = originalTaskCreate;
@@ -386,19 +386,19 @@ test("shared cover prompt helpers keep pen name out of negative constraints", ()
   });
   assert.ok(withPenName.includes("Required title text: 雾港审判局"));
   assert.ok(withPenName.includes("Required author pen name text: 雾港夜行"));
-  assert.ok(withPenName.includes('作者笔名“雾港夜行”'));
+  assert.ok(withPenName.includes('author pen name "雾港夜行"'));
 
   const titleInstructionWithoutPenName = buildNovelCoverTitleInstruction("雾港审判局");
-  assert.ok(titleInstructionWithoutPenName.includes("作者名"));
+  assert.ok(titleInstructionWithoutPenName.includes("author names"));
 
   const titleInstructionWithPenName = buildNovelCoverTitleInstruction("雾港审判局", "雾港夜行");
-  assert.ok(!titleInstructionWithPenName.includes("作者名"));
-  assert.ok(titleInstructionWithPenName.includes('作者笔名“雾港夜行”'));
+  assert.ok(!titleInstructionWithPenName.includes("author names"));
+  assert.ok(titleInstructionWithPenName.includes('author pen name "雾港夜行"'));
 
   const negativeWithPenName = buildNovelCoverNegativePrompt(DEFAULT_NOVEL_COVER_NEGATIVE_PROMPT, "雾港夜行");
-  assert.ok(!negativeWithPenName.includes("作者名"));
-  assert.ok(negativeWithPenName.includes("乱码"));
+  assert.ok(!negativeWithPenName.includes("author name"));
+  assert.ok(negativeWithPenName.includes("gibberish"));
 
   const negativeWithoutPenName = buildNovelCoverNegativePrompt(DEFAULT_NOVEL_COVER_NEGATIVE_PROMPT, null);
-  assert.ok(negativeWithoutPenName.includes("作者名"));
+  assert.ok(negativeWithoutPenName.includes("author name"));
 });

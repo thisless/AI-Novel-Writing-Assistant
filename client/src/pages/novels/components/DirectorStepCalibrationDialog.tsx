@@ -17,10 +17,10 @@ import {
 } from "@/components/ui/dialog";
 
 function stepStateLabel(step: DirectorTaskFactInspectionStep): string {
-  if (step.isCurrentFactStep) return "当前步骤";
-  if (step.completed) return "已有结果";
-  if (step.ready) return "可以调整";
-  return "等待前置条件";
+  if (step.isCurrentFactStep) return "Current step";
+  if (step.completed) return "Completed";
+  if (step.ready) return "Ready to adjust";
+  return "Waiting for prerequisites";
 }
 
 function stepStateVariant(step: DirectorTaskFactInspectionStep): "default" | "secondary" | "outline" | "destructive" {
@@ -81,21 +81,21 @@ export default function DirectorStepCalibrationDialog(input: {
       <DialogTrigger asChild>
         <Button type="button" variant="outline" size="sm" disabled={isSubmitting}>
           <Sparkles className="h-4 w-4" />
-          调整其他步骤
+          Adjust another step
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>调整导演步骤</DialogTitle>
+          <DialogTitle>Adjust a Director step</DialogTitle>
           <DialogDescription>
-            选择你不满意的步骤，告诉 AI 需要补足的方向。生成后会回到当前审核节点，确认结果后才会继续后续流程。
+            Select a step to revise and tell AI what to improve. After generation, you'll return to the current review point; the workflow continues only after you confirm the result.
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
           <div className="flex items-center justify-between gap-3">
             <label htmlFor="director-step-calibration-step" className="text-sm font-medium text-foreground">
-              要调整哪一步
+              Which step should be adjusted?
             </label>
             <Button
               type="button"
@@ -105,21 +105,21 @@ export default function DirectorStepCalibrationDialog(input: {
               disabled={inspectionQuery.isFetching}
             >
               {inspectionQuery.isFetching ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
-              重新读取
+              Reload
             </Button>
           </div>
 
           {inspectionQuery.isLoading ? (
             <div className="flex items-center justify-center rounded-xl bg-muted/30 px-4 py-8 text-sm text-muted-foreground">
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />正在读取已完成的导演步骤…
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />Loading completed Director steps…
             </div>
           ) : inspectionQuery.isError ? (
             <div className="rounded-xl bg-destructive/5 px-4 py-3 text-sm leading-6 text-destructive">
-              暂时无法读取步骤清单。{inspectionQuery.error instanceof Error ? inspectionQuery.error.message : "请稍后重试。"}
+              Unable to load the step list. {inspectionQuery.error instanceof Error ? inspectionQuery.error.message : "Try again later."}
             </div>
           ) : selectableSteps.length === 0 ? (
             <div className="rounded-xl bg-muted/30 px-4 py-3 text-sm leading-6 text-muted-foreground">
-              当前没有可调整的步骤，请先让导演完成一次步骤检查。
+              No steps are available to adjust. Ask Director to review the steps first.
             </div>
           ) : (
             <div className="space-y-2">
@@ -141,7 +141,7 @@ export default function DirectorStepCalibrationDialog(input: {
               {selectedStep ? (
                 <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
                   <Badge variant={stepStateVariant(selectedStep)}>{stepStateLabel(selectedStep)}</Badge>
-                  <span>{selectedStep.progress?.label || "可以根据你的要求重新整理这一段产出。"}</span>
+                  <span>{selectedStep.progress?.label || "This output can be revised based on your instructions."}</span>
                 </div>
               ) : null}
             </div>
@@ -149,13 +149,13 @@ export default function DirectorStepCalibrationDialog(input: {
 
           <div className="space-y-2">
             <label htmlFor="director-step-calibration-instruction" className="text-sm font-medium text-foreground">
-              希望 AI 怎么调整（可选）
+              How should AI adjust this step? (Optional)
             </label>
             <textarea
               id="director-step-calibration-instruction"
               value={instruction}
               onChange={(event) => setInstruction(event.target.value)}
-              placeholder="例如：保留当前人物动机，只重做第三卷的冲突升级；不要改变已经确认的世界观限制。"
+              placeholder="For example: Keep the current character motivations, but rework the conflict escalation in volume three. Preserve the confirmed world constraints."
               rows={4}
               className="w-full resize-y rounded-lg border border-input bg-background px-3 py-2 text-sm leading-6 text-foreground outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-ring"
               disabled={isSubmitting}
@@ -164,15 +164,15 @@ export default function DirectorStepCalibrationDialog(input: {
 
           <div className="flex flex-wrap justify-end gap-2">
             <Button type="button" variant="outline" onClick={() => submit("validate")} disabled={!selectedStep || isSubmitting}>
-              <Check className="h-4 w-4" />检查这一步
+              <Check className="h-4 w-4" />Check step
             </Button>
             <Button type="button" variant="outline" onClick={() => submit("improve")} disabled={!selectedStep || isSubmitting}>
               {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
-              完善这一步
+              Improve step
             </Button>
             <Button type="button" onClick={() => submit("regenerate")} disabled={!selectedStep || isSubmitting}>
               {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-              重新生成这一步
+              Regenerate step
             </Button>
           </div>
         </div>

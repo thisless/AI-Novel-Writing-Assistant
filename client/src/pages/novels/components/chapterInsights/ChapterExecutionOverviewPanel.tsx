@@ -59,14 +59,14 @@ export default function ChapterExecutionOverviewPanel(props: ChapterExecutionOve
   if (!selectedChapter) {
     return (
       <section className="rounded-2xl border border-dashed border-border/70 bg-background p-4 text-sm leading-6 text-muted-foreground">
-        选中章节后，这里显示本章状态、目标、字数、质量和待处理问题。
+        Select a chapter to see its status, objective, word count, quality, and open issues.
       </section>
     );
   }
 
-  const chapterLabel = `第${selectedChapter.order}章`;
-  const chapterTitle = selectedChapter.title || "未命名章节";
-  const chapterObjective = chapterPlan?.objective ?? selectedChapter.expectation ?? "这一章还没有明确目标，建议先补章节计划。";
+  const chapterLabel = `Chapter ${selectedChapter.order}`;
+  const chapterTitle = selectedChapter.title || "Untitled chapter";
+  const chapterObjective = chapterPlan?.objective ?? selectedChapter.expectation ?? "This chapter has no defined objective yet. Add a chapter plan first.";
   const runtimePackage = chapterRuntimePackage?.chapterId === selectedChapter.id ? chapterRuntimePackage : null;
   const lengthControl = runtimePackage?.lengthControl ?? null;
   const qualityOverall = chapterQualityReport?.overall ?? selectedChapter.qualityScore ?? null;
@@ -76,7 +76,7 @@ export default function ChapterExecutionOverviewPanel(props: ChapterExecutionOve
   const currentWordCount = runtimePackage?.draft.wordCount ?? selectedChapter.content?.trim().length ?? 0;
   const targetWordCount = selectedChapter.targetWordCount ?? null;
   const issueCount = openAuditIssues.length || reviewResult?.issues?.length || 0;
-  const updatedAt = selectedChapter.updatedAt ? new Date(selectedChapter.updatedAt).toLocaleString("zh-CN") : "暂无";
+  const updatedAt = selectedChapter.updatedAt ? new Date(selectedChapter.updatedAt).toLocaleString("en-US") : "None";
 
   return (
     <section className="space-y-3 rounded-2xl border border-border/70 bg-background/95 p-4">
@@ -89,12 +89,12 @@ export default function ChapterExecutionOverviewPanel(props: ChapterExecutionOve
             </Badge>
             {generationLabel ? <Badge variant="outline">{generationLabel}</Badge> : null}
             {typeof qualityOverall === "number" ? (
-              <Badge variant={getQualityBadgeVariant(qualityOverall)}>质量 {qualityOverall}</Badge>
+              <Badge variant={getQualityBadgeVariant(qualityOverall)}>Quality {qualityOverall}</Badge>
             ) : null}
           </div>
 
           <div className="space-y-2">
-            <div className="text-xs font-medium text-muted-foreground">章节概览</div>
+            <div className="text-xs font-medium text-muted-foreground">Chapter overview</div>
             <div className="text-base font-semibold text-foreground">{chapterTitle}</div>
             <p className="line-clamp-6 text-sm leading-6 text-muted-foreground">
               {chapterObjective}
@@ -103,28 +103,28 @@ export default function ChapterExecutionOverviewPanel(props: ChapterExecutionOve
         </div>
 
         <Button asChild size="sm" variant="outline" className="w-full justify-center">
-          <Link to={`/novels/${selectedChapter.novelId}/chapters/${selectedChapter.id}`}>打开章节编辑器</Link>
+          <Link to={`/novels/${selectedChapter.novelId}/chapters/${selectedChapter.id}`}>Open chapter editor</Link>
         </Button>
       </div>
 
       <div className="space-y-2">
-        <OverviewStat label="当前字数" value={String(currentWordCount)} hint="主面板正在显示的正文长度。" />
-        <OverviewStat label="章节目标" value={targetWordCount ? `${targetWordCount} 字` : "未设定"} hint="用于判断当前篇幅是否足够。" />
-        <OverviewStat label="待处理问题" value={String(issueCount)} hint="问题越少，越适合继续推进。" />
-        <OverviewStat label="最近更新" value={updatedAt} hint="用于判断这一章是否需要重新检查。" />
+        <OverviewStat label="Current word count" value={String(currentWordCount)} hint="Length of the draft shown in the main panel." />
+        <OverviewStat label="Target length" value={targetWordCount ? `${targetWordCount} words` : "Not set"} hint="Helps determine whether the chapter is long enough." />
+        <OverviewStat label="Open issues" value={String(issueCount)} hint="Fewer issues make it easier to continue." />
+        <OverviewStat label="Last updated" value={updatedAt} hint="Helps determine whether this chapter needs another review." />
       </div>
 
       {lengthControl ? (
         <div className="space-y-2">
           <OverviewStat
-            label="预算区间"
+            label="Word count range"
             value={`${lengthControl.softMinWordCount}-${lengthControl.softMaxWordCount}`}
-            hint={`硬上限 ${lengthControl.hardMaxWordCount} 字`}
+            hint={`Hard limit: ${lengthControl.hardMaxWordCount} words`}
           />
           <OverviewStat
-            label="控字模式"
-            value={lengthControl.wordControlMode === "prompt_only" ? "自然优先" : lengthControl.wordControlMode === "balanced" ? "标准控字" : "混合控字"}
-            hint={`偏差 ${Math.round(lengthControl.variance * 100)}%`}
+            label="Length control"
+            value={lengthControl.wordControlMode === "prompt_only" ? "Natural" : lengthControl.wordControlMode === "balanced" ? "Balanced" : "Hybrid"}
+            hint={`Variance: ${Math.round(lengthControl.variance * 100)}%`}
           />
         </div>
       ) : null}

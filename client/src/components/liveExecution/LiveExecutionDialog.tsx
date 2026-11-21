@@ -10,18 +10,18 @@ import { cn } from "@/lib/utils";
 
 function phaseLabel(phase: string): string {
   const labels: Record<string, string> = {
-    requesting: "正在连接",
-    streaming: "正在生成",
-    assembling: "正在整理",
-    validating: "正在检查",
-    repairing: "正在修复",
-    applying: "正在应用",
-    persisting: "正在保存",
-    completed: "已完成",
-    failed: "生成失败",
-    cancelled: "已取消",
+    requesting: "Connecting",
+    streaming: "Generating",
+    assembling: "Assembling",
+    validating: "Checking",
+    repairing: "Repairing",
+    applying: "Applying",
+    persisting: "Saving",
+    completed: "Completed",
+    failed: "Generation failed",
+    cancelled: "Cancelled",
   };
-  return labels[phase] ?? "正在处理";
+  return labels[phase] ?? "Processing";
 }
 
 function isActive(phase: string): boolean {
@@ -34,13 +34,13 @@ function sessionId(session: LlmLiveSessionSnapshot): string {
 
 function durationLabel(durationMs: number): string {
   if (!Number.isFinite(durationMs)) {
-    return "未知";
+    return "Unknown";
   }
   const seconds = Math.max(0, durationMs) / 1_000;
   if (seconds < 60) {
-    return `${seconds.toFixed(1)} 秒`;
+    return `${seconds.toFixed(1)} sec`;
   }
-  return `${Math.floor(seconds / 60)} 分 ${Math.floor(seconds % 60).toString().padStart(2, "0")} 秒`;
+  return `${Math.floor(seconds / 60)} min ${Math.floor(seconds % 60).toString().padStart(2, "0")} sec`;
 }
 
 function sessionDurationMs(session: LlmLiveSessionSnapshot, nowMs: number): number {
@@ -56,16 +56,16 @@ function SessionModelRoute({
   session: LlmLiveSessionSnapshot;
   className?: string;
 }) {
-  const provider = session.context.provider?.trim() || "未记录";
-  const model = session.context.model?.trim() || "未记录";
+  const provider = session.context.provider?.trim() || "Not recorded";
+  const model = session.context.model?.trim() || "Not recorded";
   return (
     <span
       className={cn("block truncate text-[10px] text-emerald-100/55", className)}
-      title={`本次调用：厂商 ${provider}，模型 ${model}`}
+      title={`This call: provider ${provider}, model ${model}`}
     >
-      厂商 <span className="text-emerald-100/80">{provider}</span>
+      Provider <span className="text-emerald-100/80">{provider}</span>
       <span className="px-1 text-emerald-400/45">·</span>
-      模型 <span className="text-emerald-100/80">{model}</span>
+      Model <span className="text-emerald-100/80">{model}</span>
     </span>
   );
 }
@@ -73,8 +73,8 @@ function SessionModelRoute({
 function SessionCacheMetrics({session}:{session:LlmLiveSessionSnapshot}) {
  const cache=session.tokenUsage?.inputCache;
  return <span className="flex flex-col tabular-nums">
- <span>缓存命中 Tokens {formatCacheTokens(cache?.cacheHitTokens,session.phase,cache?.cacheUsageStatus)}</span>
- <span>缓存未命中 Tokens {formatCacheTokens(cache?.cacheMissTokens,session.phase,cache?.cacheUsageStatus)}</span>
+ <span>Cache hit tokens {formatCacheTokens(cache?.cacheHitTokens,session.phase,cache?.cacheUsageStatus)}</span>
+ <span>Cache miss tokens {formatCacheTokens(cache?.cacheMissTokens,session.phase,cache?.cacheUsageStatus)}</span>
  </span>;
 }
 
@@ -86,18 +86,18 @@ function SessionMetrics({ session, nowMs }: { session: LlmLiveSessionSnapshot; n
   return (
     <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-[11px] text-emerald-100/55">
       <SessionCacheMetrics session={session}/>
-      <span>总耗时 {durationLabel(sessionDurationMs(session, nowMs))}</span>
-      <span>首返 {firstResponseMs === null ? (isActive(session.phase) ? "等待中" : "未返回") : durationLabel(firstResponseMs)}</span>
+      <span>Total time {durationLabel(sessionDurationMs(session, nowMs))}</span>
+      <span>First response {firstResponseMs === null ? (isActive(session.phase) ? "Waiting" : "No response") : durationLabel(firstResponseMs)}</span>
       {usage ? (
-        <span className="flex flex-col tabular-nums" title="思考 Token 通常包含在输出 Token 中">
-          <span>输入 Token {usage.promptTokens.toLocaleString()}</span>
-          <span>输出 Token {usage.completionTokens.toLocaleString()}</span>
-          <span>思考 {usage.reasoningTokens?.toLocaleString() ?? "未提供"} · 合计 {usage.totalTokens.toLocaleString()}</span>
+        <span className="flex flex-col tabular-nums" title="Reasoning tokens are usually included in output tokens">
+          <span>Input tokens {usage.promptTokens.toLocaleString()}</span>
+          <span>Output tokens {usage.completionTokens.toLocaleString()}</span>
+          <span>Reasoning {usage.reasoningTokens?.toLocaleString() ?? "Not provided"} · Total {usage.totalTokens.toLocaleString()}</span>
         </span>
       ) : (
         <span className="flex flex-col">
-          <span>输入 Token {isActive(session.phase) ? "统计中" : "未返回"}</span>
-          <span>输出 Token {isActive(session.phase) ? "统计中" : "未返回"}</span>
+          <span>Input tokens {isActive(session.phase) ? "Calculating..." : "No response"}</span>
+          <span>Output tokens {isActive(session.phase) ? "Calculating..." : "No response"}</span>
         </span>
       )}
     </div>
@@ -138,7 +138,7 @@ export default function LiveExecutionDialog(props: LiveExecutionDialogProps) {
   const latestSessionId = latestSession ? sessionId(latestSession) : null;
   const latestPreview = latestSession?.preview
     ? latestSession.preview.slice(-1200)
-    : "等待模型开始返回内容…";
+    : "Waiting for the model to respond…";
   const activeCount = sessions.filter((session) => isActive(session.phase)).length;
 
   useEffect(() => {
@@ -274,12 +274,12 @@ export default function LiveExecutionDialog(props: LiveExecutionDialogProps) {
           props.className,
         )}
         onClick={() => handleOpenChange(true)}
-        title="查看 AI 创作实况"
+        title="View live AI activity"
       >
         <Radio className={activeCount > 0 ? "mr-1.5 h-3.5 w-3.5 animate-pulse text-primary" : "mr-1.5 h-3.5 w-3.5"} aria-hidden="true" />
-        {!props.compact ? <span className="hidden sm:inline">AI 实况</span> : null}
+        {!props.compact ? <span className="hidden sm:inline">Live AI activity</span> : null}
         {activeCount > 0 ? (
-          <Badge className="ml-1.5 h-5 min-w-5 px-1.5 text-[10px]" aria-label={`${activeCount} 项 AI 生成正在进行`}>
+          <Badge className="ml-1.5 h-5 min-w-5 px-1.5 text-[10px]" aria-label={`${activeCount} AI generations in progress`}>
             {activeCount}
           </Badge>
         ) : null}
@@ -332,18 +332,18 @@ export default function LiveExecutionDialog(props: LiveExecutionDialogProps) {
             >
               <GripHorizontal className="mt-1 h-4 w-4 shrink-0 text-emerald-400/80" aria-hidden="true" />
               <div className="min-w-0 flex-1">
-                <DialogPrimitive.Title className="font-mono text-sm font-semibold tracking-wide text-emerald-100">AI 创作实况 / LIVE LOG</DialogPrimitive.Title>
+                <DialogPrimitive.Title className="font-mono text-sm font-semibold tracking-wide text-emerald-100">Live AI activity / LIVE LOG</DialogPrimitive.Title>
                 <DialogPrimitive.Description
                   id="live-execution-description"
                   className={cn("mt-1 text-xs leading-5 text-emerald-100/65", briefMode && "sr-only")}
                 >
-                  每次调用独立显示。新调用会自动聚焦，已完成调用会收起；清空只影响当前窗口。
+                  Each call is shown separately. New calls are focused automatically, and completed calls are collapsed. Clearing affects this window only.
                 </DialogPrimitive.Description>
               </div>
               <Badge variant="outline" className="shrink-0 border-emerald-400/50 bg-emerald-400/10 font-mono text-emerald-200">
                 {!connected
-                  ? connectionState === "reconnecting" ? "连接中断 · 自动重连中" : "正在连接"
-                  : activeCount > 0 ? `${activeCount} 项进行中` : "等待生成"}
+                  ? connectionState === "reconnecting" ? "Connection lost · reconnecting" : "Connecting"
+                  : activeCount > 0 ? `${activeCount} in progress` : "Waiting for generation"}
               </Badge>
               <Button
                 type="button"
@@ -354,11 +354,11 @@ export default function LiveExecutionDialog(props: LiveExecutionDialogProps) {
                 onPointerDown={(event) => event.stopPropagation()}
                 onPointerMove={(event) => event.stopPropagation()}
                 onPointerUp={(event) => event.stopPropagation()}
-                aria-label={briefMode ? "切换到详细模式" : "切换到简略模式"}
-                title={briefMode ? "查看全部调用" : "只看最新输出"}
+                aria-label={briefMode ? "Switch to detailed mode" : "Switch to brief mode"}
+                title={briefMode ? "Show all calls" : "Show latest output only"}
               >
                 {briefMode ? <Maximize2 className="h-3.5 w-3.5" /> : <Minimize2 className="h-3.5 w-3.5" />}
-                {briefMode ? "详细" : "简略"}
+                {briefMode ? "Detailed" : "Brief"}
               </Button>
               <Button
                 type="button"
@@ -369,8 +369,8 @@ export default function LiveExecutionDialog(props: LiveExecutionDialogProps) {
                 onPointerDown={(event) => event.stopPropagation()}
                 onPointerMove={(event) => event.stopPropagation()}
                 onPointerUp={(event) => event.stopPropagation()}
-                aria-label={fullScreen ? "退出全屏" : "全屏显示"}
-                title={fullScreen ? "退出全屏" : "全屏显示"}
+                aria-label={fullScreen ? "Exit full screen" : "Show full screen"}
+                title={fullScreen ? "Exit full screen" : "Show full screen"}
               >
                 {fullScreen ? <Shrink className="h-4 w-4" /> : <Expand className="h-4 w-4" />}
               </Button>
@@ -386,7 +386,7 @@ export default function LiveExecutionDialog(props: LiveExecutionDialogProps) {
                 onPointerUp={(event) => event.stopPropagation()}
               >
                 <Eraser className="h-3.5 w-3.5" />
-                清空前台
+                Clear activity
               </Button>
               ) : null}
               <DialogPrimitive.Close asChild>
@@ -395,7 +395,7 @@ export default function LiveExecutionDialog(props: LiveExecutionDialogProps) {
                   variant="ghost"
                   size="icon"
                   className="-mr-1 -mt-1 h-8 w-8 shrink-0 text-emerald-100 hover:bg-emerald-400/10 hover:text-emerald-50"
-                  aria-label="关闭 AI 创作实况"
+                  aria-label="Close live AI activity"
                   onPointerDown={(event) => event.stopPropagation()}
                   onPointerMove={(event) => event.stopPropagation()}
                   onPointerUp={(event) => event.stopPropagation()}
@@ -430,9 +430,9 @@ export default function LiveExecutionDialog(props: LiveExecutionDialogProps) {
                   <SessionMetrics session={latestSession} nowMs={nowMs} />
                   {latestSession.reasoning ? (
                     <>
-                      <div className="mt-2 text-[11px] font-semibold text-amber-200/80">思考过程</div>
+                      <div className="mt-2 text-[11px] font-semibold text-amber-200/80">Reasoning</div>
                       <pre className="m-0 whitespace-pre-wrap break-words text-amber-100/80">{latestSession.reasoning}</pre>
-                      <div className="mt-2 text-[11px] font-semibold text-emerald-200/80">生成内容</div>
+                      <div className="mt-2 text-[11px] font-semibold text-emerald-200/80">Generated content</div>
                     </>
                   ) : null}
                   <pre className="m-0 whitespace-pre-wrap break-words text-emerald-100/90">{latestPreview}</pre>
@@ -467,8 +467,8 @@ export default function LiveExecutionDialog(props: LiveExecutionDialogProps) {
                             {durationLabel(sessionDurationMs(session, nowMs))}
                           </span>
                           <span className="flex min-w-0 flex-col break-words text-[10px] leading-4 text-emerald-100/65 tabular-nums">
-                            <span>输入 Token {session.tokenUsage?.promptTokens.toLocaleString() ?? (active ? "统计中" : "未返回")}</span>
-                            <span>输出 Token {session.tokenUsage?.completionTokens.toLocaleString() ?? (active ? "统计中" : "未返回")}</span>
+                            <span>Input tokens {session.tokenUsage?.promptTokens.toLocaleString() ?? (active ? "Calculating..." : "No response")}</span>
+                            <span>Output tokens {session.tokenUsage?.completionTokens.toLocaleString() ?? (active ? "Calculating..." : "No response")}</span>
                             <SessionCacheMetrics session={session}/>
                           </span>
                           <span className={cn("shrink-0 rounded border px-1.5 py-0.5 text-[10px]", active ? "border-emerald-400/45 text-emerald-200" : "border-emerald-400/20 text-emerald-100/65")}>
@@ -486,7 +486,7 @@ export default function LiveExecutionDialog(props: LiveExecutionDialogProps) {
                               <div className="mb-2">
                                 <button type="button" className="inline-flex items-center gap-1.5 text-[11px] text-emerald-200/80 hover:text-emerald-50" onClick={() => togglePrompt(interactionId)}>
                                   <Clipboard className="h-3 w-3" />
-                                  {promptSessionIds.has(interactionId) ? "收起发送 Prompt" : "查看发送 Prompt"}
+                                  {promptSessionIds.has(interactionId) ? "Hide sent prompt" : "View sent prompt"}
                                 </button>
                                 {promptSessionIds.has(interactionId) ? (
                                   <pre className="mt-2 max-h-72 overflow-auto whitespace-pre-wrap break-words rounded border border-emerald-400/20 bg-black/20 p-2 text-[11px] leading-5 text-emerald-100/85">{session.context.promptText}</pre>
@@ -496,13 +496,13 @@ export default function LiveExecutionDialog(props: LiveExecutionDialogProps) {
                             {session.reasoning ? (
                               <div className="mb-3 border-l-2 border-amber-300/35 pl-3">
                                 <div className="mb-1 text-[11px] font-semibold text-amber-200/80">
-                                  思考过程 · {session.totalReasoningChars.toLocaleString()} 字符
+                                  Reasoning · {session.totalReasoningChars.toLocaleString()} characters
                                 </div>
                                 <pre className="m-0 whitespace-pre-wrap break-words text-amber-100/80">{session.reasoning}</pre>
                               </div>
                             ) : null}
-                            {session.reasoning ? <div className="mb-1 text-[11px] font-semibold text-emerald-200/80">生成内容</div> : null}
-                            <pre className="m-0 whitespace-pre-wrap break-words text-emerald-100">{session.preview || "等待模型开始返回内容…"}</pre>
+                            {session.reasoning ? <div className="mb-1 text-[11px] font-semibold text-emerald-200/80">Generated content</div> : null}
+                            <pre className="m-0 whitespace-pre-wrap break-words text-emerald-100">{session.preview || "Waiting for the model to respond…"}</pre>
                           </div>
                         ) : null}
                       </section>
@@ -511,7 +511,7 @@ export default function LiveExecutionDialog(props: LiveExecutionDialogProps) {
                 </div>
               ) : (
                 <div className="text-emerald-200/65">
-                  {connected ? "前台日志已清空，等待新的 AI 生成开始…" : "正在连接 AI 实况服务…"}
+                  {connected ? "Activity cleared. Waiting for new AI generation…" : "Connecting to live AI activity…"}
                 </div>
               )}
             </div>
@@ -520,10 +520,10 @@ export default function LiveExecutionDialog(props: LiveExecutionDialogProps) {
               "flex shrink-0 items-center justify-between gap-3 border-t border-emerald-400/25 bg-[#0d1714] px-3 text-xs text-emerald-100/65",
               briefMode ? "py-1.5" : "py-2",
             )}>
-              <span>{followingLatest ? "正在跟随最新输出" : "已停留在当前阅读位置"}</span>
+              <span>{followingLatest ? "Following latest output" : "Paused at current position"}</span>
               {!briefMode ? (
                 <Button type="button" size="sm" variant="ghost" className="h-7 px-2 font-mono text-xs text-emerald-200 hover:bg-emerald-400/10 hover:text-emerald-50" onClick={scrollToLatest}>
-                  回到最新输出
+                  Jump to latest output
                 </Button>
               ) : (
                 <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-emerald-300/60">Live</span>

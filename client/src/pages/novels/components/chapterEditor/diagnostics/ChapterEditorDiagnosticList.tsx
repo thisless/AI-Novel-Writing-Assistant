@@ -20,17 +20,17 @@ function DiagnosticRow({ card, props }: { card: ChapterEditorDiagnosticCard; pro
     <div className={`space-y-3 rounded-xl px-3 py-3 ${selected ? "bg-primary/5 ring-1 ring-primary/20" : "bg-muted/20"}`}>
       <div>
         <div className="text-sm font-medium">{card.title}</div>
-        <div className="mt-1 text-xs text-muted-foreground">{card.paragraphLabel || "整章"}</div>
+        <div className="mt-1 text-xs text-muted-foreground">{card.paragraphLabel || "Entire chapter"}</div>
       </div>
       <p className={`text-sm leading-6 text-muted-foreground ${selected ? "" : "line-clamp-2"}`}>{card.problemSummary}</p>
       <div className="flex flex-wrap gap-2">
         <Button size="sm" variant="outline" disabled={props.disabled} onClick={() => props.onFocus(card)}>
-          {selected ? "取消定位" : "定位到正文"}
+          {selected ? "Clear location" : "Locate in manuscript"}
         </Button>
-        <Button size="sm" disabled={props.disabled} onClick={() => props.onRun(card)}>直接用 AI 处理</Button>
+        <Button size="sm" disabled={props.disabled} onClick={() => props.onRun(card)}>Address with AI</Button>
         {card.sourceIssueId ? (
           <Button size="sm" variant="ghost" disabled={props.disabled || props.isDirty || props.isResolving} onClick={() => props.onResolve(card)}>
-            {props.isResolving ? "确认中..." : props.isDirty ? "保存后确认已处理" : "确认问题已处理"}
+            {props.isResolving ? "Confirming..." : props.isDirty ? "Save before confirming" : "Mark issue as addressed"}
           </Button>
         ) : null}
       </div>
@@ -44,22 +44,22 @@ export default function ChapterEditorDiagnosticList(props: Props) {
   const others = workspace?.diagnosticCards.filter((card) => card.id !== primary?.id) ?? [];
   return (
     <div className="space-y-5 border-t border-border/50 pt-5">
-      <section aria-label="首要问题" className="space-y-3">
+      <section aria-label="Top issue" className="space-y-3">
         <div className="flex items-center justify-between gap-2">
-          <h3 className="text-sm font-medium">首要问题</h3>
-          {primary ? <span className="text-xs text-muted-foreground">推荐先处理</span> : null}
+          <h3 className="text-sm font-medium">Top issue</h3>
+          {primary ? <span className="text-xs text-muted-foreground">Recommended first</span> : null}
         </div>
         {status === "loading" ? (
-          <p className="text-sm leading-6 text-muted-foreground">AI 正在结合本章目标梳理问题，你可以继续编辑正文。</p>
+          <p className="text-sm leading-6 text-muted-foreground">AI is reviewing this chapter's goals and identifying issues. You can keep editing.</p>
         ) : primary ? <DiagnosticRow card={primary} props={props} /> : (
           <p className="text-sm leading-6 text-muted-foreground">
-            {status === "error" ? "问题分析暂时失败，你仍可选段修改或填写要求。" : "暂无待处理问题，可继续编辑正文或填写修改要求。"}
+            {status === "error" ? "Issue analysis is temporarily unavailable. You can still select text to revise or add instructions." : "No issues to address. You can keep editing or add revision instructions."}
           </p>
         )}
       </section>
       {others.length ? (
         <details className="border-t border-border/40 pt-4">
-          <summary className="cursor-pointer text-sm text-muted-foreground">其余问题（{others.length}）</summary>
+          <summary className="cursor-pointer text-sm text-muted-foreground">Other issues ({others.length})</summary>
           <div className="mt-3 space-y-3">{others.map((card) => <DiagnosticRow key={card.id} card={card} props={props} />)}</div>
         </details>
       ) : null}

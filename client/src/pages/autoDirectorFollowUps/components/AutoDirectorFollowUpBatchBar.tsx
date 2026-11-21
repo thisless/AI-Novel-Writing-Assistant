@@ -14,12 +14,12 @@ interface AutoDirectorFollowUpBatchBarProps {
 
 function formatBatchActionLabel(actionCode: AutoDirectorMutationActionCode | null): string {
   if (actionCode === "continue_auto_execution") {
-    return "批量低风险继续";
+    return "Continue low-risk tasks in bulk";
   }
   if (actionCode === "retry_with_task_model") {
-    return "批量重试异常任务";
+    return "Retry failed tasks in bulk";
   }
-  return "当前所选项没有共同批量动作";
+  return "No shared bulk action for the selected items";
 }
 
 function getSelectedSection(items: AutoDirectorFollowUpItem[]): AutoDirectorFollowUpSection | null {
@@ -39,24 +39,24 @@ export function AutoDirectorFollowUpBatchBar({
   }
   const selectedSection = getSelectedSection(selectedItems);
   const consequence = batchActionCode === "continue_auto_execution"
-    ? "只向所选导演任务分别提交继续命令，不会跨任务合并状态。"
+    ? "Sends a separate continue command to each selected director task without merging task states."
     : batchActionCode === "retry_with_task_model"
-      ? "每个任务都会使用各自保存的模型重试，并保持对应的导演任务身份。"
-      : "不会执行批量操作；请重新选择同一分区且具有共同动作的任务。";
+      ? "Retries each task with its saved model while preserving its director task identity."
+      : "No bulk action will run. Select tasks from the same section that share an action.";
 
   return (
     <div className={AUTO_DIRECTOR_MOBILE_CLASSES.followUpBatchBar}>
       <TaskQueueActionRow
-        title={`已选择 ${selectedItems.length} 项 · ${selectedSection === "pending" || selectedSection === "exception" ? formatBatchActionLabel(batchActionCode) : "该分区不提供批量动作"}`}
+        title={`${selectedItems.length} selected · ${selectedSection === "pending" || selectedSection === "exception" ? formatBatchActionLabel(batchActionCode) : "Bulk actions are unavailable in this section"}`}
         consequence={consequence}
         tone={selectedSection === "exception" ? "danger" : "info"}
         action={(
           <div className="grid grid-cols-2 gap-2 md:flex">
           <Button variant="outline" size="sm" className="w-full md:w-auto" onClick={onClear} disabled={loading}>
-            清空
+            Clear
           </Button>
           <Button size="sm" className="w-full md:w-auto" onClick={() => void onExecute()} disabled={!batchActionCode || loading}>
-            执行批量动作
+            Run bulk action
           </Button>
           </div>
         )}

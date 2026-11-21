@@ -25,36 +25,36 @@ export default function DirectorStart({novelId, estimatedChapterCount, nextChapt
   const budgetSettings = useQuery({queryKey: queryKeys.settings.directorChapterBudget, queryFn: getDirectorChapterBudgetSettings});
   const validBudget = !chapterBudget.trim() || directorChapterTokenLimitSchema.safeParse(Number(chapterBudget)).success;
   const mutation = useMutation({mutationFn: async () => {
-    if (!story.trim() || !model.provider || !model.model || !Number.isInteger(count) || count < 1) throw new Error("请填写故事方向、目标章数并选择模型。");
-    if (production && (!Number.isInteger(from) || !Number.isInteger(to) || from < 1 || to < from || to > count)) throw new Error("请填写目标章数以内的有效章节范围。");
-    if (!validVolumeCount) throw new Error("固定卷数须为 1–24 之间的整数，或留空由 AI 推荐。");
-    if (!validBudget) throw new Error("单章 AI 用量上限须为 16,001 至 10,000,000 之间的整数。");
+    if (!story.trim() || !model.provider || !model.model || !Number.isInteger(count) || count < 1) throw new Error("Enter a story direction and target chapter count, and select a model.");
+    if (production && (!Number.isInteger(from) || !Number.isInteger(to) || from < 1 || to < from || to > count)) throw new Error("Enter a valid chapter range within the target chapter count.");
+    if (!validVolumeCount) throw new Error("Enter a whole number from 1 to 24 for the fixed volume count, or leave it blank for an AI recommendation.");
+    if (!validBudget) throw new Error("Enter a whole number from 16,001 to 10,000,000 for the per-chapter AI usage limit.");
     return submitDirectorCommand({type:"open_run",novelId,driver:assisted ? "assisted" : "auto",stepIdsInScope:null,idempotencyKey:createDirectorCommandKey(),
       launchInput:{storyInput:story.trim(),estimatedChapterCount:count,...(volumeCount ? {userPreferredVolumeCount:Number(volumeCount)} : {}),worldMode:world,targetMode:"opening",provider:model.provider,model:model.model,temperature:model.temperature,
         issuePolicyMode:qualityFirst ? "quality_first" : "completion_first",...(chapterBudget.trim() ? {chapterTokenLimit:Number(chapterBudget)} : {}),...(production ? {executionRange:{from,to}} : {})}});
   },onSuccess: async()=>{await Promise.all([queries.invalidateQueries({queryKey:queryKeys.directorNext.summary(novelId)}),queries.invalidateQueries({queryKey:queryKeys.directorNext.detail(novelId)})]);}});
   return <section id="director-start" className="space-y-4 border-t border-border/50 py-5">
-    <h2 className="text-sm font-semibold">{suggestedRange ? "选择后续正文范围" : "选择下一步创作"}</h2>
-    <p className="text-xs leading-5 text-muted-foreground">核对章节范围后提交，AI 会补齐所需规划并写作；已有正文会保留。</p>
-    <label className="flex gap-2 text-xs"><input type="checkbox" checked={production} onChange={e=>setProduction(e.target.checked)}/>生成指定章节正文</label>
-    {production ? <div className="grid grid-cols-2 gap-3"><label className="space-y-2 text-xs">起始章<Input type="number" min={1} max={count} value={from} onChange={e=>setFrom(Number(e.target.value))}/></label><label className="space-y-2 text-xs">结束章<Input type="number" min={from} max={count} value={to} onChange={e=>setTo(Number(e.target.value))}/></label><p className="col-span-2 text-xs text-muted-foreground">本次只写上述范围。取消“生成指定章节正文”可只补齐规划。</p></div>:null}
-    <label className="flex gap-2 text-xs"><input type="checkbox" checked={assisted} onChange={e=>setAssisted(e.target.checked)}/>按阶段确认结果（半自动）</label>
-    <p className="text-xs text-muted-foreground">本次创作：{assisted ? "按阶段确认结果" : "全自动推进"} · {qualityFirst ? "质量问题需确认" : "局部质量问题记录提醒并继续"} · {model.model || "请在更多创作设置中选择模型"}</p>
-    <Button className="w-full" disabled={mutation.isPending || !validBudget || !validVolumeCount} onClick={()=>mutation.mutate()}>{mutation.isPending ? "提交中…" : production ? `提交并生成第 ${from}—${to} 章` : "提交并补齐创作规划"}</Button>
+    <h2 className="text-sm font-semibold">{suggestedRange ? "Choose the next manuscript range" : "Choose what to write next"}</h2>
+    <p className="text-xs leading-5 text-muted-foreground">Review the chapter range before submitting. AI will complete the required planning and writing; existing manuscript text is preserved.</p>
+    <label className="flex gap-2 text-xs"><input type="checkbox" checked={production} onChange={e=>setProduction(e.target.checked)}/>Write selected chapters</label>
+    {production ? <div className="grid grid-cols-2 gap-3"><label className="space-y-2 text-xs">First chapter<Input type="number" min={1} max={count} value={from} onChange={e=>setFrom(Number(e.target.value))}/></label><label className="space-y-2 text-xs">Last chapter<Input type="number" min={from} max={count} value={to} onChange={e=>setTo(Number(e.target.value))}/></label><p className="col-span-2 text-xs text-muted-foreground">Only the selected range will be written. Turn off “Write selected chapters” to complete planning only.</p></div>:null}
+    <label className="flex gap-2 text-xs"><input type="checkbox" checked={assisted} onChange={e=>setAssisted(e.target.checked)}/>Confirm results at each stage (assisted)</label>
+    <p className="text-xs text-muted-foreground">This run: {assisted ? "Confirm each stage" : "Fully automatic"} · {qualityFirst ? "Confirm quality issues" : "Record local quality reminders and continue"} · {model.model || "Select a model in More writing settings"}</p>
+    <Button className="w-full" disabled={mutation.isPending || !validBudget || !validVolumeCount} onClick={()=>mutation.mutate()}>{mutation.isPending ? "Submitting…" : production ? `Submit and write chapters ${from}–${to}` : "Submit and complete the writing plan"}</Button>
     {mutation.isError ? <p role="alert" className="text-xs text-destructive">{mutation.error.message}</p>:null}
-    <details className="space-y-4 text-xs"><summary className="cursor-pointer text-muted-foreground">更多创作设置（故事方向、模型、预算、质量处理）</summary>
-    <label className="block space-y-2 text-xs">单章 AI 用量上限（Tokens）<Input type="number" min={16001} max={MAX_DIRECTOR_CHAPTER_TOKEN_LIMIT} step={1}
-      value={chapterBudget} placeholder={budgetSettings.data?.data ? `沿用全局设置：${budgetSettings.data.data.tokenLimit.toLocaleString("zh-CN")}` : "留空沿用全局设置"}
+    <details className="space-y-4 text-xs"><summary className="cursor-pointer text-muted-foreground">More writing settings (story direction, model, budget, quality handling)</summary>
+    <label className="block space-y-2 text-xs">Per-chapter AI usage limit (tokens)<Input type="number" min={16001} max={MAX_DIRECTOR_CHAPTER_TOKEN_LIMIT} step={1}
+      value={chapterBudget} placeholder={budgetSettings.data?.data ? `Use global setting: ${budgetSettings.data.data.tokenLimit.toLocaleString("en-US")}` : "Leave blank to use global setting"}
       aria-invalid={!validBudget} onChange={event=>setChapterBudget(event.target.value)}/></label>
-    <p className="text-xs text-muted-foreground">留空沿用全局默认；填写后仅对本任务生效。达到预算时保存进度，确认追加后继续。</p>
-    {!validBudget ? <p className="text-xs text-destructive">请输入 16,001 至 10,000,000 之间的整数，或留空沿用全局设置。</p> : null}
-    <label className="block space-y-2 text-xs">故事方向<textarea className="min-h-24 w-full rounded-md border border-input bg-background p-2 text-sm" value={story} onChange={e=>setStory(e.target.value)} placeholder="这本书讲什么，主角想达成什么？" /></label>
-    <label className="block space-y-2 text-xs">全书目标章数<Input type="number" min={1} value={count} onChange={e=>setCount(Number(e.target.value))}/></label>
-    <label className="block space-y-2 text-xs">固定卷数（可选）<Input type="number" min={1} max={24} step={1} value={volumeCount} placeholder="留空由 AI 推荐" aria-invalid={!validVolumeCount} onChange={event=>setVolumeCount(event.target.value)}/></label>
-    <p className="text-xs text-muted-foreground">填写 1–24 卷，AI 按指定卷数安排全书；已有卷结构会保留。</p>
+    <p className="text-xs text-muted-foreground">Leave blank to use the global default. A value applies only to this run. If the limit is reached, progress is saved so you can add budget and continue.</p>
+    {!validBudget ? <p className="text-xs text-destructive">Enter a whole number from 16,001 to 10,000,000, or leave blank to use the global setting.</p> : null}
+    <label className="block space-y-2 text-xs">Story direction<textarea className="min-h-24 w-full rounded-md border border-input bg-background p-2 text-sm" value={story} onChange={e=>setStory(e.target.value)} placeholder="What is the story about, and what does the protagonist want to achieve?" /></label>
+    <label className="block space-y-2 text-xs">Target chapter count for the book<Input type="number" min={1} value={count} onChange={e=>setCount(Number(e.target.value))}/></label>
+    <label className="block space-y-2 text-xs">Fixed number of volumes (optional)<Input type="number" min={1} max={24} step={1} value={volumeCount} placeholder="Leave blank for an AI recommendation" aria-invalid={!validVolumeCount} onChange={event=>setVolumeCount(event.target.value)}/></label>
+    <p className="text-xs text-muted-foreground">Enter 1–24 volumes for AI to structure the book accordingly. Existing volume structure is preserved.</p>
     <LLMSelector compact showHelperText />
-    <label className="block space-y-2 text-xs">世界设定<select className="w-full rounded-md border border-input bg-background p-2" value={world} onChange={e=>setWorld(e.target.value as typeof world)}><option value="skip">不使用独立世界设定</option>{worldId ? <option value="reuse">使用本书关联世界</option>:null}<option value="generate">AI 准备世界设定</option></select></label>
-    <label className="flex gap-2 text-xs"><input type="checkbox" checked={qualityFirst} onChange={e=>setQualityFirst(e.target.checked)}/>质量问题需要我确认后再继续</label>
+    <label className="block space-y-2 text-xs">World setting<select className="w-full rounded-md border border-input bg-background p-2" value={world} onChange={e=>setWorld(e.target.value as typeof world)}><option value="skip">Don't use a separate world setting</option>{worldId ? <option value="reuse">Use the world linked to this novel</option>:null}<option value="generate">Have AI create a world setting</option></select></label>
+    <label className="flex gap-2 text-xs"><input type="checkbox" checked={qualityFirst} onChange={e=>setQualityFirst(e.target.checked)}/>Pause for my confirmation when quality issues arise</label>
     </details>
   </section>;
 }

@@ -45,18 +45,18 @@ cache.setQueryData(['directorWorkspaceLedgers','book'],{success:true,data:{...da
 export const empty=render({kind:'foreshadowing'});
 `,resolveDir:root,loader:'tsx'},bundle:true,platform:'node',format:'esm',packages:'external',plugins:[nodeStyles],alias:{'@':path.join(root,'src')},define:{'import.meta.env':'{}'},outfile:output});
     const result=await import(pathToFileURL(output).href);
-    for(const text of ['刀的来历','待兑现','正文中的刀纹','来源章','全书最新保存状态']) assert.ok(result.payoff.includes(text),text);
-    for(const text of ['旧信物','已消耗','只能使用一次','信物已经用掉','归属需核对','证据不足']) assert.ok(result.inventory.includes(text),text);
+    for(const text of ['刀的来历','Awaiting payoff','正文中的刀纹','来源章','Latest saved state']) assert.ok(result.payoff.includes(text),text);
+    for(const text of ['旧信物','Consumed','只能使用一次','信物已经用掉','归属需核对','证据不足']) assert.ok(result.inventory.includes(text),text);
     assert.ok(!result.inventory.includes('同伴药瓶'));
     assert.doesNotMatch(result.inventory,/确认并用于后续写作|回填最近章节/);
-    assert.ok(result.directory.includes('伏笔')&&result.directory.includes('背包与资源'));
-    assert.ok(result.character.includes('查看背包与资源'));
+    assert.ok(result.directory.includes('Foreshadowing')&&result.directory.includes('Inventory &amp; resources'));
+    assert.ok(result.character.includes('View inventory &amp; resources'));
     assert.deepEqual(result.scoped,['used']);
     assert.equal(result.sources[0],null,'invalid saved id cannot fall back to a matching number');
     assert.equal(result.sources[1].id,'chapter');
     assert.equal(result.sources[2],null,'duplicate order cannot guess a chapter');
     assert.match(result.stale,/role="alert"/);assert.ok(result.stale.includes('刀的来历'),'failed refresh keeps previously saved results');
     assert.match(result.wrongBook,/role="alert"/);assert.ok(!result.wrongBook.includes('刀的来历'),'wrong-book response cannot be displayed');
-    assert.ok(result.empty.includes('暂无保存的伏笔记录'));assert.doesNotMatch(result.empty,/role="alert"/);
+    assert.ok(result.empty.includes('No saved foreshadowing records'));assert.doesNotMatch(result.empty,/role="alert"/);
   } finally {fs.rmSync(output,{force:true});}
 });

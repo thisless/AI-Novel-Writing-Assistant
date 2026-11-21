@@ -33,7 +33,7 @@ export function TensionCurveBeatContextStrip(props: TensionCurveBeatContextStrip
             className="h-8 shrink-0 px-3 text-xs"
             onClick={() => onBeatChange("all")}
           >
-            整卷
+            Entire volume
           </Button>
           {beats.map((beat) => (
             <Button
@@ -58,11 +58,11 @@ export function TensionCurveBeatContextStrip(props: TensionCurveBeatContextStrip
               {selectedBeat.chapterSpanHint ? <Badge variant="outline">{selectedBeat.chapterSpanHint}</Badge> : null}
             </div>
             <div className="mt-2 text-sm leading-6 text-foreground">
-              {selectedBeat.summary?.trim() || "这一段还没有节奏说明，建议先回到节奏板补齐交付目标。"}
+              {selectedBeat.summary?.trim() || "This beat has no description yet. Add its outcomes in the beat sheet first."}
             </div>
           </div>
           <div className="rounded-lg border border-border/70 bg-muted/20 p-3">
-            <div className="text-sm font-medium text-foreground">本段必须交付</div>
+            <div className="text-sm font-medium text-foreground">Required outcomes</div>
             {selectedBeat.mustDeliver && selectedBeat.mustDeliver.length > 0 ? (
               <ol className="mt-2 space-y-1.5">
                 {selectedBeat.mustDeliver.slice(0, 4).map((item, index) => (
@@ -75,13 +75,13 @@ export function TensionCurveBeatContextStrip(props: TensionCurveBeatContextStrip
                 ))}
               </ol>
             ) : (
-              <div className="mt-2 text-xs leading-5 text-muted-foreground">这一段还没有明确交付项。</div>
+              <div className="mt-2 text-xs leading-5 text-muted-foreground">No outcomes are defined for this beat yet.</div>
             )}
           </div>
         </div>
       ) : (
         <div className={cn("rounded-lg border border-dashed p-3 text-sm text-muted-foreground", beats.length === 0 ? "bg-amber-50 text-amber-800" : "")}>
-          {beats.length > 0 ? "当前查看整卷走势。切到具体节奏段后，可对照该段摘要和必须交付项调整强度。" : "当前卷还没有节奏段，先生成节奏板后再按段检查曲线。"}
+          {beats.length > 0 ? "Viewing the full-volume curve. Select a beat to adjust intensity using its summary and required outcomes." : "This volume has no beats yet. Generate a beat sheet to review the curve by beat."}
         </div>
       )}
     </div>

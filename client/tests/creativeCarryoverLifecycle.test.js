@@ -148,20 +148,20 @@ test("StrictMode first generation unlocks adoption without refresh and persists 
   const page = await mount();
   try {
     assert.equal(page.pending.length, 1, "subscription replay must not duplicate a paid request");
-    assert.equal(page.button("采用推荐方案"), undefined);
+    assert.equal(page.button("Adopt recommended plan"), undefined);
     await page.click("生成方向");
     assert.equal(globalThis.directionGenerations, 0, "unadopted reference must not start direction generation");
     await page.complete(0, { status: "ready", contract: contract() });
-    assert.equal(page.button("采用推荐方案")?.disabled, false);
-    assert.equal(page.button("重新生成")?.disabled, false);
-    assert.equal(page.surface.querySelector('[aria-label="创作承接方案"]').getAttribute("aria-busy"), "false");
+    assert.equal(page.button("Adopt recommended plan")?.disabled, false);
+    assert.equal(page.button("Regenerate")?.disabled, false);
+    assert.equal(page.surface.querySelector('[aria-label="Story carryover plan"]').getAttribute("aria-busy"), "false");
     assert.deepEqual([...page.surface.querySelectorAll("ol li")].map(item => item.textContent), ["01开篇方向1", "02开篇方向2", "03开篇方向3"]);
     assert.equal(page.surface.querySelectorAll("details[open]").length, 0);
     assert.match(page.surface.textContent, /人物终局一/);
     assert.match(page.surface.textContent, /未完线索一/);
-    await page.click("采用推荐方案");
+    await page.click("Adopt recommended plan");
     assert.equal(page.surface.querySelector('[role="dialog"]'), null);
-    assert.equal(page.button("查看已采用方案")?.disabled, false);
+    assert.equal(page.button("View adopted plan")?.disabled, false);
     const draft = JSON.parse(localStorage.getItem(localStorage.key(0)));
     assert.equal(draft.creativeCarryoverContract.adopted, true);
     assert.match(draft.idea, /续写开篇/);
@@ -173,22 +173,22 @@ test("regeneration blocks adoption until completion and a failed regeneration ke
   try {
     await page.complete(0, { status: "ready", contract: contract("adaptation") });
     assert.equal(page.surface.querySelector('[role="dialog"]'), null, "generation must not interrupt writing with a popup");
-    await page.click("查看创作方案");
+    await page.click("View story plan");
     assert.match(page.surface.textContent, /独立角色与世界/);
-    await page.click("重新生成");
+    await page.click("Regenerate");
     assert.equal(page.pending.length, 2);
-    assert.equal(page.button("采用推荐方案").disabled, true);
+    assert.equal(page.button("Adopt recommended plan").disabled, true);
     assert.match(page.surface.textContent, /开篇方向1/);
     await page.complete(1, { status: "ready", contract: contract("adaptation", "analysis-1", "新方案") });
-    assert.equal(page.button("采用推荐方案").disabled, false);
+    assert.equal(page.button("Adopt recommended plan").disabled, false);
     assert.match(page.surface.textContent, /开篇方向1新方案/);
-    await page.click("重新生成");
+    await page.click("Regenerate");
     await page.fail(2);
-    assert.equal(page.button("采用推荐方案").disabled, false);
-    assert.equal(page.button("重试生成").disabled, false);
+    assert.equal(page.button("Adopt recommended plan").disabled, false);
+    assert.equal(page.button("Try again").disabled, false);
     assert.match(page.surface.textContent, /开篇方向1新方案/);
-    await page.click("采用推荐方案");
-    assert.equal(page.button("查看已采用方案")?.disabled, false);
+    await page.click("Adopt recommended plan");
+    assert.equal(page.button("View adopted plan")?.disabled, false);
   } finally { await page.cleanup(); }
 });
 
@@ -196,17 +196,17 @@ test("material failures and mismatched results release the request state without
   const page = await mount();
   try {
     await page.complete(0, { status: "insufficient_material", bookAnalysisId: "analysis-1", analysisTitle: "参考小说", missingSectionTitles: ["人物系统"], sourceVersionReadable: true });
-    await page.click("查看创作方案");
-    assert.match(page.surface.textContent, /拆书还缺少：人物系统/);
-    assert.equal(page.button("采用推荐方案"), undefined);
+    await page.click("View story plan");
+    assert.match(page.surface.textContent, /Missing analysis sections: 人物系统/);
+    assert.equal(page.button("Adopt recommended plan"), undefined);
   } finally { await page.cleanup(); }
   const mismatched = await mount();
   try {
     await mismatched.complete(0, { status: "ready", contract: contract("continuation", "another-analysis") });
-    await mismatched.click("查看创作方案");
-    assert.match(mismatched.surface.textContent, /与当前参考作品不一致/);
-    assert.equal(mismatched.button("重试生成").disabled, false);
-    assert.equal(mismatched.button("采用推荐方案"), undefined);
+    await mismatched.click("View story plan");
+    assert.match(mismatched.surface.textContent, /does not match the current reference work/);
+    assert.equal(mismatched.button("Try again").disabled, false);
+    assert.equal(mismatched.button("Adopt recommended plan"), undefined);
   } finally { await mismatched.cleanup(); }
 });
 
@@ -217,10 +217,10 @@ test("a late response from the previous source cannot replace the newly selected
     assert.equal(page.pending.length, 2);
     await page.complete(1, { status: "ready", contract: contract("continuation", "analysis-2", "第二本") });
     await page.complete(0, { status: "ready", contract: contract("continuation", "analysis-1", "第一本") });
-    await page.click("查看创作方案");
+    await page.click("View story plan");
     assert.match(page.surface.textContent, /开篇方向1第二本/);
     assert.doesNotMatch(page.surface.textContent, /开篇方向1第一本/);
-    assert.equal(page.button("采用推荐方案").disabled, false);
+    assert.equal(page.button("Adopt recommended plan").disabled, false);
   } finally { await page.cleanup(); }
 });
 
@@ -228,22 +228,22 @@ test("adoption waits for the task save, prevents duplicate actions and stays ret
   const page = await mount({ taskId: "task-1" });
   try {
     await page.complete(0, { status: "ready", contract: contract() });
-    await page.click("查看创作方案");
-    await page.click("采用推荐方案");
+    await page.click("View story plan");
+    await page.click("Adopt recommended plan");
     assert.equal(page.saves.length, 1);
     assert.equal(page.saves[0].input.workflowTaskId, "task-1");
     assert.equal(page.saves[0].input.seedPayload.creativeCarryoverContract.adopted, true);
-    assert.equal(page.button("正在采用…").disabled, true);
-    assert.equal(page.button("重新生成").disabled, true);
-    await page.click("正在采用…");
+    assert.equal(page.button("Applying…").disabled, true);
+    assert.equal(page.button("Regenerate").disabled, true);
+    await page.click("Applying…");
     assert.equal(page.saves.length, 1);
-    assert.equal(page.button("查看已采用方案"), undefined);
+    assert.equal(page.button("View adopted plan"), undefined);
     await page.failSave(0);
-    assert.equal(page.button("采用推荐方案").disabled, false);
-    await page.click("采用推荐方案");
+    assert.equal(page.button("Adopt recommended plan").disabled, false);
+    await page.click("Adopt recommended plan");
     await page.completeSave(1);
     assert.equal(page.surface.querySelector('[role="dialog"]'), null);
-    assert.equal(page.button("查看已采用方案")?.disabled, false);
+    assert.equal(page.button("View adopted plan")?.disabled, false);
   } finally { await page.cleanup(); }
 });
 
@@ -251,32 +251,32 @@ test("the idea-stage entry opens a dismissible dialog and keeps its result acros
   const page = await mount();
   try {
     assert.equal(page.container.firstElementChild.querySelector("h1").textContent, "起始想法");
-    assert.equal(page.container.querySelector('section[aria-label="创作承接方案"]'), null);
+    assert.equal(page.container.querySelector('section[aria-label="Story carryover plan"]'), null);
     assert.equal(page.surface.querySelector('[role="dialog"]'), null);
-    await page.click("查看创作方案");
+    await page.click("View story plan");
     assert.ok(page.surface.querySelector('[role="dialog"]'));
-    await page.click("返回开书设置");
+    await page.click("Back to story setup");
     assert.equal(page.surface.querySelector('[role="dialog"]'), null);
     await page.complete(0, { status: "ready", contract: contract() });
     assert.equal(page.surface.querySelector('[role="dialog"]'), null);
-    await page.click("查看创作方案");
-    assert.equal(page.button("采用推荐方案").disabled, false);
+    await page.click("View story plan");
+    assert.equal(page.button("Adopt recommended plan").disabled, false);
     assert.equal(page.pending.length, 1, "opening or closing the dialog must not regenerate the proposal");
-    await page.click("采用推荐方案");
+    await page.click("Adopt recommended plan");
     assert.equal(page.surface.querySelector('[role="dialog"]'), null);
-    const trigger = page.button("查看已采用方案");
+    const trigger = page.button("View adopted plan");
     assert.ok(trigger && !trigger.disabled);
     // Radix restores focus in a timer scheduled during dialog unmount, after the React commit.
     const deadline = performance.now() + 1000;
     while (document.activeElement !== trigger && performance.now() < deadline) await delay(10);
     assert.ok(document.activeElement === trigger, "closing the dialog must return focus to its trigger");
-    await page.click("查看已采用方案");
-    assert.match(page.surface.querySelector('[role="dialog"]').textContent, /已采用，可继续/);
-    assert.equal(page.button("采用推荐方案"), undefined);
-    await page.click("返回开书设置");
+    await page.click("View adopted plan");
+    assert.match(page.surface.querySelector('[role="dialog"]').textContent, /Plan adopted\. You can continue with setup/);
+    assert.equal(page.button("Adopt recommended plan"), undefined);
+    await page.click("Back to story setup");
     await page.click("继续完善设定");
-    assert.equal(page.button("查看已采用方案")?.disabled, false);
-    await page.click("查看已采用方案");
+    assert.equal(page.button("View adopted plan")?.disabled, false);
+    await page.click("View adopted plan");
     assert.match(page.surface.querySelector('[role="dialog"]').textContent, /开篇方向1/);
     assert.equal(page.pending.length, 1);
   } finally { await page.cleanup(); }

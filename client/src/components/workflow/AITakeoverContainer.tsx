@@ -31,16 +31,16 @@ export interface AITakeoverContainerProps {
 function modeLabel(mode: AITakeoverMode): string {
   switch (mode) {
     case "loading":
-      return "加载中";
+      return "Loading";
     case "running":
-      return "AI 接管中";
+      return "AI taking over";
     case "waiting":
-      return "等待确认";
+      return "Awaiting confirmation";
     case "action_required":
-      return "待处理";
+      return "Pending";
     case "failed":
     default:
-      return "执行异常";
+      return "Execution error";
   }
 }
 
@@ -94,13 +94,13 @@ function progressTone(mode: AITakeoverMode): WorkflowProgressTone {
 function progressStatusLabel(mode: AITakeoverMode): string | null {
   switch (mode) {
     case "running":
-      return "实时推进中";
+      return "In progress";
     case "waiting":
-      return "等待你确认";
+      return "Awaiting your confirmation";
     case "action_required":
-      return "需要你处理";
+      return "Needs your attention";
     case "failed":
-      return "已中断";
+      return "Interrupted";
     default:
       return null;
   }
@@ -170,7 +170,7 @@ export default function AITakeoverContainer({
                   <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-primary" />
                 </span>
               ) : null}
-              <span className="font-medium text-foreground">流程进度</span>
+              <span className="font-medium text-foreground">Workflow progress</span>
               {progressStatusLabel(mode) ? (
                 <span className="rounded-full bg-background/80 px-2 py-0.5 text-[11px] text-muted-foreground">
                   {progressStatusLabel(mode)}
@@ -195,10 +195,10 @@ export default function AITakeoverContainer({
             </div>
           ) : null}
           {checkpointLabel ? (
-            <div className="mt-2 text-xs text-muted-foreground">最近检查点：{checkpointLabel}</div>
+            <div className="mt-2 text-xs text-muted-foreground">Latest checkpoint: {checkpointLabel}</div>
           ) : null}
           {taskId ? (
-            <div className="mt-2 text-[11px] text-muted-foreground/70">运行编号 {taskId.slice(0, 8)}</div>
+            <div className="mt-2 text-[11px] text-muted-foreground/70">Run ID {taskId.slice(0, 8)}</div>
           ) : null}
         </div>
       ) : null}

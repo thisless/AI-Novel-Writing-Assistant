@@ -17,11 +17,11 @@ import { SettingsShell } from "../components/SettingsShell";
 import { APP_RUNTIME } from "@/lib/constants";
 
 const entries = [
-  { to: "/settings/models", title: "模型与厂商", description: "添加模型厂商、选择模型并管理连接。", icon: Bot },
-  { to: "/settings/model-routes", title: "模型路由管理", description: "为不同创作任务选择模型并检查连接状态。", icon: Route },
-  { to: "/settings/director", title: "自动导演", description: "安排问题处理、确认偏好与提醒方式。", icon: BookOpenCheck },
-  { to: "/settings/knowledge", title: "知识库与写法", description: "让资料和写法偏好参与后续创作。", icon: Database },
-  { to: "/settings/maintenance", title: "桌面与维护", description: "查看适用于当前设备的更新和数据维护。", icon: MonitorCog },
+  { to: "/settings/models", title: "Models & Providers", label: "Models & Providers", description: "Add providers, choose models, and manage connections.", icon: Bot },
+  { to: "/settings/model-routes", title: "Model Routing", label: "Model Routing", description: "Choose models for different writing tasks and check connection status.", icon: Route },
+  { to: "/settings/director", title: "Auto Director", label: "Auto Director", description: "Set issue handling, confirmation preferences, and reminders.", icon: BookOpenCheck },
+  { to: "/settings/knowledge", title: "Knowledge & Style", label: "Knowledge & Style", description: "Use reference materials and style preferences in future writing.", icon: Database },
+  { to: "/settings/maintenance", title: "Desktop & Maintenance", label: "Desktop & Maintenance", description: "View updates and data maintenance for this device.", icon: MonitorCog },
 ];
 
 export default function SettingsOverviewPage() {
@@ -49,28 +49,28 @@ export default function SettingsOverviewPage() {
   const rag = ragQuery.data?.data;
 
   return (
-    <SettingsShell title="系统设置" description="查看创作环境状态，并进入需要调整的设置。">
+    <SettingsShell title="Settings" description="Review your writing environment and open the settings you want to adjust.">
       <SettingsReadinessCard items={items} />
       <div className="grid gap-4 md:grid-cols-2">
-        {entries.map(({ to, title, description, icon: Icon }) => {
-          const summary = title === "模型与厂商"
-            ? configuredProvider ? `${configuredProvider.name} · ${configuredProvider.currentModel || "未选择模型"}` : "尚未配置可用的文本模型"
-            : title === "模型路由管理"
-              ? `${routeCount} 条任务路由已设置`
-            : title === "知识库与写法"
-              ? rag?.enabled ? `资料检索已开启 · ${rag.embeddingModel || "未选择向量模型"}` : "可选增强，暂不影响开始创作"
-              : title === "桌面与维护"
-                ? APP_RUNTIME === "desktop" ? "可检查桌面更新和本机旧数据" : "网页端无需桌面维护"
-                : "设置确认偏好、问题处理和通知方式";
+        {entries.map(({ to, title, label, description, icon: Icon }) => {
+          const summary = title === "Models & Providers"
+            ? configuredProvider ? `${configuredProvider.name} · ${configuredProvider.currentModel || "No model selected"}` : "No text model configured"
+            : title === "Model Routing"
+              ? `${routeCount} task routes configured`
+            : title === "Knowledge & Style"
+              ? rag?.enabled ? `Reference retrieval enabled · ${rag.embeddingModel || "No embedding model selected"}` : "Optional enhancement; you can start writing without it"
+              : title === "Desktop & Maintenance"
+                ? APP_RUNTIME === "desktop" ? "Check for desktop updates and review legacy local data" : "No desktop maintenance is needed on the web"
+                : "Set confirmation preferences, issue handling, and notifications";
           return (
             <Card key={to} className="min-w-0">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-base"><Icon className="h-4 w-4" />{title}</CardTitle>
+                <CardTitle className="flex items-center gap-2 text-base"><Icon className="h-4 w-4" />{label}</CardTitle>
                 <CardDescription>{description}</CardDescription>
               </CardHeader>
               <CardContent className="flex items-end justify-between gap-3">
                 <p className="text-sm text-muted-foreground">{summary}</p>
-                <Button asChild variant="outline" size="sm" className="shrink-0"><Link to={to}>打开<ArrowRight className="h-4 w-4" /></Link></Button>
+                <Button asChild variant="outline" size="sm" className="shrink-0"><Link to={to}>Open<ArrowRight className="h-4 w-4" /></Link></Button>
               </CardContent>
             </Card>
           );

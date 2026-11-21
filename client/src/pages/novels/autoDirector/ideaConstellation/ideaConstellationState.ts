@@ -6,13 +6,13 @@ import {
 } from "@ai-novel/shared/types/novelDirector";
 
 export const IDEA_CONSTELLATION_CATEGORY_LABELS: Record<DirectorIdeaConstellationCategory, string> = {
-  protagonist: "主角开局",
-  setting: "题材舞台",
-  advantage: "金手指 / 优势",
-  opening_crisis: "首章爆点",
-  core_goal: "前期目标",
-  story_variable: "核心阻力",
-  relationship: "关键关系",
+  protagonist: "Protagonist",
+  setting: "Story setting",
+  advantage: "Special advantage",
+  opening_crisis: "Opening hook",
+  core_goal: "Initial goal",
+  story_variable: "Central obstacle",
+  relationship: "Key relationship",
 };
 
 export interface FoundationConstellationOption {

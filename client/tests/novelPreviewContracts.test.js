@@ -13,6 +13,6 @@ test("preview keeps its content offset synchronized with the chapter directory",
 test("preview downloads the full novel and the active chapter", () => {
   assert.match(preview, /downloadNovelExport\(id, "txt", "full"/);
   assert.match(preview, /handleDownloadChapter/);
-  assert.match(preview, /下载本章/);
-  assert.match(preview, /下载整本/);
+  assert.match(preview, /Download chapter/);
+  assert.match(preview, /Download full manuscript/);
 });

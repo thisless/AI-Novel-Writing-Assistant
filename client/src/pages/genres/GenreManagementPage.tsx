@@ -72,32 +72,32 @@ export default function GenreManagementPage() {
   const statusItems = useMemo<AssetLibraryStatusItem[]>(() => [
     {
       key: "genres",
-      label: "题材基底",
+      label: "Genre frameworks",
       value: statusUnavailable ? "—" : totalGenres,
-      detail: "可供小说选择的分类节点",
+      detail: "Categories available for novels",
       icon: Tags,
       tone: statusUnavailable ? "neutral" : "info",
     },
     {
       key: "roots",
-      label: "根分类",
+      label: "Root categories",
       value: statusUnavailable ? "—" : genreTree.length,
-      detail: "用于划分主要创作方向",
+      detail: "Define the main creative directions",
       icon: Layers3,
     },
     {
       key: "novels",
-      label: "关联小说",
+      label: "Linked novels",
       value: statusUnavailable ? "—" : linkedNovelCount,
-      detail: "正在使用这些题材的作品",
+      detail: "Works currently using these genres",
       icon: BookOpen,
       tone: statusUnavailable ? "neutral" : linkedNovelCount > 0 ? "success" : "neutral",
     },
     {
       key: "descriptions",
-      label: "说明完整",
+      label: "Descriptions complete",
       value: statusUnavailable ? "—" : `${describedGenreCount}/${totalGenres}`,
-      detail: "有明确定位说明的题材",
+      detail: "Genres with a clearly defined position",
       icon: FileText,
       tone: statusUnavailable
         ? "neutral"
@@ -115,7 +115,7 @@ export default function GenreManagementPage() {
     mutationFn: (genreId: string) => deleteGenre(genreId),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: queryKeys.genres.all });
-      toast.success("题材基底已删除。");
+      toast.success("Genre framework deleted.");
     },
   });
 
@@ -132,8 +132,8 @@ export default function GenreManagementPage() {
   const handleDelete = (genre: GenreTreeNode) => {
     const descendantCount = collectDescendantIds(genre).length;
     const message = descendantCount > 0
-      ? `确认删除题材基底「${genre.name}」？这会同时删除其下 ${descendantCount} 个子分类，此操作不可恢复。`
-      : `确认删除题材基底「${genre.name}」？此操作不可恢复。`;
+      ? `Delete the genre framework “${genre.name}”? This will also delete its ${descendantCount} subcategories. This action cannot be undone.`
+      : `Delete the genre framework “${genre.name}”? This action cannot be undone.`;
     const confirmed = window.confirm(message);
     if (!confirmed) {
       return;
@@ -144,39 +144,39 @@ export default function GenreManagementPage() {
   const recommendation = genreTreeQuery.isError ? (
     <AssetLibraryRecommendation
       icon={CircleAlert}
-      title="重新加载题材基底"
-      description="暂时无法读取题材结构。重新加载后，可以继续查看、编辑和维护题材。"
+      title="Reload genre frameworks"
+      description="The genre structure is temporarily unavailable. Reload to continue viewing and editing genres."
       tone="danger"
       action={(
         <Button type="button" variant="outline" onClick={() => void genreTreeQuery.refetch()}>
-          重新加载
+          Reload
         </Button>
       )}
     />
   ) : genreTreeQuery.isLoading ? (
     <AssetLibraryRecommendation
       icon={LoaderCircle}
-      title="正在确认题材基底状态"
-      description="加载完成后，会根据题材覆盖和说明完整度给出下一步建议。"
+      title="Checking genre framework status"
+      description="Once loading is complete, recommendations will be based on genre coverage and description quality."
       tone="neutral"
     />
   ) : totalGenres === 0 ? (
     <AssetLibraryRecommendation
       icon={Sparkles}
-      title="先建立第一棵题材基底树"
-      description="描述你想覆盖的创作方向，可以手动搭建层级，也可以让 AI 生成草稿后再调整。"
+      title="Create your first genre framework"
+      description="Describe the creative directions you want to cover. Build the hierarchy manually or have AI draft one for you to refine."
       action={(
         <Button type="button" onClick={handleCreateRoot}>
           <Plus className="h-4 w-4" aria-hidden="true" />
-          创建题材基底
+          Create a genre framework
         </Button>
       )}
     />
   ) : firstGenreWithoutDescription ? (
     <AssetLibraryRecommendation
       icon={FileText}
-      title={`补充「${firstGenreWithoutDescription.name}」的题材说明`}
-      description="明确作品定位、读者期待和核心冲突，能帮助 AI 在开书和规划时更准确地理解这个题材。"
+      title={`Add a description for “${firstGenreWithoutDescription.name}”`}
+      description="Clarify the work's positioning, reader expectations, and central conflict so AI can better understand the genre during setup and planning."
       tone="warning"
       action={(
         <Button
@@ -184,20 +184,20 @@ export default function GenreManagementPage() {
           variant="outline"
           onClick={() => setEditingGenreId(firstGenreWithoutDescription.id)}
         >
-          补充说明
+          Add description
         </Button>
       )}
     />
   ) : (
     <AssetLibraryRecommendation
       icon={Sparkles}
-      title="题材基底可以支持开书选择"
-      description="现有题材都有明确说明。需要覆盖新的创作方向时，再新增根题材或细分子类。"
+      title="Genres are ready for novel setup"
+      description="All existing genres have descriptions. Add a root genre or subcategory when you need to cover a new creative direction."
       tone="success"
       action={(
         <Button type="button" variant="outline" onClick={handleCreateRoot}>
           <Plus className="h-4 w-4" aria-hidden="true" />
-          扩充题材
+          Expand genres
         </Button>
       )}
     />
@@ -226,13 +226,13 @@ export default function GenreManagementPage() {
 
       <AssetLibraryHeader
         icon={Tags}
-        context="创作资产 / 小说定位"
-        title="题材基底库"
-        description="维护小说可复用的题材定位与分类层级。开书时选择合适的题材基底，AI 会据此理解作品类型、读者期待和主要创作方向。"
+        context="Creative assets / Novel positioning"
+        title="Genre library"
+        description="Manage reusable genre positioning and category hierarchies. Choose a suitable genre framework when starting a novel so AI understands the work's type, reader expectations, and creative direction."
         actions={(
           <Button type="button" onClick={handleCreateRoot}>
             <Plus className="h-4 w-4" aria-hidden="true" />
-            新建题材基底树
+            New genre framework
           </Button>
         )}
       />
@@ -242,8 +242,8 @@ export default function GenreManagementPage() {
       {recommendation}
 
       <AssetLibrarySection
-        title="题材结构"
-        description="从左侧目录展开细分方向，在右侧查看定位和维护节点。正在被小说使用的分类，需要先调整关联作品后才能删除。"
+        title="Genre structure"
+        description="Expand categories in the left-hand tree, then view details and manage nodes on the right. To delete a category used by a novel, first update the linked work."
       >
         {genreTreeQuery.isLoading ? (
           <div
@@ -251,19 +251,19 @@ export default function GenreManagementPage() {
             role="status"
           >
             <LoaderCircle className="h-6 w-6 animate-spin text-muted-foreground" aria-hidden="true" />
-            <div className="mt-3 text-sm font-semibold text-foreground">正在加载题材结构</div>
-            <div className="mt-1 text-sm text-muted-foreground">请稍候，题材与小说关联正在同步。</div>
+            <div className="mt-3 text-sm font-semibold text-foreground">Loading genre structure</div>
+            <div className="mt-1 text-sm text-muted-foreground">Please wait while genre and novel links are synchronized.</div>
           </div>
         ) : null}
 
         {genreTreeQuery.isError ? (
           <AssetLibraryEmptyState
             icon={CircleAlert}
-            title="题材基底暂时无法加载"
-            description="请检查服务连接后重新加载。已有题材不会受到影响。"
+            title="Genre frameworks are temporarily unavailable"
+            description="Check the service connection and reload. Existing genres will not be affected."
             action={(
               <Button type="button" variant="outline" onClick={() => void genreTreeQuery.refetch()}>
-                重新加载
+                Reload
               </Button>
             )}
           />
@@ -272,12 +272,12 @@ export default function GenreManagementPage() {
         {!genreTreeQuery.isLoading && !genreTreeQuery.isError && genreTree.length === 0 ? (
           <AssetLibraryEmptyState
             icon={Tags}
-            title="还没有可供开书选择的题材基底"
-            description="先创建一个主要题材。你可以手动填写，也可以描述创作方向，让 AI 生成包含子类的题材树草稿。"
+            title="No genres available for novel setup"
+            description="Create a primary genre first. Enter it manually or describe your creative direction and let AI draft a genre tree with subcategories."
             action={(
               <Button type="button" onClick={handleCreateRoot}>
                 <Plus className="h-4 w-4" aria-hidden="true" />
-                创建第一棵题材树
+                Create the first genre tree
               </Button>
             )}
           />

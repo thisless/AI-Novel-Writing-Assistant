@@ -47,7 +47,7 @@ export default function BlgCelebration({ open, onClose }: BlgCelebrationProps) {
   return (
     <div
       role="dialog"
-      aria-label="BLG 夺冠庆祝"
+      aria-label="BLG championship celebration"
       className="fixed inset-0 z-[100] flex items-center justify-center overflow-hidden bg-black/80 p-6 backdrop-blur-sm"
       onClick={onClose}
     >
@@ -75,7 +75,7 @@ export default function BlgCelebration({ open, onClose }: BlgCelebrationProps) {
       >
         <button
           type="button"
-          aria-label="关闭庆祝"
+          aria-label="Close celebration"
           onClick={onClose}
           className="absolute right-3 top-3 rounded-md p-1 text-white/60 hover:text-white"
         >
@@ -83,17 +83,17 @@ export default function BlgCelebration({ open, onClose }: BlgCelebrationProps) {
         </button>
         <Trophy className="h-12 w-12 text-[#F6B24C]" aria-hidden="true" />
         <p className="text-5xl font-black tracking-wide text-[#FFD166]">BLG</p>
-        <p className="text-lg font-semibold">2026 英雄联盟全球总决赛冠军</p>
+        <p className="text-lg font-semibold">2026 League of Legends World Champions</p>
         <p className="text-sm leading-relaxed text-white/70">
-          决赛 3:1 战胜 GEN，一穿四连斩四支 LCK 队伍
+          Defeated GEN 3–1 in the final, then swept four LCK teams in a row
         </p>
-        <p className="text-sm text-white/70">Knight 决赛 MVP · 2026.11.15 · 纽约</p>
+        <p className="text-sm text-white/70">Finals MVP: Knight · 2026.11.15 · New York</p>
         <button
           type="button"
           onClick={onClose}
           className="mt-3 rounded-full bg-[#FB7299] px-6 py-2 text-sm font-semibold text-white hover:bg-[#f95d8a]"
         >
-          继续创作
+          Continue creating
         </button>
       </div>
     </div>

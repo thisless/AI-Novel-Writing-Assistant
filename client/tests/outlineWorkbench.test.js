@@ -12,17 +12,17 @@ test("outline comparisons resolve arrays against each selected revision", () => 
   assert.equal(formatOutlineValue(["p"], "characterNodeIds", before), "苏禾");
 });
 test("outline empty and deleted references are human readable", () => {
-  assert.equal(formatOutlineValue([], "relatedNodeIds", before), "无");
-  assert.equal(formatOutlineValue(["missing"], "relatedNodeIds", before), "（已删除的节点）");
-  assert.equal(formatOutlineValue({ type: "chapter", nodeId: "c" }, "scope", before), "类型：章节；节点：第一章：来信");
+  assert.equal(formatOutlineValue([], "relatedNodeIds", before), "Not set");
+  assert.equal(formatOutlineValue(["missing"], "relatedNodeIds", before), "(Deleted node)");
+  assert.equal(formatOutlineValue({ type: "chapter", nodeId: "c" }, "scope", before), "Type: Chapter; Node: 第一章：来信");
 });
 test("proposal references include newly added and renamed nodes", () => {
   assert.equal(formatOutlineValue(["new-c"], "chapterNodeIds", before, { "new-c": "第二章：退潮" }), "第二章：退潮");
   assert.equal(formatOutlineValue("c", "volumeNodeId", before, { c: "新标题" }), "新标题");
 });
 test("model risk prose translates known fields and hides internal operation IDs", () => {
-  assert.equal(localizeOutlineText("theme 重复；immutable=false；与 op-tone-07 保持一致", { "op-tone-07": "修改「总纲」" }), "主题 重复；可调整的设定；与 修改「总纲」 保持一致");
-  assert.equal(localizeOutlineText("op-unknown-01 依赖 tone"), "相关修改 依赖 基调");
+  assert.equal(localizeOutlineText("theme repeated; immutable=false; consistent with op-tone-07", { "op-tone-07": "Edit “Story”" }), "Theme repeated; Editable setting; consistent with Edit “Story”");
+  assert.equal(localizeOutlineText("op-unknown-01 depends on tone"), "related change depends on Tone");
 });
 test("outline layout is scoped, independently scrollable and comparison columns use pane width", () => {
   const css = readFileSync(new URL("../src/pages/outlines/outlineWorkspace.css", import.meta.url), "utf8");

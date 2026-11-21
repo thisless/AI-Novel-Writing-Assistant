@@ -15,7 +15,7 @@ export function useCandidateReview(sessionId: string, original: string, candidat
     try {
       return { text: applySelectedChapterEditorDiff(original, candidate.content, candidate.diffChunks, selectedChangeIds), error: null };
     } catch (error) {
-      return { text: original, error: error instanceof Error ? error.message : "候选对比无法读取，请重新生成。" };
+      return { text: original, error: error instanceof Error ? error.message : "Could not read the candidate comparison. Generate a new revision." };
     }
   }, [candidate, original, selectedChangeIds]);
 

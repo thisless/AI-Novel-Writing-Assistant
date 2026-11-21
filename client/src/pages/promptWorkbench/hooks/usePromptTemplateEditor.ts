@@ -94,7 +94,7 @@ export function usePromptTemplateEditor(input: {
   const saveMutation = useMutation({
     mutationFn: (targetNovelId?: string) => {
       const destination = targetNovelId || novelId;
-      if (!destination || !draftTemplate) throw new Error("请选择要应用模板的小说。");
+      if (!destination || !draftTemplate) throw new Error("Select a novel to apply the template to.");
       return savePromptTemplateOverride({
         promptId, novelId: destination, template: draftTemplate, notes: notes.trim() || null,
       });
@@ -146,7 +146,7 @@ export function usePromptTemplateEditor(input: {
   const loadVersionToDraft = useCallback((version: PromptTemplateVersionView) => {
     setDrafts((current) => ({
       ...current,
-      [overrideKey]: { template: version.template, notes: `基于 v${version.versionNo} 调整` },
+      [overrideKey]: { template: version.template, notes: `Based on v${version.versionNo}` },
     }));
   }, [overrideKey]);
 

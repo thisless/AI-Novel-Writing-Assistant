@@ -20,7 +20,7 @@ test('short review URLs resolve only saved current contexts and ignore forged or
  const closed=resolveSavedReview({...book,reviewContexts:[]},query);
  assert.equal(closed.ready,false,'closed or paused gates cannot be confirmed');
  assert.equal(closed.error,undefined,'absence of an open gate is a normal review state');
- assert.ok(closed.notice.includes('没有待确认'));
+ assert.ok(closed.notice.includes('no result awaiting confirmation'));
  assert.equal(resolveSavedReview({...book,reviewContexts:[],reviewContextError:'保存结果归属异常'},query).error,'保存结果归属异常');
  assert.ok(resolveSavedReview({...book,reviewContexts:[context,context]},query).error);
  assert.ok(resolveSavedReview(book,new URLSearchParams('review=unknown')).error);
@@ -56,7 +56,7 @@ export const invalid=render(<NovelWorkspace book={{...book,reviewContexts:book.r
 export const closed=render(<NovelWorkspace book={{...book,reviewContexts:[]}} review={new URLSearchParams('review=chapter_batch_closed')} preview/>);
 export const contextError=render(<NovelWorkspace book={{...book,reviewContexts:[],reviewContextError:'保存结果归属异常'}} review={new URLSearchParams('review=chapter_batch_closed')} preview/>);
 const target='/lab/director/book?review=chapter_task_sheet';
-const view={...previewView('waiting_gate'),novelId:'book',availableActions:[{id:'review:chapter_task_sheet',label:'去确认「章节任务与场景」',kind:'navigate',primary:true,target},{id:'cancel',label:'取消本次创作',kind:'command',command:'cancel',primary:false}]};
+const view={...previewView('waiting_gate'),novelId:'book',availableActions:[{id:'review:chapter_task_sheet',label:'Review “Chapter tasks & scenes”',kind:'navigate',primary:true,target},{id:'cancel',label:'Cancel this writing run',kind:'command',command:'cancel',primary:false}]};
 export const noReview=render(<DirectorPanel view={view} novelId='book'/>);
 export const wrongReview=render(<DirectorPanel view={view} novelId='book' reviewTarget='/lab/director/book?review=volume_strategy' reviewReady/>);
 export const ready=render(<DirectorPanel view={view} novelId='book' reviewTarget={target} reviewReady reviewRunId={view.runId} reviewVersion={view.sourceTrace.controlVersion}/>);
@@ -76,44 +76,44 @@ cache.setQueryData(queryKeys.directorNext.detail('book'),{success:true,data:{vie
 export const assistedPage=renderToStaticMarkup(<MemoryRouter initialEntries={[target]}><QueryClientProvider client={cache}><Routes><Route path='/lab/director/:novelId' element={<DirectorNovelPage/>}/></Routes></QueryClientProvider></MemoryRouter>);
 `,resolveDir:root,loader:'tsx'},bundle:true,platform:'node',format:'esm',packages:'external',plugins:[nodeStyles],alias:{'@':path.join(root,'src')},define:{'import.meta.env':'{}'},outfile:output});
     const m=await import(pathToFileURL(output).href);
-    for (const text of ['章节任务与场景','本章必须取得证据','目标场景证据','保持有限视角','2000','避免提前揭晓']) assert.ok(m.review.includes(text),text);
+    for (const text of ['Chapter tasks &amp; scenes','本章必须取得证据','目标场景证据','保持有限视角','2000','避免提前揭晓']) assert.ok(m.review.includes(text),text);
     assert.ok(!m.review.includes('错误首章任务'));
     assert.ok(m.execution.includes('真正同步的执行任务'));
     assert.ok(m.execution.includes('真正同步的执行场景'));
     assert.ok(m.batch.includes('保存的第七章正文'));
     assert.ok(m.batch.includes('保存的第八章正文'));
     assert.ok(!m.batch.includes('不能列入本次审阅'));
-    assert.ok(m.invalid.includes('无法定位'));
+    assert.ok(m.invalid.includes("Couldn&#x27;t locate"));
     assert.match(m.invalid,/<p role="alert" class="text-sm text-destructive">/);
-    assert.match(m.closed,/<p role="status" class="text-sm leading-6 text-muted-foreground">本阶段没有待确认的结果/);
+    assert.match(m.closed,/<p role="status" class="text-sm leading-6 text-muted-foreground">There is no result awaiting confirmation for this stage/);
     assert.doesNotMatch(m.closed,/role="alert"|text-destructive/);
     assert.match(m.contextError,/<p role="alert" class="text-sm text-destructive">保存结果归属异常/);
-    for(const html of [m.noReview,m.wrongReview,m.missing,m.stale,m.staleVersion]) assert.ok(!html.includes('确认结果并继续'));
-    assert.ok(m.ready.includes('确认结果并继续'));
-    assert.ok(m.ready.includes('请核对左侧本阶段结果，确认后 AI 按本次授权范围继续。'));
+    for(const html of [m.noReview,m.wrongReview,m.missing,m.stale,m.staleVersion]) assert.ok(!html.includes('Confirm results and continue'));
+    assert.ok(m.ready.includes('Confirm results and continue'));
+    assert.ok(m.ready.includes("Review this stage&#x27;s results on the left. Confirm to let AI continue within the authorized range."));
     for(const html of [m.ready,m.missing,m.stale,m.staleVersion]) {
-      assert.ok(!html.includes('去确认「章节任务与场景」'),'the open review must not repeat its navigation action');
+      assert.ok(!html.includes('Review “Chapter tasks &amp; scenes”'),'the open review must not repeat its navigation action');
       assert.doesNotMatch(html,/href="\/lab\/director\/book\?review=chapter_task_sheet"/);
-      assert.ok(!html.includes('查看本阶段结果'),'the open review must not link to itself again');
-      assert.ok(html.includes('取消本次创作'),'navigation suppression must preserve workflow commands');
+      assert.ok(!html.includes("View this stage's results"),'the open review must not link to itself again');
+      assert.ok(html.includes('Cancel this writing run'),'navigation suppression must preserve workflow commands');
     }
     for(const html of [m.noReview,m.wrongReview]) {
-      assert.ok(html.includes('去确认「章节任务与场景」'));
+      assert.ok(html.includes('Review “Chapter tasks &amp; scenes”'));
       assert.match(html,/href="\/lab\/director\/book\?review=chapter_task_sheet"/);
     }
     for(const html of [m.ready,m.noReview]) assert.doesNotMatch(html,/href="\/novels\//);
-    assert.ok(m.cast.includes('角色阵容') && m.cast.includes('林渡'));
+    assert.ok(m.cast.includes('Character cast') && m.cast.includes('Lin Du'));
     assert.ok(m.outline.includes('本次目标卷') && m.outline.includes('本次卷纲内容'));
-    assert.ok(m.page.includes('目标场景证据') && m.page.includes('确认结果并继续'));
-    assert.ok(m.page.includes('编辑任务与场景'),'the current readable chapter gate must offer its scoped plan editor');
-    for(const html of [m.noReview,m.wrongReview,m.missing,m.stale,m.staleVersion,m.invalid]) assert.ok(!html.includes('编辑任务与场景'));
+    assert.ok(m.page.includes('目标场景证据') && m.page.includes('Confirm results and continue'));
+    assert.ok(m.page.includes('Edit tasks and scenes'),'the current readable chapter gate must offer its scoped plan editor');
+    for(const html of [m.noReview,m.wrongReview,m.missing,m.stale,m.staleVersion,m.invalid]) assert.ok(!html.includes('Edit tasks and scenes'));
     const automaticHeader=m.page.match(/<header\b[^>]*>[\s\S]*?<\/header>/)?.[0] ?? '';
     const assistedHeader=m.assistedPage.match(/<header\b[^>]*>[\s\S]*?<\/header>/)?.[0] ?? '';
-    assert.ok(automaticHeader.includes('当前模式：全自动推进'),'the book header must show the current mode');
-    assert.ok(assistedHeader.includes('当前模式：按阶段确认（半自动）'));
-    for (const header of [automaticHeader,assistedHeader]) assert.ok(!header.includes('取消本次创作'),'the header mode indicator cannot expose workflow commands');
-    assert.ok(!m.page.includes('去确认「章节任务与场景」'));
+    assert.ok(automaticHeader.includes('Mode: Fully automatic'),'the book header must show the current mode');
+    assert.ok(assistedHeader.includes('Mode: Confirm each stage (assisted)'));
+    for (const header of [automaticHeader,assistedHeader]) assert.ok(!header.includes('Cancel this writing run'),'the header mode indicator cannot expose workflow commands');
+    assert.ok(!m.page.includes('Review “Chapter tasks & scenes”'));
     assert.doesNotMatch(m.page,/href="\/lab\/director\/book\?review=chapter_task_sheet"/);
-    assert.doesNotMatch(m.page,/href="\/novels\/[^\"]+\/edit|编辑本书/);
+    assert.doesNotMatch(m.page,/href="\/novels\/[^\"]+\/edit|Edit this novel/);
   } finally {fs.rmSync(output,{force:true});}
 });

@@ -58,15 +58,15 @@ export function parseStorylineStructuredView(draftText: string): StorylineStruct
   const forbiddenItems = findByKeywords(lines, ["禁止", "避免", "禁忌"]);
 
   return {
-    coreTheme: coreTheme || "未标注",
-    mainGoal: mainGoal || "未标注",
-    earlyPhase: earlyPhase || "未标注",
-    middlePhase: middlePhase || "未标注",
-    latePhase: latePhase || "未标注",
-    growthCurve: growthCurve || "未标注",
-    emotionTrend: emotionTrend || "未标注",
-    coreConflicts: coreConflicts || "未标注",
-    endingDirection: endingDirection || "未标注",
-    forbiddenItems: forbiddenItems || "未标注",
+    coreTheme: coreTheme || "Not specified",
+    mainGoal: mainGoal || "Not specified",
+    earlyPhase: earlyPhase || "Not specified",
+    middlePhase: middlePhase || "Not specified",
+    latePhase: latePhase || "Not specified",
+    growthCurve: growthCurve || "Not specified",
+    emotionTrend: emotionTrend || "Not specified",
+    coreConflicts: coreConflicts || "Not specified",
+    endingDirection: endingDirection || "Not specified",
+    forbiddenItems: forbiddenItems || "Not specified",
   };
 }

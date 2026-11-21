@@ -37,8 +37,8 @@ export default function FullscreenView(props: FullscreenViewProps) {
     headerClassName,
     bodyClassName,
     fullscreenBodyClassName,
-    toggleLabel = "全屏查看",
-    exitLabel = "退出全屏",
+    toggleLabel = "View fullscreen",
+    exitLabel = "Exit fullscreen",
   } = props;
   const headingId = useId();
   const [internalFullscreen, setInternalFullscreen] = useState(defaultFullscreen);

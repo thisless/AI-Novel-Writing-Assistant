@@ -37,27 +37,27 @@ export default function StoryModeProfileFields({
     <div className="space-y-7">
       <section className="border-t border-border pt-6">
         <div>
-          <h3 className="text-sm font-semibold text-foreground">核心体验</h3>
-          <p className="mt-1 text-xs leading-5 text-muted-foreground">明确故事为什么能持续推进，以及读者每个阶段会得到什么。</p>
+          <h3 className="text-sm font-semibold text-foreground">Core experience</h3>
+          <p className="mt-1 text-xs leading-5 text-muted-foreground">Define what keeps the story moving and what readers gain at each stage.</p>
         </div>
         <div className="mt-4 grid gap-4 md:grid-cols-2">
           <label className="space-y-2 text-sm">
-            <span className="font-medium text-foreground">核心驱动</span>
+            <span className="font-medium text-foreground">Core drive</span>
             <textarea
               rows={3}
               className={textareaClassName}
               value={value.coreDrive}
-              placeholder="例如：建设目标不断升级，资源与势力同步扩张。"
+              placeholder="For example: Construction goals keep scaling up as resources and influence grow."
               onChange={(event) => onChange({ ...value, coreDrive: event.target.value })}
             />
           </label>
           <label className="space-y-2 text-sm">
-            <span className="font-medium text-foreground">读者回报</span>
+            <span className="font-medium text-foreground">Reader reward</span>
             <textarea
               rows={3}
               className={textareaClassName}
               value={value.readerReward}
-              placeholder="例如：看见成果落地、地盘扩大和角色地位提升。"
+              placeholder="For example: See plans succeed, territory expand, and characters gain status."
               onChange={(event) => onChange({ ...value, readerReward: event.target.value })}
             />
           </label>
@@ -66,47 +66,47 @@ export default function StoryModeProfileFields({
 
       <section className="border-t border-border pt-6">
         <div>
-          <h3 className="text-sm font-semibold text-foreground">推进节奏</h3>
-          <p className="mt-1 text-xs leading-5 text-muted-foreground">规定章节如何形成小循环，以及阶段结束时怎样兑现成果。</p>
+          <h3 className="text-sm font-semibold text-foreground">Progression rhythm</h3>
+          <p className="mt-1 text-xs leading-5 text-muted-foreground">Define chapter-level cycles and how each stage delivers results.</p>
         </div>
         <div className="mt-4 grid gap-4 md:grid-cols-2">
           <label className="space-y-2 text-sm">
-            <span className="font-medium text-foreground">章节推进单位</span>
+            <span className="font-medium text-foreground">Chapter progression units</span>
             <textarea
               rows={4}
               className={textareaClassName}
               value={listToLines(value.progressionUnits)}
-              placeholder={"每行一项，例如：\n发现资源缺口\n完成建设目标\n获得阶段反馈"}
+              placeholder={"One item per line, for example:\nFind a resource shortage\nComplete a construction goal\nGet feedback on progress"}
               onChange={(event) => updateList("progressionUnits", event.target.value)}
             />
           </label>
           <label className="space-y-2 text-sm">
-            <span className="font-medium text-foreground">章节颗粒</span>
+            <span className="font-medium text-foreground">Chapter scope</span>
             <textarea
               rows={4}
               className={textareaClassName}
               value={value.chapterUnit}
-              placeholder="说明一章通常完成多大的目标和变化。"
+              placeholder="Describe the scale of goals and changes typically completed in one chapter."
               onChange={(event) => onChange({ ...value, chapterUnit: event.target.value })}
             />
           </label>
           <label className="space-y-2 text-sm">
-            <span className="font-medium text-foreground">常用化解方式</span>
+            <span className="font-medium text-foreground">Typical ways to overcome obstacles</span>
             <textarea
               rows={3}
               className={textareaClassName}
               value={value.resolutionStyle}
-              placeholder="主角通常依靠什么解决阻力并进入下一阶段。"
+              placeholder="Explain how the protagonist usually overcomes obstacles and moves to the next stage."
               onChange={(event) => onChange({ ...value, resolutionStyle: event.target.value })}
             />
           </label>
           <label className="space-y-2 text-sm">
-            <span className="font-medium text-foreground">阶段 / 卷末回报</span>
+            <span className="font-medium text-foreground">Stage or volume-end reward</span>
             <textarea
               rows={3}
               className={textareaClassName}
               value={value.volumeReward}
-              placeholder="说明一个大阶段结束时必须兑现的成果。"
+              placeholder="Describe what must be delivered at the end of a major stage."
               onChange={(event) => onChange({ ...value, volumeReward: event.target.value })}
             />
           </label>
@@ -116,60 +116,60 @@ export default function StoryModeProfileFields({
       <section className="border-t border-border pt-6">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <h3 className="text-sm font-semibold text-foreground">边界与防跑偏</h3>
-            <p className="mt-1 text-xs leading-5 text-muted-foreground">告诉 AI 哪些冲突适合这种模式，以及写到什么程度应该收住。</p>
+            <h3 className="text-sm font-semibold text-foreground">Boundaries and guardrails</h3>
+            <p className="mt-1 text-xs leading-5 text-muted-foreground">Tell AI which conflicts suit this mode and when the story should pull back.</p>
           </div>
           <label className="flex shrink-0 items-center gap-2 text-sm">
-            <span className="font-medium text-foreground">冲突强度</span>
+            <span className="font-medium text-foreground">Conflict intensity</span>
             <SelectControl
               className="w-28"
               value={value.conflictCeiling}
               onChange={(event) => onChange({ ...value, conflictCeiling: event.target.value as StoryModeProfile["conflictCeiling"] })}
             >
-              <option value="low">低</option>
-              <option value="medium">中</option>
-              <option value="high">高</option>
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
             </SelectControl>
           </label>
         </div>
         <div className="mt-4 grid gap-4 md:grid-cols-2">
           <label className="space-y-2 text-sm">
-            <span className="font-medium text-foreground">适合的冲突</span>
+            <span className="font-medium text-foreground">Suitable conflicts</span>
             <textarea
               rows={4}
               className={textareaClassName}
               value={listToLines(value.allowedConflictForms)}
-              placeholder="每行一种适合反复使用的冲突形式。"
+              placeholder="Enter one reusable conflict type per line."
               onChange={(event) => updateList("allowedConflictForms", event.target.value)}
             />
           </label>
           <label className="space-y-2 text-sm">
-            <span className="font-medium text-foreground">不适合的冲突</span>
+            <span className="font-medium text-foreground">Unsuitable conflicts</span>
             <textarea
               rows={4}
               className={textareaClassName}
               value={listToLines(value.forbiddenConflictForms)}
-              placeholder="每行一种会破坏该模式体验的冲突形式。"
+              placeholder="Enter one conflict type per line that would undermine this mode."
               onChange={(event) => updateList("forbiddenConflictForms", event.target.value)}
             />
           </label>
           <label className="space-y-2 text-sm">
-            <span className="font-medium text-foreground">必须出现的信号</span>
+            <span className="font-medium text-foreground">Required signals</span>
             <textarea
               rows={4}
               className={textareaClassName}
               value={listToLines(value.mandatorySignals)}
-              placeholder="每行一个能证明推进模式正在生效的信号。"
+              placeholder="Enter one signal per line that shows the mode is working."
               onChange={(event) => updateList("mandatorySignals", event.target.value)}
             />
           </label>
           <label className="space-y-2 text-sm">
-            <span className="font-medium text-foreground">必须避免的跑偏信号</span>
+            <span className="font-medium text-foreground">Signals of unwanted drift</span>
             <textarea
               rows={4}
               className={textareaClassName}
               value={listToLines(value.antiSignals)}
-              placeholder="每行一个出现后说明故事正在偏离该模式的信号。"
+              placeholder="Enter one signal per line that indicates the story is drifting away from this mode."
               onChange={(event) => updateList("antiSignals", event.target.value)}
             />
           </label>

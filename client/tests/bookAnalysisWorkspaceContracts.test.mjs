@@ -33,7 +33,7 @@ test("book analysis reserves the large header and guidance for states that need 
 test("book analysis keeps status budget and publishing actions in the compact result toolbar", () => {
   const toolbar = read("src/pages/bookAnalysis/components/BookAnalysisWorkspaceToolbar.tsx");
   assert.match(toolbar, /formatStatus\(selectedAnalysis\.status\)/);
-  assert.match(toolbar, /预算/);
+  assert.match(toolbar, /Budget/);
   assert.match(toolbar, /onPublish/);
   assert.match(toolbar, /onDownload/);
   assert.match(toolbar, /onCreateStyleProfile/);
@@ -60,8 +60,8 @@ test("source and chapter failures only degrade comparison and expose a retry", (
   assert.match(page, /sourceError/);
   assert.match(page, /chaptersLoading/);
   assert.match(page, /chaptersError/);
-  assert.match(detail, /拆书结果仍可继续查看/);
-  assert.match(detail, /已生成的拆书结果不会被隐藏或删除/);
+  assert.match(detail, /You can still review the analysis results/);
+  assert.match(detail, /Existing analysis results remain available/);
   assert.match(detail, /onRetrySource/);
   assert.match(detail, /onRetryChapters/);
   assert.match(detail, /enabled=\{isDualPane && !sourceError && !chaptersError\}/);
@@ -107,12 +107,12 @@ test("book analysis character profiles prioritize reading over maintenance contr
   const candidate = read("src/pages/bookAnalysis/components/BookAnalysisCharacterCandidateCard.tsx");
 
   assert.match(panel, /<details className="group overflow-hidden rounded-2xl/);
-  assert.match(panel, /生成与添加角色/);
+  assert.match(panel, /Generate and add characters/);
   assert.match(panel, /aria-pressed=\{selectedDimensions\.includes\(dimension\)\}/);
   assert.match(panel, /<article/);
-  assert.match(panel, /成长轨迹/);
-  assert.match(panel, /关键场景/);
-  assert.match(panel, /形象与视觉资料/);
+  assert.match(panel, /Growth arc/);
+  assert.match(panel, /Key scenes/);
+  assert.match(panel, /Appearance & visual references/);
   assert.match(candidate, /rounded-xl bg-background\/75/);
   assert.doesNotMatch(panel, /rounded-md bg-muted\/30 p-2/);
 });
@@ -121,10 +121,10 @@ test("book analysis character appearance reads as a visual timeline", () => {
   const appearance = read("src/pages/bookAnalysis/components/BookAnalysisCharacterAppearancePanel.tsx");
   const images = read("src/pages/bookAnalysis/components/BookAnalysisCharacterImagePanel.tsx");
 
-  assert.match(appearance, /当前形象/);
+  assert.match(appearance, /Current appearance/);
   assert.match(appearance, /aspect-\[4\/3\]/);
   assert.match(appearance, /aria-pressed=\{targetPercent === value\}/);
-  assert.match(appearance, /章节形象记录/);
+  assert.match(appearance, /Appearance by chapter/);
   assert.match(appearance, /border-l border-primary\/20/);
   assert.doesNotMatch(appearance, /type="range"/);
   assert.match(images, /border-t border-border\/35/);

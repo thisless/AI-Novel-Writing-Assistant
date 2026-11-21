@@ -11,17 +11,17 @@ async function presentation() {
 test('reported zero is distinct from unknown token counts', async () => {
   const {formatUsageTokens} = await presentation();
   assert.equal(formatUsageTokens(0), '0');
-  assert.equal(formatUsageTokens(null), '未提供');
-  assert.equal(formatUsageTokens(undefined), '未提供');
-  assert.equal(formatUsageTokens(1000), (1000).toLocaleString());
+  assert.equal(formatUsageTokens(null), 'Not provided');
+  assert.equal(formatUsageTokens(undefined), 'Not provided');
+  assert.equal(formatUsageTokens(1000), (1000).toLocaleString('en-US'));
 });
 
 test('incomplete book coverage is explicit without inventing lifetime totals or double-adding cache', async () => {
   const {usageCoverageNotes} = await presentation();
   const notes = usageCoverageNotes({recordedCallCount: 5, unknownUsageCallCount: 1, cacheReportedCallCount: 3, partialCallCount: 1, failedCallCount: 1});
-  assert.ok(notes.some(note => note.includes('1 次调用未返回 Token')));
+  assert.ok(notes.some(note => note.includes('Calls with unreported token usage: 1')));
   assert.ok(notes.some(note => note.includes('3/5')));
-  assert.ok(notes.some(note => note.includes('部分返回')));
+  assert.ok(notes.some(note => note.includes('returned partial results')));
   assert.equal(usageCoverageNotes({recordedCallCount: 1, unknownUsageCallCount: 0, cacheReportedCallCount: 1, partialCallCount: 0, failedCallCount: 0}).length, 0);
 });
 

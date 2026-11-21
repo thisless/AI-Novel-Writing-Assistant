@@ -7,21 +7,21 @@ import type {
 } from "../chapterEditorTypes";
 
 export const CHAPTER_EDITOR_OPERATION_LABELS: Record<ChapterEditorOperation, string> = {
-  polish: "优化表达",
-  expand: "扩写",
-  compress: "精简",
-  emotion: "强化情绪",
-  conflict: "强化冲突",
-  custom: "自定义指令",
+  polish: "Polish",
+  expand: "Expand",
+  compress: "Condense",
+  emotion: "Strengthen emotion",
+  conflict: "Strengthen conflict",
+  custom: "Custom instruction",
 };
 
 export const CHAPTER_EDITOR_CURSOR_OPERATION_LABELS: Record<ChapterEditorCursorOperation, string> = {
-  continue: "继续写下一段",
-  transition: "生成过渡段",
-  dialogue: "增加对话",
-  description: "增加环境描写",
-  inner_thought: "增加心理描写",
-  conflict: "推进冲突",
+  continue: "Continue the next passage",
+  transition: "Add a transition",
+  dialogue: "Add dialogue",
+  description: "Add setting details",
+  inner_thought: "Add inner thoughts",
+  conflict: "Advance the conflict",
 };
 
 export function normalizeEditorText(text: string): string {
@@ -381,13 +381,13 @@ export function buildAiRevisionRequest(input: ChapterEditorRequestBuilderInput) 
 
 export function getSaveStatusLabel(status: "idle" | "saving" | "saved" | "error", isDirty: boolean): string {
   if (status === "saving") {
-    return "保存中";
+    return "Saving";
   }
   if (status === "saved" && !isDirty) {
-    return "已保存";
+    return "Saved";
   }
   if (status === "error") {
-    return "保存失败";
+    return "Save failed";
   }
-  return isDirty ? "待保存" : "已同步";
+  return isDirty ? "Unsaved changes" : "Synced";
 }

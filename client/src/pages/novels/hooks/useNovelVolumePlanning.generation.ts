@@ -221,12 +221,12 @@ export function useVolumeGenerationMutation({
       }, payload.scope === "chapter_list" || payload.scope === "volume" ? setChapterListProgress : undefined);
       let nextDocument = generatedResponse.data;
       if (!nextDocument) {
-        throw new Error("AI 没有返回卷工作区结果。");
+        throw new Error("AI didn't return a volume workspace result.");
       }
       if (isSlimVolumeGenerationResponse(nextDocument)) {
         const latestWorkspaceResponse = await getNovelVolumeWorkspace(novelId);
         if (!latestWorkspaceResponse.data) {
-          throw new Error("AI 已完成生成，但暂时无法读取最新卷工作区，请刷新卷规划后继续。");
+          throw new Error("AI finished generating, but the latest volume workspace couldn't be loaded. Refresh volume planning to continue.");
         }
         nextDocument = latestWorkspaceResponse.data;
         // 精简响应已由服务端保存，并在需要时连接章节执行；重读后不再二次保存。
@@ -250,7 +250,7 @@ export function useVolumeGenerationMutation({
           autoSyncedToChapterExecution,
         };
       } catch (error) {
-        const message = error instanceof Error ? error.message : "AI 生成已完成，但保存当前卷工作区失败。";
+        const message = error instanceof Error ? error.message : "AI finished generating, but the current volume workspace couldn't be saved.";
         throw new VolumeGenerationAutoSaveError(message, nextDocument);
       }
     },
@@ -272,33 +272,33 @@ export function useVolumeGenerationMutation({
           ? "volume_strategy"
           : "structured_outline",
         itemLabel: payload.scope === "strategy"
-          ? "卷战略建议已更新"
+          ? "Volume strategy recommendation updated"
           : payload.scope === "strategy_critique"
-            ? "卷战略审稿已更新"
+            ? "Volume strategy review updated"
             : payload.scope === "skeleton" || payload.scope === "book"
-              ? "卷骨架已更新"
+              ? "Volume outline updated"
               : payload.scope === "beat_sheet"
-                ? "当前卷节奏板已更新"
+                ? "Current volume beat sheet updated"
                 : payload.scope === "chapter_list" || payload.scope === "volume"
                   ? payload.generationMode === "single_beat"
-                    ? "当前卷节奏段章节已更新并连接到章节执行"
-                    : "当前卷章节列表已生成并连接到章节执行"
+                    ? "Current volume beat-sheet chapters updated and connected to chapter execution"
+                    : "Current volume chapter list generated and connected to chapter execution"
                   : payload.scope === "rebalance"
-                    ? "相邻卷再平衡建议已更新"
+                    ? "Adjacent-volume rebalancing recommendation updated"
                     : result.autoSyncedToChapterExecution
-                      ? "章节细化已更新并连接到章节执行"
-                      : "章节细化已更新",
+                      ? "Chapter refinement updated and connected to chapter execution"
+                      : "Chapter refinement updated",
         checkpointType: payload.scope === "skeleton" || payload.scope === "book"
           ? "volume_strategy_ready"
           : payload.scope === "chapter_list" || payload.scope === "volume"
             ? "chapter_batch_ready"
             : null,
         checkpointSummary: payload.scope === "skeleton" || payload.scope === "book"
-          ? "卷战略与卷骨架已刷新，可以继续进入节奏拆章。"
+          ? "Volume strategy and outline refreshed. You can continue to the beat and chapter breakdown."
           : payload.scope === "chapter_list" || payload.scope === "volume"
             ? payload.generationMode === "single_beat"
-              ? "当前卷节奏段章节已刷新，可继续细化或直接进入章节执行。"
-              : "当前卷章节列表已准备完成，可继续细化或直接进入章节执行。"
+              ? "Current volume beat-sheet chapters refreshed. Continue refining or move to chapter execution."
+              : "Current volume chapter list is ready. Continue refining or move to chapter execution."
             : undefined,
         volumeId: payload.targetVolumeId,
         chapterId: payload.targetChapterId,
@@ -310,24 +310,24 @@ export function useVolumeGenerationMutation({
       }
 
       if (payload.scope === "strategy") {
-        const message = "卷战略建议已生成并自动保存。下一步请先审查，再确认卷骨架。";
+        const message = "Volume strategy recommendation generated and saved. Review it before confirming the volume outline.";
         setVolumeGenerationMessage(message);
         setStructuredMessage(message);
         return;
       }
       if (payload.scope === "strategy_critique") {
-        const message = "卷战略审稿已完成，问题和建议已写入右侧审稿区。";
+        const message = "Volume strategy review complete. Issues and recommendations are in the review panel on the right.";
         setVolumeGenerationMessage(message);
         return;
       }
       if (payload.scope === "skeleton" || payload.scope === "book") {
-        const message = "卷骨架已生成并自动保存。系统已清空旧节奏板，下一步请为当前卷生成节奏板。";
+        const message = "Volume outline generated and saved. The old beat sheet was cleared; generate a new one for the current volume.";
         setVolumeGenerationMessage(message);
         setStructuredMessage(message);
         return;
       }
       if (payload.scope === "beat_sheet") {
-        setStructuredMessage("当前卷节奏板已更新并自动保存。下一步可以继续拆当前卷章节列表。");
+        setStructuredMessage("Current volume beat sheet updated and saved. Next, create the chapter list for this volume.");
         return;
       }
       if (payload.scope === "chapter_list" || payload.scope === "volume") {
@@ -341,15 +341,15 @@ export function useVolumeGenerationMutation({
         return;
       }
       if (payload.scope === "rebalance") {
-        setStructuredMessage("相邻卷再平衡建议已更新。");
+        setStructuredMessage("Adjacent-volume rebalancing recommendation updated.");
         return;
       }
 
       const label = detailModeLabel(payload.detailMode ?? "purpose");
       setStructuredMessage(
         result.autoSyncedToChapterExecution
-          ? `${label}已完成 AI 修正并自动保存，章节执行区也已自动同步最新内容。`
-          : `${label}已完成 AI 修正并自动保存。`,
+          ? `${label} was refined by AI and saved. The latest content was also synced to chapter execution.`
+          : `${label} was refined by AI and saved.`,
       );
     },
     onError: async (error, payload, context) => {
@@ -360,7 +360,7 @@ export function useVolumeGenerationMutation({
         ? error.message
         : error instanceof Error
           ? error.message
-          : "卷级方案生成失败。";
+          : "Volume plan generation failed.";
       const shouldTryRecoverPersistedWorkspace = !(error instanceof VolumeGenerationAutoSaveError)
         && shouldRequestSlimVolumeGenerationResponse(payload.scope);
       let recoveredMessage: string | null = null;
@@ -374,8 +374,8 @@ export function useVolumeGenerationMutation({
             if (persistedWorkspaceSnapshotAfter !== context?.persistedWorkspaceSnapshotBefore) {
               hydratePersistedWorkspace(latestWorkspace);
               recoveredMessage = payload.scope === "chapter_list" || payload.scope === "volume"
-                ? "已恢复到最近自动保存进度，可继续从未完成节奏段推进。"
-                : "已恢复到最近自动保存进度，可继续当前卷生成。";
+                ? "Restored the latest autosaved progress. Continue from the unfinished beat section."
+                : "Restored the latest autosaved progress. Continue generating the current volume.";
             }
           }
         } catch {

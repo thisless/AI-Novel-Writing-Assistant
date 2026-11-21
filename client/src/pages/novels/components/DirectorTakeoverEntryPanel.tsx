@@ -25,7 +25,7 @@ export default function DirectorTakeoverEntryPanel({
         <div className="shrink-0">{entry}</div>
       </div>
       <div className="mt-2 text-xs leading-5 text-muted-foreground">
-        接管前会先读取当前项目真实进度，并明确告诉你这次会跳过、继续还是重跑哪些步骤。
+        Before taking over, the system checks the project's actual progress and shows which steps will be skipped, continued, or rerun.
       </div>
     </section>
   );

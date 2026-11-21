@@ -91,13 +91,13 @@ function canHomeWrite(novel: HomeNovelItem): boolean {
 
 export function formatHomeDate(value: string | undefined): string {
   if (!value) {
-    return "暂无";
+    return "Not available";
   }
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) {
-    return "暂无";
+    return "Not available";
   }
-  return date.toLocaleString();
+  return date.toLocaleString("en-US");
 }
 
 export function getNovelPriorityScore(novel: HomeNovelItem): number {
@@ -125,7 +125,7 @@ export function getNovelPriorityScore(novel: HomeNovelItem): number {
 }
 
 export function getNovelLeadSummary(novel: HomeNovelItem): string {
-  if (isHomeV2Novel(novel)) return "进入小说导演台查看规划、正文与本次创作进度。";
+  if (isHomeV2Novel(novel)) return "Open Auto Director to view the outline, chapter text, and current writing progress.";
   const workflowDescription = getWorkflowDescription(getHomeNovelTask(novel));
   if (workflowDescription) {
     return workflowDescription;
@@ -134,9 +134,9 @@ export function getNovelLeadSummary(novel: HomeNovelItem): string {
     return novel.description.trim();
   }
   if (novel.world?.name) {
-    return `当前项目绑定世界观「${novel.world.name}」，可以继续创作。`;
+    return `This project is linked to the world "${novel.world.name}" and is ready for more writing.`;
   }
-  return "当前项目暂无简介，可以进入编辑页继续推进。";
+  return "This project has no description yet. Open the editor to keep working on it.";
 }
 
 export function selectPrimaryNovel(novels: HomeNovelItem[]): HomeNovelItem | null {
@@ -157,10 +157,10 @@ export function buildHomeNextAction(primaryNovel: HomeNovelItem | null): HomeNex
   if (!primaryNovel) {
     return {
       kind: "starter",
-      eyebrow: "开始第一本小说",
-      title: "选择适合你的第一种创作方式",
-      description: "想完成长篇，可以交给自动导演准备整本结构；想更快看到完整作品，可以直接从短篇开始。",
-      reason: "两种方式都只需要先说出一个模糊想法，AI 会继续帮你整理创作方向。",
+      eyebrow: "Start your first novel",
+      title: "Choose how you'd like to create",
+      description: "Let Auto Director plan a full-length novel, or start with a short story to finish a complete work sooner.",
+      reason: "Start with a rough idea, and AI will help you shape it into a story.",
       tone: "info",
     };
   }
@@ -168,92 +168,92 @@ export function buildHomeNextAction(primaryNovel: HomeNovelItem | null): HomeNex
   const task = getHomeNovelTask(primaryNovel);
   if (isHomeV2Novel(primaryNovel)) {
     const status = primaryNovel.bookProgress?.director?.status;
-    const action = status === "waiting_gate" ? "确认本阶段结果" : isHomeActionRequired(primaryNovel) || status === "cancelled"
-      ? "查看创作中断" : isHomeRunning(primaryNovel) ? "查看创作进度"
+    const action = status === "waiting_gate" ? "Review this stage" : isHomeActionRequired(primaryNovel) || status === "cancelled"
+      ? "Review interrupted writing" : isHomeRunning(primaryNovel) ? "View writing progress"
       : primaryNovel.bookProgress?.targetChapters && getHomeWrittenChapters(primaryNovel) >= primaryNovel.bookProgress.targetChapters
-        ? "阅读并检查正文" : "继续创作小说";
-    return {kind: "novel", eyebrow: "推荐下一步", title: action, description: getNovelLeadSummary(primaryNovel),
-      reason: "在本书导演台核对保存结果、质量提醒和后续章节范围，再继续创作。",
+        ? "Read and review chapter text" : "Continue writing";
+    return {kind: "novel", eyebrow: "Recommended next step", title: action, description: getNovelLeadSummary(primaryNovel),
+      reason: "Review saved results, quality reminders, and upcoming chapters in Auto Director before continuing.",
       tone: isHomeActionRequired(primaryNovel) ? "warning" : "info"};
   }
   if (primaryNovel.narrativeForm === "short_story") {
     return {
       kind: "novel",
-      eyebrow: task?.status === "succeeded" ? "完整作品" : "创作进行中",
-      title: task?.status === "succeeded" ? "继续完善这篇作品" : "查看成稿进度",
+      eyebrow: task?.status === "succeeded" ? "Complete story" : "Writing in progress",
+      title: task?.status === "succeeded" ? "Keep refining this story" : "View story progress",
       description: getNovelLeadSummary(primaryNovel),
       reason: task?.status === "succeeded"
-        ? "作品已完整生成，可以直接阅读、编辑、修改或导出。"
-        : "短篇正在后台写成一篇连续作品，打开后即可查看实时进度。",
+        ? "Your story is complete. Read, edit, revise, or export it."
+        : "Your short story is being written in the background. Open it to see live progress.",
       tone: task?.status === "succeeded" ? "success" : "info",
     };
   }
   if (canContinueChapterBatchAutoExecution(task)) {
     return {
       kind: "novel",
-      eyebrow: "推荐下一步",
-      title: "恢复章节创作",
+      eyebrow: "Recommended next step",
+      title: "Resume chapter writing",
       description: getNovelLeadSummary(primaryNovel),
-      reason: "章节批次停在可恢复节点，先恢复执行能最快回到正文生产。",
+      reason: "The chapter batch can be resumed. Resume it to get back to writing sooner.",
       tone: "danger",
     };
   }
   if (requiresCandidateSelection(task)) {
     return {
       kind: "novel",
-      eyebrow: "推荐下一步",
-      title: "确认整本故事方向",
+      eyebrow: "Recommended next step",
+      title: "Confirm the novel's direction",
       description: getNovelLeadSummary(primaryNovel),
-      reason: "确认方向后，系统才能继续准备世界观、角色和章节执行计划。",
+      reason: "Confirm the direction so the system can continue planning the world, characters, and chapters.",
       tone: "warning",
     };
   }
   if (canContinueDirector(task)) {
     return {
       kind: "novel",
-      eyebrow: "推荐下一步",
-      title: "继续准备整本小说",
+      eyebrow: "Recommended next step",
+      title: "Continue planning the novel",
       description: getNovelLeadSummary(primaryNovel),
-      reason: "当前阶段等待确认，继续后会推进到下一段可执行准备。",
+      reason: "This stage is waiting for your confirmation. Continue to move on to the next planning step.",
       tone: "warning",
     };
   }
   if (task?.status === "running" || task?.status === "queued") {
     return {
       kind: "novel",
-      eyebrow: "AI 创作中",
-      title: "查看创作进度",
+      eyebrow: "AI is writing",
+      title: "View writing progress",
       description: getNovelLeadSummary(primaryNovel),
-      reason: "自动导演或章节执行仍在后台处理，可以查看进度和最近阶段。",
+      reason: "Auto Director or chapter writing is running in the background. Check its progress and latest stage.",
       tone: "info",
     };
   }
   if (canEnterChapterExecution(task)) {
     return {
       kind: "novel",
-      eyebrow: "推荐下一步",
-      title: "开始创作章节",
+      eyebrow: "Recommended next step",
+      title: "Start writing chapters",
       description: getNovelLeadSummary(primaryNovel),
-      reason: "规划资产已经能支撑章节生产，可以进入正文生成和审阅。",
+      reason: "Your planning materials are ready for chapter production. Start drafting and reviewing the text.",
       tone: "success",
     };
   }
   if (task?.status === "failed" || task?.status === "cancelled") {
     return {
       kind: "novel",
-      eyebrow: "需要处理",
-      title: "处理创作中断",
+      eyebrow: "Needs attention",
+      title: "Resolve interrupted writing",
       description: getNovelLeadSummary(primaryNovel),
-      reason: "任务存在暂停或失败记录，先查看详情再决定恢复、重试或调整。",
+      reason: "This task was paused or failed. Review its details before resuming, retrying, or making changes.",
       tone: "danger",
     };
   }
   return {
     kind: "novel",
-    eyebrow: "推荐下一步",
-    title: "继续完善小说",
+    eyebrow: "Recommended next step",
+    title: "Keep refining your novel",
     description: getNovelLeadSummary(primaryNovel),
-    reason: "没有更高优先级的阻塞项，可以回到项目主页继续完善资料或章节。",
+    reason: "Nothing is blocking higher-priority work. Return to the project to refine its details or chapters.",
     tone: "neutral",
   };
 }
@@ -276,30 +276,30 @@ export function buildHomeMetrics(input: {
   return [
     {
       id: "running",
-      title: "正在创作",
+      title: "Writing",
       value: liveWorkflowCount,
-      hint: "AI 正在推进的小说或章节。",
+      hint: "Novels or chapters currently being written by AI.",
       tone: "info",
     },
     {
       id: "attention",
-      title: "等待你确认",
+      title: "Awaiting your review",
       value: actionRequiredCount,
-      hint: "确认后即可继续创作的项目。",
+      hint: "Projects that can continue after your review.",
       tone: actionRequiredCount > 0 ? "warning" : "success",
     },
     {
       id: "chapter-ready",
-      title: "可以开始写",
+      title: "Ready to write",
       value: readyForExecutionCount,
-      hint: "故事准备充分，可以进入正文。",
+      hint: "Planning is complete. Start writing chapter text.",
       tone: readyForExecutionCount > 0 ? "success" : "neutral",
     },
     {
       id: "chapters",
-      title: "已写正文",
+      title: "Chapters written",
       value: totalChapterCount,
-      hint: "所有作品中持续积累的章节。",
+      hint: "Chapters written across all your novels.",
       tone: totalChapterCount > 0 ? "info" : "neutral",
     },
   ];
@@ -324,39 +324,39 @@ export function buildHomeAttentionItems(input: {
   if (failedTaskCount > 0 || recoveryCandidateCount > 0) {
     items.push({
       id: "task-recovery",
-      title: failedTaskCount > 0 ? `${failedTaskCount} 个后台任务失败` : `${recoveryCandidateCount} 个任务可恢复`,
-      description: "先处理失败或可恢复任务，可以避免后续生成继续卡在同一位置。",
+      title: failedTaskCount > 0 ? `${failedTaskCount} background tasks failed` : `${recoveryCandidateCount} tasks can be resumed`,
+      description: "Resolve failed or resumable tasks to keep future generation from getting stuck.",
       tone: failedTaskCount > 0 ? "danger" : "warning",
       to: "/tasks",
-      actionLabel: "查看任务中心",
+      actionLabel: "View task center",
     });
   }
   if (actionRequiredCount > 0 || waitingApprovalCount > 0) {
     items.push({
       id: "workflow-action-required",
-      title: `${Math.max(actionRequiredCount, waitingApprovalCount)} 个创作流程等待处理`,
-      description: "这些项目可能在等待方向确认、阶段继续或失败后的恢复决策。",
+      title: `${Math.max(actionRequiredCount, waitingApprovalCount)} writing workflows need attention`,
+      description: "These projects may be waiting for direction approval, the next stage, or a recovery decision.",
       tone: "warning",
       to: "/auto-director/follow-ups",
-      actionLabel: "查看跟进事项",
+      actionLabel: "View follow-ups",
     });
   }
   if (readyForExecutionCount > 0) {
     items.push({
       id: "chapter-ready",
-      title: `${readyForExecutionCount} 个项目可进入章节执行`,
-      description: "这些项目的规划资产已经能支撑正文生产，可以继续推进章节。",
+      title: `${readyForExecutionCount} projects are ready for chapter writing`,
+      description: "Planning materials are ready to support chapter writing.",
       tone: "success",
     });
   }
   if (runningCount > 0) {
     items.push({
       id: "running-tasks",
-      title: `${runningCount} 个任务处理中`,
-      description: "后台任务仍在推进，可以稍后回到首页查看结果。",
+      title: `${runningCount} tasks in progress`,
+      description: "Background tasks are running. Return to the home page later to check the results.",
       tone: "info",
       to: "/tasks",
-      actionLabel: "查看进度",
+      actionLabel: "View progress",
     });
   }
 
@@ -378,32 +378,32 @@ export function buildHomeAssetHealthItems(novels: HomeNovelItem[]): HomeAssetHea
   return [
     {
       id: "world",
-      title: "世界观覆盖",
+      title: "Worldbuilding coverage",
       value: totalNovels > 0 ? `${worldBoundCount}/${totalNovels}` : "0",
       description: totalNovels > 0
-        ? "绑定世界观的项目更容易在后续章节中保持规则一致。"
-        : "创建小说后，这里会显示世界观资产状态。",
+        ? "Linking a world helps keep its rules consistent in later chapters."
+        : "Worldbuilding status will appear here after you create a novel.",
       tone: totalNovels === 0 ? "neutral" : worldBoundCount === totalNovels ? "success" : "warning",
     },
     {
       id: "characters",
-      title: "角色资产",
+      title: "Character assets",
       value: String(totalCharacters),
-      description: "角色数量用于判断项目是否具备连续生成的基本资产。",
+      description: "The number of characters helps show whether a project is ready for continued generation.",
       tone: totalCharacters > 0 ? "success" : "warning",
     },
     {
       id: "chapters",
-      title: "章节沉淀",
+      title: "Chapters written",
       value: String(totalChapters),
-      description: "章节越多，摘要、事实和角色时间线越需要稳定回灌。",
+      description: "As you write more chapters, summaries, facts, and character timelines need regular updates.",
       tone: totalChapters > 0 ? "info" : "neutral",
     },
     {
       id: "readiness",
-      title: "资源准备度",
+      title: "Planning readiness",
       value: averageResourceScore == null ? "--" : `${averageResourceScore}`,
-      description: "来自项目资料准备度的平均信号，用于辅助判断开写基础。",
+      description: "Average readiness of project materials to help assess whether you're ready to write.",
       tone: averageResourceScore == null
         ? "neutral"
         : averageResourceScore >= 80

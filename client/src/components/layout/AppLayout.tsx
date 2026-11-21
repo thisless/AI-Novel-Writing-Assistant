@@ -147,7 +147,7 @@ export default function AppLayout() {
             </Suspense>
           </main>
         </div>
-        {isDirectorWorkbench ? <Dialog open={projectMenuOpen} onOpenChange={setProjectMenuOpen}><DialogContent aria-describedby={undefined} className="max-h-[90dvh] w-auto overflow-y-auto p-4"><DialogTitle>全局菜单</DialogTitle><Sidebar collapsed={false} onToggle={() => setProjectMenuOpen(false)} /></DialogContent></Dialog> : null}
+        {isDirectorWorkbench ? <Dialog open={projectMenuOpen} onOpenChange={setProjectMenuOpen}><DialogContent aria-describedby={undefined} className="max-h-[90dvh] w-auto overflow-y-auto p-4"><DialogTitle>Global menu</DialogTitle><Sidebar collapsed={false} onToggle={() => setProjectMenuOpen(false)} /></DialogContent></Dialog> : null}
         <TaskRecoveryDialog />
       </div>
     </TaskRecoveryProvider>

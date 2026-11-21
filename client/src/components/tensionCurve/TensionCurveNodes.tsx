@@ -76,7 +76,7 @@ export function TensionCanvasNodeComponent({ data }: NodeProps) {
           strokeWidth="1"
         />
         <text x="14" y={NULL_TRACK_Y + 4} className="fill-muted-foreground text-[11px] font-medium">
-          待定
+          Pending
         </text>
 
         {canvasData.guides.map((guide) => (
@@ -146,13 +146,13 @@ export function TensionPointNodeComponent({ data, selected }: NodeProps) {
         "flex h-7 w-7 items-center justify-center rounded-full bg-transparent",
         pointData.editable && hasValue ? "cursor-ns-resize" : "cursor-default",
       )}
-      title={`第${pointData.chapterOrder}章 ${pointData.title}：${hasValue ? pointData.value : "未设置"}${userAnchored ? "，用户锚定" : ""}`}
-      aria-label={`第${pointData.chapterOrder}章冲突强度${hasValue ? pointData.value : "未设置"}`}
+      title={`Chapter ${pointData.chapterOrder} ${pointData.title}: ${hasValue ? pointData.value : "Not set"}${userAnchored ? ", manually anchored" : ""}`}
+      aria-label={`Chapter ${pointData.chapterOrder} conflict intensity${hasValue ? pointData.value : "Not set"}`}
     >
       <NodeToolbar isVisible={Boolean(selected && pointData.editable)} offset={12}>
         <div className="nodrag rounded-md border border-border/80 bg-background p-2 text-xs shadow-lg">
           <div className="mb-2 whitespace-nowrap font-medium text-foreground">
-            第{pointData.chapterOrder}章
+            Chapter {pointData.chapterOrder}
           </div>
           {hasValue ? (
             <div className="flex items-center gap-2">
@@ -170,7 +170,7 @@ export function TensionPointNodeComponent({ data, selected }: NodeProps) {
                 }}
               />
               <Button type="button" size="sm" className="h-8 px-2 text-xs" onClick={commitDraft}>
-                应用
+                Apply
               </Button>
               {userAnchored ? (
                 <Button
@@ -180,12 +180,12 @@ export function TensionPointNodeComponent({ data, selected }: NodeProps) {
                   className="h-8 px-2 text-xs"
                   onClick={() => pointData.onRelease?.(pointData.seriesId, pointData.pointId, pointData.value ?? 0)}
                 >
-                  交还 AI
+                  Let AI manage
                 </Button>
               ) : null}
             </div>
           ) : (
-            <div className="whitespace-nowrap text-muted-foreground">先生成或填写本章强度</div>
+            <div className="whitespace-nowrap text-muted-foreground">Generate or enter this chapter's intensity first</div>
           )}
         </div>
       </NodeToolbar>
@@ -209,25 +209,25 @@ export function TensionPointNodeComponent({ data, selected }: NodeProps) {
 export function CompactLegend() {
   return (
     <div className="flex flex-wrap items-center gap-3 rounded-md border border-border/70 bg-muted/10 px-3 py-2 text-xs text-muted-foreground">
-      <span className="inline-flex items-center gap-1.5" title="连接所有已有强度的章节，红点也属于这条走势。">
+      <span className="inline-flex items-center gap-1.5" title="Connects all chapters with an intensity value, including red points.">
         <span className="h-[3px] w-6 rounded-full bg-blue-600" />
-        当前走势
+        Current curve
       </span>
-      <span className="inline-flex items-center gap-1.5" title="AI 可以继续优化；拖动后会变成手动固定。">
+      <span className="inline-flex items-center gap-1.5" title="AI can continue optimizing this point. Drag it to anchor the value manually.">
         <span className="h-3 w-3 rounded-full bg-blue-600 ring-2 ring-blue-100" />
-        AI 托管
+        AI-managed
       </span>
-      <span className="inline-flex items-center gap-1.5" title="AI 会围绕固定点规划，可点选节点后交还 AI。">
+      <span className="inline-flex items-center gap-1.5" title="AI plans around anchored points. Select a node to let AI manage it again.">
         <span className="h-3.5 w-3.5 rounded-full bg-rose-600 ring-2 ring-rose-200" />
-        手动固定
+        Manually anchored
       </span>
-      <span className="inline-flex items-center gap-1.5" title="仅占章节位置，暂时不参与蓝线走势。">
+      <span className="inline-flex items-center gap-1.5" title="Marks the chapter position but is not yet included in the blue curve.">
         <span className="h-2.5 w-2.5 rounded-full bg-slate-400 opacity-70" />
-        暂无强度
+        No intensity
       </span>
-      <span className="inline-flex items-center gap-1.5" title="只用来对照节奏形状，不会保存到章节。">
+      <span className="inline-flex items-center gap-1.5" title="For comparing curve shapes only; not saved to chapters.">
         <span className="h-px w-6 border-t-2 border-dashed border-slate-500" />
-        参考模板
+        Reference template
       </span>
     </div>
   );

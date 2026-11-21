@@ -7,34 +7,34 @@ export const VISIBLE_PROFILE_FIELDS: Array<{
   label: string;
   placeholder: string;
 }> = [
-  { key: "appearance", label: "样貌记忆点", placeholder: "眉眼、发型、表情习惯等能被读者记住的样貌特征" },
-  { key: "physique", label: "体态基底", placeholder: "年龄感、身形、行动姿态、身体状态基底" },
-  { key: "attireStyle", label: "常见穿着", placeholder: "日常穿着、身份外观、阶层或职业痕迹" },
-  { key: "signatureDetail", label: "标志细节", placeholder: "标志物、动作、微习惯、气味或反复可用的细节" },
-  { key: "voiceTexture", label: "声音口吻", placeholder: "声线、说话节奏、句式习惯、口吻" },
-  { key: "presenceImpression", label: "登场印象", placeholder: "首次或常规登场时给读者的直观感受" },
+  { key: "appearance", label: "Distinctive appearance", placeholder: "Memorable features such as eyes, hairstyle, or habitual expressions" },
+  { key: "physique", label: "Build and bearing", placeholder: "Apparent age, build, posture, and physical condition" },
+  { key: "attireStyle", label: "Typical attire", placeholder: "Everyday clothing, visible status, or traces of class or profession" },
+  { key: "signatureDetail", label: "Signature details", placeholder: "Signature objects, gestures, habits, scents, or recurring details" },
+  { key: "voiceTexture", label: "Voice and speech style", placeholder: "Voice, speaking rhythm, sentence patterns, and tone" },
+  { key: "presenceImpression", label: "First impression", placeholder: "The impression readers get when the character first appears or enters a scene" },
 ];
 
 export function getSecretStatus(selectedCharacter?: Character): string {
   if (!selectedCharacter) {
-    return "暂无";
+    return "None";
   }
   if (selectedCharacter.secret?.trim()) {
-    return "存在明确秘密";
+    return "Has a known secret";
   }
   const runtimeSignal = `${selectedCharacter.currentState ?? ""} ${selectedCharacter.currentGoal ?? ""}`;
-  return /秘密|隐瞒|卧底|伪装/.test(runtimeSignal) ? "已隐藏关键信息" : "暂无显性秘密";
+  return /秘密|隐瞒|卧底|伪装/.test(runtimeSignal) ? "Key information concealed" : "No known secrets";
 }
 
 export function getEmotionSignal(selectedCharacter?: Character): string {
   const runtimeSignal = `${selectedCharacter?.currentState ?? ""} ${selectedCharacter?.currentGoal ?? ""}`;
   if (/愤|怒|焦虑|崩溃|绝望/.test(runtimeSignal)) {
-    return "高压";
+    return "High stress";
   }
   if (/平静|稳|冷静|从容/.test(runtimeSignal)) {
-    return "平稳";
+    return "Steady";
   }
-  return "待观察";
+  return "Unclear";
 }
 
 export function getResourceDisplayMode(character?: Character): {
@@ -46,16 +46,16 @@ export function getResourceDisplayMode(character?: Character): {
   const roleText = `${character?.role ?? ""} ${character?.castRole ?? ""}`;
   if (isProtagonistCharacter(character)) {
     return {
-      label: "主角完整资源",
-      helper: "主角会完整展示道具、线索、身份凭证、底牌和消耗状态，后续章节会优先参考这些行动边界。",
+      label: "Protagonist resources",
+      helper: "Shows the protagonist's items, clues, credentials, hidden advantages, and resource usage. Future chapters will prioritize these action constraints.",
       limit: 10,
       shouldShowResource: () => true,
     };
   }
   if (/临时|路人|客串|一次性/.test(roleText)) {
     return {
-      label: "临时角色资源",
-      helper: "临时角色只展示会跨章复用、牵动冲突、绑定伏笔或被主角带走的资源。",
+      label: "Minor character resources",
+      helper: "Shows only resources that recur across chapters, drive conflict, relate to a setup, or are taken by the protagonist.",
       limit: 5,
       shouldShowResource: (item) => (
         item.narrativeFunction === "promise"
@@ -66,8 +66,8 @@ export function getResourceDisplayMode(character?: Character): {
     };
   }
   return {
-    label: "长期角色关键资源",
-    helper: "长期角色优先展示会改变行动选择、关系筹码、读者知情或伏笔兑现的资源。",
+    label: "Key resources for recurring characters",
+    helper: "Prioritizes resources that affect actions, relationship leverage, what readers know, or the payoff of a setup.",
     limit: 6,
     shouldShowResource: (item) => item.status !== "stale",
   };
@@ -75,30 +75,30 @@ export function getResourceDisplayMode(character?: Character): {
 
 export function getResourceStatusLabel(status: CharacterResourceLedgerItem["status"]): string {
   const labels: Record<CharacterResourceLedgerItem["status"], string> = {
-    available: "可用",
-    hidden: "隐藏",
-    borrowed: "借用",
-    transferred: "转交",
-    lost: "丢失",
-    consumed: "已消耗",
-    damaged: "受损",
-    destroyed: "毁坏",
-    stale: "淡出",
+    available: "Available",
+    hidden: "Hidden",
+    borrowed: "Borrowed",
+    transferred: "Transferred",
+    lost: "Lost",
+    consumed: "Consumed",
+    damaged: "Damaged",
+    destroyed: "Destroyed",
+    stale: "No longer relevant",
   };
   return labels[status] ?? status;
 }
 
 export function getResourceFunctionLabel(value: CharacterResourceLedgerItem["narrativeFunction"]): string {
   const labels: Record<CharacterResourceLedgerItem["narrativeFunction"], string> = {
-    tool: "工具",
-    clue: "线索",
-    weapon: "武器",
-    proof: "证据",
-    key: "钥匙",
-    cost: "代价",
-    promise: "伏笔",
-    hidden_card: "底牌",
-    constraint: "限制",
+    tool: "Tool",
+    clue: "Clue",
+    weapon: "Weapon",
+    proof: "Evidence",
+    key: "Key",
+    cost: "Cost",
+    promise: "Setup",
+    hidden_card: "Hidden advantage",
+    constraint: "Constraint",
   };
   return labels[value] ?? value;
 }

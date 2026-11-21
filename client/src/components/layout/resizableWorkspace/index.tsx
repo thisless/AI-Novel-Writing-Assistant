@@ -38,7 +38,7 @@ export function ResizableWorkspace({ id, label, left, right, defaultLeft, minLef
   return <div ref={container} className={cn("min-h-0 min-w-0", className)}>
     {wide && right ? <Group id={id} orientation="horizontal" groupRef={group} defaultLayout={defaultLayout} onLayoutChanged={onLayoutChanged} className="h-full min-h-0 min-w-0 items-stretch">
       <Panel id={leftId} defaultSize={defaultLeft} minSize={`${minLeft}px`} className="h-full min-h-0 min-w-0">{left}</Panel>
-      <Separator aria-label={label} title="拖动调整宽度，双击恢复默认；方向键微调" onDoubleClick={() => group.current?.setLayout({ [leftId]: defaultLeft, [rightId]: 100 - defaultLeft })} className="group mx-1 flex w-3 shrink-0 cursor-col-resize touch-none items-center justify-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">
+      <Separator aria-label={label} title="Drag to resize, double-click to reset, or use arrow keys for fine adjustments" onDoubleClick={() => group.current?.setLayout({ [leftId]: defaultLeft, [rightId]: 100 - defaultLeft })} className="group mx-1 flex w-3 shrink-0 cursor-col-resize touch-none items-center justify-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">
         <span className="h-full w-px bg-border/50 transition-colors group-hover:bg-primary group-focus-visible:bg-primary" />
       </Separator>
       <Panel id={rightId} defaultSize={100 - defaultLeft} minSize={`${minRight}px`} className="h-full min-h-0 min-w-0">{right}</Panel>

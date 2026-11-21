@@ -52,8 +52,8 @@ test("task and follow-up pages expose recovery states and resolve book entry by 
   assert.match(followUpPage, /getCurrentDirectorTask\(selectedNovelId\)/);
   assert.match(followUpPage, /stripLegacyTaskUrlParams\(searchParams\)/);
   assert.doesNotMatch(followUpPage, /workspaceTaskId/);
-  assert.match(taskFilters, /aria-label="按任务类型筛选"/);
-  assert.match(followUpList, /aria-label="按跟进原因筛选"/);
+  assert.match(taskFilters, /aria-label="Filter by task type"/);
+  assert.match(followUpList, /aria-label="Filter by follow-up reason"/);
   assert.match(followUpOverview, /aria-pressed=/);
 });
 
@@ -67,14 +67,14 @@ test("task center reads as an inbox before exposing runtime diagnostics", () => 
 
   assert.match(taskPage, /xl:grid-cols-\[minmax\(0,1\.25fr\)_minmax\(380px,0\.75fr\)\]/);
   assert.match(summary, /flex flex-wrap items-center/);
-  assert.match(filters, /aria-label="筛选运行记录"/);
+  assert.match(filters, /aria-label="Filter run history"/);
   assert.match(filters, /sr-only/);
   assert.match(list, /transition-\[width\]/);
-  assert.match(list, /更新于/);
+  assert.match(list, /Updated /);
   assert.doesNotMatch(list, /最近心跳：/);
   assert.match(detail, /<details className="group border-t/);
-  assert.match(detail, /运行信息/);
-  assert.match(detailPanel, /执行步骤/);
+  assert.match(detail, /Run details/);
+  assert.match(detailPanel, /Execution steps/);
 });
 
 test("task center stays read only and sends workflow actions back to the source page", () => {
@@ -83,6 +83,6 @@ test("task center stays read only and sends workflow actions back to the source 
 
   assert.doesNotMatch(taskPage, /useMutation|retryTask|continueNovelWorkflow|cancelTask|archiveTask/);
   assert.doesNotMatch(detailPanel, /可执行动作|noticeAction|failureAction|TaskCenterActionSpec/);
-  assert.match(detailPanel, /打开来源页面/);
-  assert.match(detailPanel, /继续、恢复或重试请在来源页面完成/);
+  assert.match(detailPanel, /Open source page/);
+  assert.match(detailPanel, /Continue, recover, or retry the task from its source page/);
 });

@@ -16,7 +16,7 @@ export default function EffectiveRuleList(props: EffectiveRuleListProps) {
             <li key={item.source + "-" + item.rule.id} className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5 text-sm">
               <span className="min-w-0 break-words">{item.rule.name}</span>
               {item.source !== "global_baseline" || item.weight !== 1 ? (
-                <span className="text-xs text-muted-foreground">{item.sourceLabel}{item.weight !== 1 ? " · 强度 " + item.weight : ""}</span>
+                <span className="text-xs text-muted-foreground">{item.sourceLabel}{item.weight !== 1 ? " · Weight " + item.weight : ""}</span>
               ) : null}
             </li>
           ))}

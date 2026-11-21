@@ -47,12 +47,12 @@ export async function run(scenario) {
  try {
   await act(async()=>root.render(<QueryClientProvider client={cache}><MemoryRouter initialEntries={['/novels/book/revision']}><Routes><Route path='/novels/:id/revision' element={<Page/>}/></Routes></MemoryRouter></QueryClientProvider>));await flush();
   if(scenario==='mobile'||scenario==='unconfirmed') return {text:document.body.textContent,requests,unit,second};
-  if(scenario==='manual') {await click('测试手改');const blocked=[...document.querySelectorAll('button')].find(button=>button.textContent==='生成修文候选').disabled;await click('保存当前手改');return {blocked,text:document.body.textContent,requests,unit,second};}
-  await click('生成修文候选');const before=unit.content;const beforeText=document.body.textContent;
-  if(scenario==='stale')return {before,beforeText,disabled:[...document.querySelectorAll('button')].find(button=>button.textContent==='采纳并保存本章').disabled,requests,unit};
-  if(scenario==='reject'){await click('放弃候选');return {before,text:document.body.textContent,requests,unit};}
-  await click('采纳并保存本章');
-  if(scenario==='undo')await click('撤回最新采纳');
+  if(scenario==='manual') {await click('测试手改');const blocked=[...document.querySelectorAll('button')].find(button=>button.textContent==='Generate revision candidate').disabled;await click('Save manual edits');return {blocked,text:document.body.textContent,requests,unit,second};}
+  await click('Generate revision candidate');const before=unit.content;const beforeText=document.body.textContent;
+  if(scenario==='stale')return {before,beforeText,disabled:[...document.querySelectorAll('button')].find(button=>button.textContent==='Accept and save chapter').disabled,requests,unit};
+  if(scenario==='reject'){await click('Discard candidate');return {before,text:document.body.textContent,requests,unit};}
+  await click('Accept and save chapter');
+  if(scenario==='undo')await click('Undo latest acceptance');
   return {before,beforeText,text:document.body.textContent,requests,unit,second};
  } finally {await act(async()=>root.unmount());cache.clear();}
 }
@@ -60,11 +60,11 @@ export async function run(scenario) {
  ({run}=await import(pathToFileURL(output).href));
 });
 after(()=>{if(fs.existsSync(output))fs.unlinkSync(output);dom?.window.close();restore.reverse().forEach(fn=>fn());});
-test("B1预览不写正文，显式采纳只传候选ID且不自动下一章",async()=>{const result=await run("apply");assert.equal(result.before,"原稿正文");assert.equal(result.unit.content,"候选正文");assert.equal(result.second.content,"第二章不变");assert.ok(result.text.includes("候选已采纳并保存，仅改动本章"));const apply=result.requests.find(item=>item.url.endsWith("/apply"));assert.equal(apply.body.candidateId,"candidate-1");assert.equal(apply.body.baseContentHash,"old-hash");assert.equal(apply.body.content,undefined);assert.equal(result.requests.filter(item=>item.url.includes("revision-previews")).length,1);});
+test("B1预览不写正文，显式采纳只传候选ID且不自动下一章",async()=>{const result=await run("apply");assert.equal(result.before,"原稿正文");assert.equal(result.unit.content,"候选正文");assert.equal(result.second.content,"第二章不变");assert.ok(result.text.includes("Candidate accepted and saved. Only this chapter changed"));const apply=result.requests.find(item=>item.url.endsWith("/apply"));assert.equal(apply.body.candidateId,"candidate-1");assert.equal(apply.body.baseContentHash,"old-hash");assert.equal(apply.body.content,undefined);assert.equal(result.requests.filter(item=>item.url.includes("revision-previews")).length,1);});
 test("B1手改先保存，生成候选保持禁用，刷新后正文不回跳",async()=>{const result=await run("manual");assert.equal(result.blocked,true);assert.equal(result.unit.content,"原稿正文手改");assert.ok(!result.text.includes("有未保存手改"));const save=result.requests.find(item=>item.url.endsWith("/manual-save"));assert.equal(save.body.baseContentHash,"old-hash");assert.equal(save.body.baseUnitRevision,1);});
-test("B1过期候选保持可对照但不可覆盖",async()=>{const result=await run("stale");assert.equal(result.disabled,true);assert.equal(result.unit.content,"原稿正文");assert.match(result.beforeText,/候选仅供对照/);});
+test("B1过期候选保持可对照但不可覆盖",async()=>{const result=await run("stale");assert.equal(result.disabled,true);assert.equal(result.unit.content,"原稿正文");assert.match(result.beforeText,/candidate is for comparison only/);});
 test("B1拒绝候选不写正文",async()=>{const result=await run("reject");assert.equal(result.unit.content,"原稿正文");assert.ok(result.requests.some(item=>item.url.endsWith("/reject")));assert.ok(!result.requests.some(item=>item.url.endsWith("/apply")));});
 test("B1撤回使用afterHash并留在本章",async()=>{const result=await run("undo");assert.equal(result.unit.content,"原稿正文");assert.equal(result.second.content,"第二章不变");assert.equal(result.requests.find(item=>item.url.endsWith("/undo")).body.expectedAfterHash,"after-hash");});
 test("B1采纳冲突保留工作正文与待审候选",async()=>{const result=await run("conflict");assert.equal(result.unit.content,"原稿正文");assert.match(result.text,/候选已过期/);assert.match(result.text,/方案一/);});
-test("B1手机深链不装配桌面工作区，不请求模型或数据",async()=>{const result=await run("mobile");assert.match(result.text,/请在电脑端导入或确认结构修订/);assert.equal(result.requests.length,0);});
-test("B1未确认原纲时不自动开始反推或修文",async()=>{const result=await run("unconfirmed");assert.match(result.text,/确认原纲后启用 AI 修文/);assert.equal(result.requests.filter(item=>item.method!=="get").length,0);});
+test("B1手机深链不装配桌面工作区，不请求模型或数据",async()=>{const result=await run("mobile");assert.match(result.text,/Import or confirm structural revisions on desktop/);assert.equal(result.requests.length,0);});
+test("B1未确认原纲时不自动开始反推或修文",async()=>{const result=await run("unconfirmed");assert.match(result.text,/confirm the source outline to enable AI revisions/);assert.equal(result.requests.filter(item=>item.method!=="get").length,0);});

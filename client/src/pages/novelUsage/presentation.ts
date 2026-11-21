@@ -1,16 +1,16 @@
 import type { NovelUsageQuery, NovelUsageSummary } from "@ai-novel/shared/types/llmUsage";
 
 export function formatUsageTokens(value: number | null | undefined): string {
-  return typeof value === "number" && Number.isSafeInteger(value) && value >= 0 ? value.toLocaleString() : "未提供";
+  return typeof value === "number" && Number.isSafeInteger(value) && value >= 0 ? value.toLocaleString("en-US") : "Not provided";
 }
 
 export function usageCoverageNotes(summary: Pick<NovelUsageSummary, "recordedCallCount" | "unknownUsageCallCount" | "cacheReportedCallCount" | "partialCallCount">): string[] {
   const notes: string[] = [];
-  if (summary.unknownUsageCallCount) notes.push(`${summary.unknownUsageCallCount} 次调用未返回 Token，用量合计仅包含已报告部分。`);
+  if (summary.unknownUsageCallCount) notes.push(`Calls with unreported token usage: ${summary.unknownUsageCallCount}. Totals include reported usage only.`);
   if (summary.recordedCallCount && summary.cacheReportedCallCount < summary.recordedCallCount) {
-    notes.push(`缓存统计覆盖 ${summary.cacheReportedCallCount}/${summary.recordedCallCount} 次调用，命中与未命中仅汇总已报告部分。`);
+    notes.push(`Cache statistics cover ${summary.cacheReportedCallCount}/${summary.recordedCallCount} calls. Hit and miss totals include reported values only.`);
   }
-  if (summary.partialCallCount) notes.push(`${summary.partialCallCount} 次调用仅部分返回，统计可能不完整。`);
+  if (summary.partialCallCount) notes.push(`${summary.partialCallCount} calls returned partial results; statistics may be incomplete.`);
   return notes;
 }
 
@@ -26,29 +26,29 @@ export function usageFiltersFromParams(params: URLSearchParams): NovelUsageQuery
 }
 
 const stages: Record<string, string> = {
-  writer: "正文生成", chapter_writer: "正文生成", chapter_writing: "正文生成",
-  chapter_acceptance: "章节验收", review: "审校", chapter_review: "章节审校",
-  chapter_repair: "正文修文", repair: "正文修文", chapter_patch: "局部修文",
-  chapter_artifact_sync: "章节资料整理", chapter_summary: "章节总结",
-  chapter_artifact_delta: "章节资源回填", payoff_ledger_reconcile: "伏笔整体校准", payoff_ledger_planning: "伏笔规划",
-  chapter_batch: "章节批次创作", production_run: "正文创作",
-  story_macro: "故事规划", story_macro_plan: "故事规划", book_contract: "全书创作目标",
-  world_setup: "世界设定", character_setup: "角色设定", volume_strategy: "分卷规划",
-  volume_beat_sheet: "节奏段规划", volume_chapter_list: "章节目录规划",
-  chapter_detail_bundle: "章节任务与场景", structured_outline: "章节规划",
-  replan: "后续重规划", chapter_local_replan: "后续章节重规划",
+  writer: "Chapter writing", chapter_writer: "Chapter writing", chapter_writing: "Chapter writing",
+  chapter_acceptance: "Chapter validation", review: "Review", chapter_review: "Chapter review",
+  chapter_repair: "Chapter revision", repair: "Chapter revision", chapter_patch: "Targeted revision",
+  chapter_artifact_sync: "Chapter reference sync", chapter_summary: "Chapter summary",
+  chapter_artifact_delta: "Chapter asset updates", payoff_ledger_reconcile: "Foreshadowing reconciliation", payoff_ledger_planning: "Foreshadowing planning",
+  chapter_batch: "Batch chapter writing", production_run: "Manuscript writing",
+  story_macro: "Story planning", story_macro_plan: "Story planning", book_contract: "Book objectives",
+  world_setup: "Worldbuilding", character_setup: "Character setup", volume_strategy: "Volume planning",
+  volume_beat_sheet: "Volume beat sheet", volume_chapter_list: "Chapter outline",
+  chapter_detail_bundle: "Chapter tasks and scenes", structured_outline: "Structured outline",
+  replan: "Replanning", chapter_local_replan: "Chapter replanning",
 };
-export function usageStageLabel(stage: string | null): string { return stage ? stages[stage] ?? stage : "创作步骤未记录"; }
+export function usageStageLabel(stage: string | null): string { return stage ? stages[stage] ?? stage : "Unrecorded writing stage"; }
 export function usageStatusLabel(status: string): string {
-  return status === "completed" ? "调用完成" : status === "partial" ? "部分返回" : status === "failed" ? "调用失败" : "状态未记录";
+  return status === "completed" ? "Completed" : status === "partial" ? "Partial" : status === "failed" ? "Failed" : "Unrecorded status";
 }
 export function usageTime(value: string | null): string {
-  return value && Number.isFinite(Date.parse(value)) ? new Date(value).toLocaleString() : "未记录";
+  return value && Number.isFinite(Date.parse(value)) ? new Date(value).toLocaleString("en-US") : "Not recorded";
 }
 
 export function formatUsageDuration(ms: number | null | undefined): string {
-  return ms == null ? "未提供" : ms < 1000 ? `${Math.round(ms)} ms` : `${(ms / 1000).toFixed(1)} 秒`;
+  return ms == null ? "Not provided" : ms < 1000 ? `${Math.round(ms)} ms` : `${(ms / 1000).toFixed(1)} s`;
 }
 export function usageTokensPerSecond(tokens: number | null, durationMs: number | null): string {
-  return tokens !== null && durationMs !== null && durationMs > 0 ? (tokens * 1000 / durationMs).toFixed(1) : "未提供";
+  return tokens !== null && durationMs !== null && durationMs > 0 ? (tokens * 1000 / durationMs).toFixed(1) : "Not provided";
 }

@@ -105,9 +105,9 @@ export default function KnowledgeEmbeddingSettingsCard({
             <Search className="h-5 w-5" aria-hidden="true" />
           </div>
           <div>
-            <h2 className="text-xl font-semibold tracking-tight">让资料参与创作</h2>
+            <h2 className="text-xl font-semibold tracking-tight">Use documents in your creative work</h2>
             <p className="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground">
-              选择向量模型并连接资料库，已建立索引的资料就能用于拆书、规划和正文创作。
+              Choose an embedding model and connect a document store to use indexed documents for analysis, planning, and drafting.
             </p>
           </div>
         </div>
@@ -116,7 +116,7 @@ export default function KnowledgeEmbeddingSettingsCard({
             <Badge variant="secondary" className="border-0 bg-muted/60 font-normal">{currentProvider.name}</Badge>
           ) : null}
           <Badge variant="secondary" className={`border-0 font-normal ${form.enabled ? "bg-success/10 text-success" : "bg-muted/60"}`}>
-            {form.enabled ? "资料检索已开启" : "资料检索已暂停"}
+            {form.enabled ? "Document search enabled" : "Document search paused"}
           </Badge>
         </div>
       </header>
@@ -128,9 +128,9 @@ export default function KnowledgeEmbeddingSettingsCard({
               <Search className="h-4 w-4" aria-hidden="true" />
             </div>
             <div>
-              <div className="font-medium">选择资料理解方式</div>
+              <div className="font-medium">Choose how documents are processed</div>
               <div className="mt-1 text-xs leading-5 text-muted-foreground">
-                推荐使用已配置且可用的服务商；模型用于理解资料含义，不会改动原文。
+                Use a configured, available provider. The model analyzes document meaning without changing the original text.
               </div>
             </div>
           </div>
@@ -138,7 +138,7 @@ export default function KnowledgeEmbeddingSettingsCard({
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
               <SelectField
-                label="Embedding 服务商"
+                label="Embedding provider"
                 value={form.embeddingProvider}
                 onValueChange={(value) =>
                   setForm((prev) => ({
@@ -154,42 +154,42 @@ export default function KnowledgeEmbeddingSettingsCard({
               {currentProvider ? (
                 <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
                   <Badge variant="secondary" className={`border-0 font-normal ${currentProvider.isConfigured ? "bg-success/10 text-success" : "bg-warning/10 text-warning"}`}>
-                    {currentProvider.isConfigured ? "连接已配置" : "待配置连接"}
+                    {currentProvider.isConfigured ? "Connection configured" : "Connection not configured"}
                   </Badge>
                   <Badge variant="secondary" className={`border-0 font-normal ${currentProvider.isActive ? "bg-success/10 text-success" : "bg-muted/60"}`}>
-                    {currentProvider.isActive ? "可用" : "未启用"}
+                    {currentProvider.isActive ? "Available" : "Disabled"}
                   </Badge>
                 </div>
               ) : null}
             </div>
 
             <div className="space-y-2">
-              <div className="text-sm font-medium">Embedding 模型</div>
+              <div className="text-sm font-medium">Embedding model</div>
               {modelQuery.isLoading ? (
                 <div className="rounded-md border border-dashed p-3 text-sm text-muted-foreground">
-                  正在加载可用的 Embedding 模型...
+                  Loading available embedding models…
                 </div>
               ) : modelOptions.length > 0 ? (
                 <SearchableSelect
                   value={form.embeddingModel}
                   onValueChange={(value) => setForm((prev) => ({ ...prev, embeddingModel: value }))}
                   options={modelOptions.map((model) => ({ value: model }))}
-                  placeholder="选择 Embedding 模型"
-                  searchPlaceholder="搜索 Embedding 模型"
-                  emptyText="没有匹配的 Embedding 模型"
+                  placeholder="Select an embedding model"
+                  searchPlaceholder="Search embedding models"
+                  emptyText="No matching embedding models"
                 />
               ) : null}
               <Input
                 className={modelQuery.isLoading || modelOptions.length > 0 ? "hidden" : undefined}
                 value={form.embeddingModel}
                 onChange={(event) => setForm((prev) => ({ ...prev, embeddingModel: event.target.value }))}
-                placeholder="例如：text-embedding-3-small"
+                placeholder="For example: text-embedding-3-small"
               />
               {modelQuery.data ? (
                 <div className="text-xs text-muted-foreground">
                   {modelQuery.data.source === "remote"
-                    ? `服务商可用模型：${modelQuery.data.models.length} 个。`
-                    : "可先使用推荐模型；连接配置可用时，列表会展示服务商模型。"}
+                    ? `Models available from provider: ${modelQuery.data.models.length}.`
+                      : "You can use a recommended model. Provider models will appear when the connection is configured."}
                 </div>
               ) : null}
             </div>
@@ -197,25 +197,25 @@ export default function KnowledgeEmbeddingSettingsCard({
 
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
-              <div className="text-sm font-medium">向量服务 API Key</div>
+              <div className="text-sm font-medium">Embedding service API key</div>
               <Input
                 type="password"
                 value={form.embeddingApiKey}
                 onChange={(event) => setForm((prev) => ({ ...prev, embeddingApiKey: event.target.value }))}
-                placeholder={currentProvider?.isConfigured ? "留空则保留已保存的 Key" : "请输入向量服务 API Key"}
+                placeholder={currentProvider?.isConfigured ? "Leave blank to keep the saved key" : "Enter the embedding service API key"}
               />
             </div>
             <div className="space-y-2">
-              <div className="text-sm font-medium">向量服务 API 地址</div>
+              <div className="text-sm font-medium">Embedding service API URL</div>
               <Input
                 value={form.embeddingBaseURL}
                 onChange={(event) => setForm((prev) => ({ ...prev, embeddingBaseURL: event.target.value }))}
-                placeholder="留空则使用该服务商的默认地址"
+                placeholder="Leave blank to use the provider's default URL"
               />
             </div>
           </div>
           <div className="text-xs leading-5 text-muted-foreground">
-            这里的连接只用于资料理解，不会改动创作模型、默认模型或任务路由。
+            This connection is only used to process documents. It does not change your creative model, default model, or task routing.
           </div>
 
         </section>
@@ -226,31 +226,31 @@ export default function KnowledgeEmbeddingSettingsCard({
               <Database className="h-4 w-4" aria-hidden="true" />
             </div>
             <div>
-              <div className="font-medium">连接资料库</div>
+              <div className="font-medium">Connect a document store</div>
               <div className="mt-1 text-xs leading-5 text-muted-foreground">
-                支持 Qdrant Cloud、自托管 Qdrant 或本机资料库。
+                Supports Qdrant Cloud, self-hosted Qdrant, or a local document store.
               </div>
             </div>
           </div>
 
           <div className="space-y-2">
-            <div className="text-sm font-medium">向量库 URL</div>
+            <div className="text-sm font-medium">Vector database URL</div>
             <Input
               value={form.qdrantUrl}
               onChange={(event) => setForm((prev) => ({ ...prev, qdrantUrl: event.target.value }))}
               placeholder="http://127.0.0.1:6333"
             />
             <div className="text-xs text-muted-foreground">
-              本机默认地址通常是 http://127.0.0.1:6333；云端地址可以直接填写完整 URL。
+              The default local address is usually http://127.0.0.1:6333. For cloud instances, enter the full URL.
             </div>
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
               <div className="flex items-center justify-between gap-2">
-                <div className="text-sm font-medium">向量库 API Key</div>
+                <div className="text-sm font-medium">Vector database API key</div>
                 <Badge variant="secondary" className={`border-0 font-normal ${form.qdrantApiKeyConfigured ? "bg-success/10 text-success" : "bg-muted/60"}`}>
-                  {form.qdrantApiKeyConfigured ? "Key 可用" : "未设置"}
+                  {form.qdrantApiKeyConfigured ? "Key available" : "Not set"}
                 </Badge>
               </div>
               <Input
@@ -262,7 +262,7 @@ export default function KnowledgeEmbeddingSettingsCard({
                     qdrantApiKey: event.target.value,
                     clearQdrantApiKey: false,
                   }))}
-                placeholder={form.qdrantApiKeyConfigured ? "留空则保留保存的 Key" : "请输入向量库 API Key"}
+                placeholder={form.qdrantApiKeyConfigured ? "Leave blank to keep the saved key" : "Enter the vector database API key"}
               />
             </div>
 
@@ -277,7 +277,7 @@ export default function KnowledgeEmbeddingSettingsCard({
                     qdrantApiKey: event.target.checked ? "" : prev.qdrantApiKey,
                   }))}
               />
-              保存时清除已保存的向量库 API Key
+              Clear the saved vector database API key when saving
             </label>
           </div>
         </section>
@@ -285,14 +285,14 @@ export default function KnowledgeEmbeddingSettingsCard({
         <details className="group rounded-3xl bg-muted/20 p-5 sm:p-6">
           <summary className="flex cursor-pointer list-none flex-col gap-2 md:flex-row md:items-center md:justify-between">
             <div className="space-y-1">
-              <div className="font-medium">高级配置</div>
+              <div className="font-medium">Advanced settings</div>
               <div className="text-xs text-muted-foreground">
-                集合版本 v{form.collectionVersion} · 集合命名、索引重建、检索质量和后台任务参数
+                Collection version v{form.collectionVersion} · collection naming, index rebuilding, search quality, and background task settings
               </div>
             </div>
             <div className="flex shrink-0 items-center gap-2 text-xs text-muted-foreground">
-              <span className="group-open:hidden">展开</span>
-              <span className="hidden group-open:inline">收起</span>
+              <span className="group-open:hidden">Expand</span>
+              <span className="hidden group-open:inline">Collapse</span>
               <ChevronDown className="h-4 w-4 transition-transform duration-200 group-open:rotate-180" />
             </div>
           </summary>
@@ -300,15 +300,15 @@ export default function KnowledgeEmbeddingSettingsCard({
           <div className="mt-5 space-y-6">
             <section className="space-y-4">
               <div className="space-y-1">
-                <div className="text-sm font-medium">集合与索引</div>
+                <div className="text-sm font-medium">Collections and indexing</div>
                 <div className="text-xs text-muted-foreground">
-                  自动命名会按服务商、模型、标签和版本区分集合，降低向量维度冲突风险。
+                  Automatic names identify collections by provider, model, tag, and version to reduce the risk of vector dimension conflicts.
                 </div>
               </div>
 
               <div className="grid gap-4 md:grid-cols-2">
                 <SelectField
-                  label="集合命名方式"
+                  label="Collection naming"
                   value={form.collectionMode}
                   onValueChange={(value) =>
                     setForm((prev) => ({
@@ -316,27 +316,27 @@ export default function KnowledgeEmbeddingSettingsCard({
                       collectionMode: value as "auto" | "manual",
                     }))}
                   options={[
-                    { value: "auto", label: "自动生成" },
-                    { value: "manual", label: "手动指定" },
+                    { value: "auto", label: "Automatic" },
+                    { value: "manual", label: "Manual" },
                   ]}
                 />
 
                 <div className="space-y-2">
-                  <div className="text-sm font-medium">集合标签</div>
+                  <div className="text-sm font-medium">Collection tag</div>
                   <Input
                     value={form.collectionTag}
                     onChange={(event) => setForm((prev) => ({ ...prev, collectionTag: event.target.value }))}
-                    placeholder="例如：kb / prod / novel"
+                    placeholder="For example: kb / prod / novel"
                   />
                   <div className="text-xs text-muted-foreground">
-                    用一个简短标签区分环境或不同数据分组。
+                    Use a short tag to distinguish environments or data groups.
                   </div>
                 </div>
               </div>
 
               <div className="space-y-2">
                 <div className="text-sm font-medium">
-                  {form.collectionMode === "auto" ? "自动生成集合名" : "向量库集合名"}
+                  {form.collectionMode === "auto" ? "Automatically generated collection name" : "Vector database collection name"}
                 </div>
                 {form.collectionMode === "auto" ? (
                   <div className="rounded-md border border-dashed bg-muted/20 p-3 font-mono text-xs break-all">
@@ -346,14 +346,14 @@ export default function KnowledgeEmbeddingSettingsCard({
                   <Input
                     value={form.collectionName}
                     onChange={(event) => setForm((prev) => ({ ...prev, collectionName: event.target.value }))}
-                    placeholder="例如：ai_novel_rag_openai_text_embedding_3_small_kb_v1"
+                    placeholder="For example: ai_novel_rag_openai_text_embedding_3_small_kb_v1"
                   />
                 )}
               </div>
 
               <div className="grid gap-4 md:grid-cols-2">
                 <SelectField
-                  label="Embedding 变更后自动重建索引"
+                  label="Automatically rebuild the index when the embedding changes"
                   value={form.autoReindexOnChange ? "true" : "false"}
                   onValueChange={(value) =>
                     setForm((prev) => ({
@@ -361,13 +361,13 @@ export default function KnowledgeEmbeddingSettingsCard({
                       autoReindexOnChange: value === "true",
                     }))}
                   options={[
-                    { value: "true", label: "开启" },
-                    { value: "false", label: "关闭" },
+                    { value: "true", label: "On" },
+                    { value: "false", label: "Off" },
                   ]}
                 />
 
                 <div className="rounded-md border bg-background p-3">
-                  <div className="text-sm font-medium">目标集合</div>
+                  <div className="text-sm font-medium">Target collection</div>
                   <div className="mt-2 font-mono text-xs break-all">{collectionNameToDisplay}</div>
                 </div>
               </div>
@@ -375,15 +375,15 @@ export default function KnowledgeEmbeddingSettingsCard({
 
             <section className="space-y-4">
               <div className="space-y-1">
-                <div className="text-sm font-medium">连接与写入参数</div>
+                <div className="text-sm font-medium">Connection and write settings</div>
                 <div className="text-xs text-muted-foreground">
-                  默认值适合大多数知识库；只有连接慢、批量写入失败或需要暂停检索时再调整。
+                  Defaults work for most knowledge libraries. Adjust them only if connections are slow, batch writes fail, or you need to pause search.
                 </div>
               </div>
 
               <div className="grid gap-4 md:grid-cols-3">
                 <SelectField
-                  label="RAG 状态"
+                  label="RAG status"
                   value={form.enabled ? "true" : "false"}
                   onValueChange={(value) =>
                     setForm((prev) => ({
@@ -391,13 +391,13 @@ export default function KnowledgeEmbeddingSettingsCard({
                       enabled: value === "true",
                     }))}
                   options={[
-                    { value: "true", label: "启用" },
-                    { value: "false", label: "暂停" },
+                    { value: "true", label: "Enabled" },
+                    { value: "false", label: "Paused" },
                   ]}
                 />
 
                 <div className="space-y-2">
-                  <div className="text-sm font-medium">向量库超时（毫秒）</div>
+                  <div className="text-sm font-medium">Vector database timeout (ms)</div>
                   <Input
                     type="number"
                     min={1000}
@@ -412,7 +412,7 @@ export default function KnowledgeEmbeddingSettingsCard({
                 </div>
 
                 <div className="space-y-2">
-                  <div className="text-sm font-medium">单次写入最大字节数</div>
+                  <div className="text-sm font-medium">Maximum bytes per write</div>
                   <Input
                     type="number"
                     min={1024 * 1024}
@@ -427,7 +427,7 @@ export default function KnowledgeEmbeddingSettingsCard({
                 </div>
 
                 <div className="space-y-2">
-                  <div className="text-sm font-medium">向量库写入并发数</div>
+                  <div className="text-sm font-medium">Vector database write concurrency</div>
                   <Input
                     type="number"
                     min={1}
@@ -440,7 +440,7 @@ export default function KnowledgeEmbeddingSettingsCard({
                       }))}
                   />
                   <div className="text-xs text-muted-foreground">
-                    向 Qdrant 并发提交分块批次的最大并发数。默认 3，大文档可调至 4-6 提速。
+                    Maximum number of chunk batches submitted to Qdrant concurrently. The default is 3; increase to 4–6 to speed up large documents.
                   </div>
                 </div>
               </div>
@@ -448,15 +448,15 @@ export default function KnowledgeEmbeddingSettingsCard({
 
             <section className="space-y-4">
               <div className="space-y-1">
-                <div className="text-sm font-medium">检索调优</div>
+                <div className="text-sm font-medium">Search tuning</div>
                 <div className="text-xs text-muted-foreground">
-                  当召回内容不够准，或检索延迟需要控制时，可以调整切块和候选数量。
+                  Adjust chunking and candidate counts if retrieval is inaccurate or search latency needs to be reduced.
                 </div>
               </div>
 
               <div className="grid gap-4 md:grid-cols-3">
                 <div className="space-y-2">
-                  <div className="text-sm font-medium">切块大小</div>
+                  <div className="text-sm font-medium">Chunk size</div>
                   <Input
                     type="number"
                     min={200}
@@ -471,7 +471,7 @@ export default function KnowledgeEmbeddingSettingsCard({
                 </div>
 
                 <div className="space-y-2">
-                  <div className="text-sm font-medium">切块重叠</div>
+                  <div className="text-sm font-medium">Chunk overlap</div>
                   <Input
                     type="number"
                     min={0}
@@ -486,7 +486,7 @@ export default function KnowledgeEmbeddingSettingsCard({
                 </div>
 
                 <div className="space-y-2">
-                  <div className="text-sm font-medium">最终 Top K</div>
+                  <div className="text-sm font-medium">Final Top K</div>
                   <Input
                     type="number"
                     min={1}
@@ -501,7 +501,7 @@ export default function KnowledgeEmbeddingSettingsCard({
                 </div>
 
                 <div className="space-y-2">
-                  <div className="text-sm font-medium">向量候选数</div>
+                  <div className="text-sm font-medium">Vector candidates</div>
                   <Input
                     type="number"
                     min={1}
@@ -516,7 +516,7 @@ export default function KnowledgeEmbeddingSettingsCard({
                 </div>
 
                 <div className="space-y-2">
-                  <div className="text-sm font-medium">关键词候选数</div>
+                  <div className="text-sm font-medium">Keyword candidates</div>
                   <Input
                     type="number"
                     min={1}
@@ -534,15 +534,15 @@ export default function KnowledgeEmbeddingSettingsCard({
 
             <section className="space-y-4">
               <div className="space-y-1">
-                <div className="text-sm font-medium">Embedding 请求行为</div>
+                <div className="text-sm font-medium">Embedding request behavior</div>
                 <div className="text-xs text-muted-foreground">
-                  大批量导入或服务响应较慢时，可以调节批大小、超时、重试和轮询参数。
+                  Adjust batch size, timeouts, retries, and polling when importing large volumes or when the service responds slowly.
                 </div>
               </div>
 
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                 <div className="space-y-2">
-                  <div className="text-sm font-medium">Embedding 批大小</div>
+                  <div className="text-sm font-medium">Embedding batch size</div>
                   <Input
                     type="number"
                     min={1}
@@ -557,7 +557,7 @@ export default function KnowledgeEmbeddingSettingsCard({
                 </div>
 
                 <div className="space-y-2">
-                  <div className="text-sm font-medium">Embedding 并发数</div>
+                  <div className="text-sm font-medium">Embedding concurrency</div>
                   <Input
                     type="number"
                     min={1}
@@ -570,12 +570,12 @@ export default function KnowledgeEmbeddingSettingsCard({
                       }))}
                   />
                   <div className="text-xs text-muted-foreground">
-                    同时发起的 embedding API 请求数。默认 4；调高可大幅缩短大文档索引时间，但要看服务商配额。
+                    Number of concurrent embedding API requests. The default is 4; increasing it can speed up indexing large documents, subject to provider limits.
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <div className="text-sm font-medium">Embedding 超时（毫秒）</div>
+                  <div className="text-sm font-medium">Embedding timeout (ms)</div>
                   <Input
                     type="number"
                     min={5000}
@@ -590,7 +590,7 @@ export default function KnowledgeEmbeddingSettingsCard({
                 </div>
 
                 <div className="space-y-2">
-                  <div className="text-sm font-medium">Embedding 最大重试次数</div>
+                  <div className="text-sm font-medium">Maximum embedding retries</div>
                   <Input
                     type="number"
                     min={0}
@@ -605,7 +605,7 @@ export default function KnowledgeEmbeddingSettingsCard({
                 </div>
 
                 <div className="space-y-2">
-                  <div className="text-sm font-medium">Embedding 重试基础间隔（毫秒）</div>
+                  <div className="text-sm font-medium">Embedding retry base interval (ms)</div>
                   <Input
                     type="number"
                     min={100}
@@ -620,7 +620,7 @@ export default function KnowledgeEmbeddingSettingsCard({
                 </div>
 
                 <div className="space-y-2">
-                  <div className="text-sm font-medium">Worker 轮询间隔（毫秒）</div>
+                  <div className="text-sm font-medium">Worker polling interval (ms)</div>
                   <Input
                     type="number"
                     min={200}
@@ -635,7 +635,7 @@ export default function KnowledgeEmbeddingSettingsCard({
                 </div>
 
                 <div className="space-y-2">
-                  <div className="text-sm font-medium">Worker 最大尝试次数</div>
+                  <div className="text-sm font-medium">Maximum worker attempts</div>
                   <Input
                     type="number"
                     min={1}
@@ -650,7 +650,7 @@ export default function KnowledgeEmbeddingSettingsCard({
                 </div>
 
                 <div className="space-y-2">
-                  <div className="text-sm font-medium">Worker 重试基础间隔（毫秒）</div>
+                  <div className="text-sm font-medium">Worker retry base interval (ms)</div>
                   <Input
                     type="number"
                     min={1000}
@@ -665,7 +665,7 @@ export default function KnowledgeEmbeddingSettingsCard({
                 </div>
 
                 <div className="space-y-2">
-                  <div className="text-sm font-medium">RAG HTTP 超时（毫秒）</div>
+                  <div className="text-sm font-medium">RAG HTTP timeout (ms)</div>
                   <Input
                     type="number"
                     min={1000}
@@ -684,7 +684,7 @@ export default function KnowledgeEmbeddingSettingsCard({
         </details>
 
         <div className="flex flex-col gap-3 border-t border-border/30 pt-5 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-xs leading-5 text-muted-foreground">保存后，新建或重建索引的资料会使用这套检索设置。</p>
+          <p className="text-xs leading-5 text-muted-foreground">New or rebuilt document indexes will use these search settings after you save.</p>
           <Button
             className="w-full rounded-full sm:w-auto"
             onClick={onSave}
@@ -696,7 +696,7 @@ export default function KnowledgeEmbeddingSettingsCard({
               || !form.qdrantUrl.trim()
             }
           >
-            {isSaving ? "保存中..." : "保存检索设置"}
+            {isSaving ? "Saving…" : "Save search settings"}
           </Button>
         </div>
       </div>
