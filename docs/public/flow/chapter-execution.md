@@ -4,7 +4,7 @@
 
 ![章节执行环路图](./diagrams/chapter-execution-loop.svg)
 
-![章节执行工作台：正文、阶段状态与推荐动作](../../../images/write/章节执行.png)
+![章节执行工作台：正文、阶段状态与推荐动作](../../../images/write/chapter-execution.png)
 
 ## 执行入口
 

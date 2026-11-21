@@ -18,10 +18,10 @@ import { formatStarCount, useGithubStars } from "./hooks/useGithubStars";
 import { usePageMeta } from "./hooks/usePageMeta";
 import DocsPage from "./DocsPage";
 import { docsPath, isSitePath, parseRoute, sitePath } from "./routing";
-import bookAnalysisImage from "../../images/v2/微信截图_20260813220038.png";
-import bookshelfImage from "../../images/v2/微信截图_20260813220328.png";
-import chapterExecutionImage from "../../images/write/章节执行.png";
-import projectSettingsImage from "../../images/write/项目设定.png";
+import bookAnalysisImage from "../../images/v2/feature-preview-20260813-220038.png";
+import bookshelfImage from "../../images/v2/feature-preview-20260813-220328.png";
+import chapterExecutionImage from "../../images/write/chapter-execution.png";
+import projectSettingsImage from "../../images/write/project-settings.png";
 
 const repoUrl = "https://github.com/ExplosiveCoderflome/AI-Novel-Writing-Assistant";
 const releaseUrl = `${repoUrl}/releases/latest`;

@@ -1,35 +1,35 @@
 <p align="center">
-  <img src="./desktop/builder/app-icon-128.png" alt="Biz Novel Studio 图标" width="88" height="88" />
+  <img src="./desktop/builder/app-icon-128.png" alt="Biz Novel Studio icon" width="88" height="88" />
 </p>
 
-<h1 align="center">AI 小说创作工作台</h1>
-<p align="center"><strong>Biz Novel Studio · 从一句灵感，走向一本完整小说</strong></p>
-<p align="center">AI 帮你规划世界与角色、逐章写作、检查和保存，让长篇创作有一条可以继续走下去的路。</p>
+<h1 align="center">AI Novel Writing Studio</h1>
+<p align="center"><strong>Biz Novel Studio · From a spark of inspiration to a complete novel</strong></p>
+<p align="center">Plan worlds and characters, write chapter by chapter, review and save your work, and keep long-form projects moving forward with AI.</p>
 <p align="center"><sub>Open-source AI novel writing assistant and long-form production studio.</sub></p>
 
 <p align="center">
-  <a href="https://biznovelstudio.com"><strong>🌐 项目官网｜使用文档、下载安装与更新说明</strong></a>
+  <a href="https://biznovelstudio.com"><strong>🌐 Website · User guide · Downloads · Release notes</strong></a>
 </p>
 
 <p align="center">
-  <a href="https://github.com/ExplosiveCoderflome/AI-Novel-Writing-Assistant/releases/latest"><img src="https://img.shields.io/github/v/release/ExplosiveCoderflome/AI-Novel-Writing-Assistant?style=flat-square&amp;label=Windows%20%E6%A1%8C%E9%9D%A2%E7%89%88&amp;color=17556b" alt="最新桌面版本" /></a>
-  <a href="./LICENSE"><img src="https://img.shields.io/badge/License-AGPL--3.0-17556b?style=flat-square" alt="AGPL-3.0 许可证" /></a>
-  <a href="https://linux.do/"><img src="https://img.shields.io/badge/LINUX%20DO-%E7%A4%BE%E5%8C%BA-FDD835?style=flat-square&amp;labelColor=222" alt="LINUX DO 社区" /></a>
+  <a href="https://github.com/ExplosiveCoderflome/AI-Novel-Writing-Assistant/releases/latest"><img src="https://img.shields.io/github/v/release/ExplosiveCoderflome/AI-Novel-Writing-Assistant?style=flat-square&amp;label=Windows%20Desktop&amp;color=17556b" alt="Latest desktop release" /></a>
+  <a href="./LICENSE"><img src="https://img.shields.io/badge/License-AGPL--3.0-17556b?style=flat-square" alt="AGPL-3.0 license" /></a>
+  <a href="https://linux.do/"><img src="https://img.shields.io/badge/LINUX%20DO-Community-FDD835?style=flat-square&amp;labelColor=222" alt="LINUX DO community" /></a>
   <a href="./package.json"><img src="https://img.shields.io/badge/Monorepo-pnpm%20workspace-3C873A?style=flat-square" alt="Monorepo · pnpm workspace" /></a>
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Frontend-React%20%2B%20Vite-61DAFB?style=flat-square" alt="前端 · React + Vite" />
-  <img src="https://img.shields.io/badge/Backend-Express%20%2B%20Prisma-111827?style=flat-square" alt="后端 · Express + Prisma" />
+  <img src="https://img.shields.io/badge/Frontend-React%20%2B%20Vite-61DAFB?style=flat-square" alt="Frontend · React + Vite" />
+  <img src="https://img.shields.io/badge/Backend-Express%20%2B%20Prisma-111827?style=flat-square" alt="Backend · Express + Prisma" />
   <img src="https://img.shields.io/badge/AI-LangChain-0EA5E9?style=flat-square" alt="AI · LangChain" />
   <img src="https://img.shields.io/badge/Agent-LangGraph-7C3AED?style=flat-square" alt="Agent · LangGraph" />
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Editor-Plate-7C3AED?style=flat-square" alt="编辑器 · Plate" />
-  <img src="https://img.shields.io/badge/Database-SQLite%20%2B%20PostgreSQL-111827?style=flat-square" alt="数据库 · SQLite + PostgreSQL" />
-  <img src="https://img.shields.io/badge/RAG-Qdrant-E63946?style=flat-square" alt="向量检索 · Qdrant" />
-  <img src="https://img.shields.io/badge/Desktop-Electron-47848F?style=flat-square" alt="桌面端 · Electron" />
+  <img src="https://img.shields.io/badge/Editor-Plate-7C3AED?style=flat-square" alt="Editor · Plate" />
+  <img src="https://img.shields.io/badge/Database-SQLite%20%2B%20PostgreSQL-111827?style=flat-square" alt="Database · SQLite + PostgreSQL" />
+  <img src="https://img.shields.io/badge/RAG-Qdrant-E63946?style=flat-square" alt="Retrieval · Qdrant" />
+  <img src="https://img.shields.io/badge/Desktop-Electron-47848F?style=flat-square" alt="Desktop · Electron" />
 </p>
 
 <p align="center">
@@ -37,294 +37,293 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/ExplosiveCoderflome/AI-Novel-Writing-Assistant/releases/latest"><strong>下载 Windows 桌面版</strong></a> ·
-  <a href="https://biznovelstudio.com">项目官网与文档</a> ·
-  <a href="#快速开始">第一次使用</a> ·
-  <a href="#源码运行">源码运行</a> ·
-  <a href="https://github.com/ExplosiveCoderflome/AI-Novel-Writing-Assistant/issues">问题反馈</a>
+  <a href="https://github.com/ExplosiveCoderflome/AI-Novel-Writing-Assistant/releases/latest"><strong>Download the Windows desktop app</strong></a> ·
+  <a href="https://biznovelstudio.com">Website and documentation</a> ·
+  <a href="#quick-start">Get started</a> ·
+  <a href="#run-from-source">Run from source</a> ·
+  <a href="https://github.com/ExplosiveCoderflome/AI-Novel-Writing-Assistant/issues">Report an issue</a>
 </p>
 
 ---
 
-你只需要先有一个想法。这个工作台会帮你把方向、人物、世界和章节接起来，在创作过程中保留正文、设定与进度。长篇由自动导演持续推进，短篇走独立的完整成稿流程。它面向第一次写小说的人，也为需要维护长期资料、研究 AI 创作流程的作者与开发者提供更细的工具。
+Start with an idea. Biz Novel Studio helps connect your story direction, characters, world, and chapters while keeping your drafts, settings, and progress together. Long-form projects can be advanced by Auto Director; short stories use a separate end-to-end drafting workflow. The app is designed for first-time novelists as well as authors and developers who want to manage long-running projects or explore AI-assisted writing.
 
-**桌面版适合直接开始写作；源码版适合开发和自行部署。** 模型需要使用你自己的 API 配置，知识库检索可按需启用。
+**Use the desktop app to start writing right away; run from source to develop or self-host.** You provide your own model API configuration. Knowledge-base retrieval is optional.
 
-[最新更新](#最新更新) · [能做什么](#现在已经能做什么) · [导演版本与模式](#导演版本与运行模式) · [功能预览](#功能预览) · [文档导航](#文档导航) · [参与项目](#参与项目)
+[Latest updates](#latest-updates) · [What you can do](#what-you-can-do) · [Director versions and run modes](#director-versions-and-run-modes) · [Feature preview](#feature-preview) · [Documentation](#documentation) · [Contributing](#contributing)
 
-## 最新更新
+## Latest updates
 
 ### 2026-11-16 · v0.8.7
 
-桌面版本 `v0.8.7`：大纲「交互完善」提案在依赖写错、章节未标明所属卷或误改卷章节列表时，会给出可读中文提示并拒绝采纳，不再出现笼统的服务器错误；采纳失败不会留下半截结果。
+Desktop release `v0.8.7`: outline refinement proposals now report clear errors and are rejected when dependencies are invalid, chapters are missing their volume assignment, or a volume's chapter list is changed incorrectly. Failed proposals no longer produce generic server errors or leave partial results behind.
 
-#### 修复
+#### Fixes
 
-- 大纲「交互完善」提案：依赖写错成节点编号、新增章节未标明所属卷、或误改卷的章节列表时，会给出可读的中文提示并拒绝采纳，不再出现笼统的服务器错误；采纳失败不会留下半截结果。
+- Outline refinement proposals now explain invalid node dependencies, missing volume assignments, and unintended changes to a volume's chapter list. Invalid proposals are rejected without leaving partial results.
 
-[查看完整更新历史](docs/releases/release-notes.md)
+[View the complete release history](docs/releases/release-notes.md)
 
-正式桌面版以 GitHub Release 的 **v0.8.7** 五平台安装包为准；`v0.8.6` 为上一完整五平台版本，`v0.8.5` 亦为完整五平台，`v0.8.4` 缺 Windows 包，`v0.8.3` 标签曾推送但打包失败、无安装包，`v0.8.2` 附注标签也不对应可下载版本。功能与致谢见[完整更新历史](docs/releases/release-notes.md)。
+The latest complete five-platform desktop release is **v0.8.7** on GitHub Releases. Versions `v0.8.6` and `v0.8.5` also have complete five-platform packages; `v0.8.4` is missing its Windows package; tag `v0.8.3` was pushed but its packaging failed, so it has no installers; and `v0.8.2` is an annotation tag, not a downloadable release. See the [full release history](docs/releases/release-notes.md) for features and acknowledgements.
 
+## What you can do
 
-## 现在已经能做什么
-
-| 你想完成的事 | 工作台怎样帮助你 | 了解更多 |
+| Your goal | How the studio helps | Learn more |
 | --- | --- | --- |
-| 把一个点子变成一本书的方向 | 自动导演整理题材、卖点、人物目标和候选方向；也可从热门题材或完成的拆书起步 | [小说与开书入口](./docs/public/modules/novels.md) |
-| 写一篇完整短篇 | 从想法与方向选择进入 3,000—30,000 字短篇生产，连续阅读、修改和导出；也可另建长篇延展原故事 | [短篇使用路径](#写一篇完整短篇) |
-| 持续写出后续章节 | V2 围绕授权范围推进近期规划、章节任务、场景、正文、检查与保存；V1 保留原工作流程 | [版本与模式说明](#导演版本与运行模式) |
-| 维护同一本书的世界与人物 | 保存本书世界、角色、关系和章节状态，查看世界地图与角色关系图，为后续创作提供资料 | [世界样本库](./docs/public/modules/world-sample-library.md) · [角色库](./docs/public/modules/character-library.md) |
-| 控制作品的表达方式 | 写法资产与反 AI 规则参与正文生成、检查和局部修文；检测与自动修正按本书设置生效 | [写法引擎](./docs/public/modules/style-engine.md) · [反 AI 规则](./docs/public/modules/anti-ai-rules.md) |
-| 学习参考作品并复用资料 | 拆书分析结构、人物与写法，回溯原文证据；结果可用于知识库、写法资产或参考开书 | [拆书工作台](./docs/public/modules/book-analysis.md) |
-| 让长期资料参与写作 | 知识库与 RAG 检索召回相关资料，配合本书世界、角色和写法组装章节上下文 | [知识库](./docs/public/modules/knowledge-base.md) |
-| 看懂 AI 在做什么、消耗多少 | AI 实况查看执行过程并在断线后重连；V2 小说用量页查看已记录的调用消耗；运行记录查看进度与来源 | [运行记录](./docs/public/modules/task-center.md) · [用量说明](#ai-用量怎么看) |
-| 减少连续创作中的重复消耗 | 稳定资料与动态剧情分开组织，保留可复用的输入前缀，并减少相同条件下的重复审校 | [Token 缓存与调用优化](#token-缓存与调用优化) |
-| 让不同任务使用合适的模型 | 在页面配置供应商、连接测试与模型路由，为规划、正文、审阅、拆书分别选择模型 | [模型设置](./docs/public/modules/system-settings.md) · [模型路由](./docs/public/modules/model-routing.md) |
-| 把小说延展成其他素材 | 从已有章节、人物与场景整理漫画分镜、角色视觉资产和短剧素材 | [漫画](./docs/public/modules/comic-workspace.md) · [短剧](./docs/public/modules/short-drama-workspace.md) |
+| Turn an idea into a book concept | Auto Director organizes genre, selling points, character goals, and candidate directions. You can also start from popular genres or a completed book analysis. | [Novel creation](./docs/public/modules/novels.md) |
+| Write a complete short story | Choose a direction and produce a 3,000-30,000-word story that you can read, revise, and export. You can also extend it into a separate long-form project. | [Short-story workflow](#write-a-complete-short-story) |
+| Keep writing subsequent chapters | V2 works within an authorized range to plan upcoming chapters, prepare tasks and scenes, draft, review, and save. V1 retains its original workflow. | [Versions and run modes](#director-versions-and-run-modes) |
+| Maintain a book's world and cast | Save the book's world, characters, relationships, and chapter state; explore world and relationship maps to support later writing. | [World sample library](./docs/public/modules/world-sample-library.md) · [Character library](./docs/public/modules/character-library.md) |
+| Control the writing style | Style assets and anti-AI rules can guide drafting, review, and targeted revisions. Detection and automatic corrections follow each book's settings. | [Style engine](./docs/public/modules/style-engine.md) · [Anti-AI rules](./docs/public/modules/anti-ai-rules.md) |
+| Study a reference work and reuse its insights | Analyze structure, characters, and style, with evidence linked to the source text. Reuse the results in the knowledge base, style assets, or a new project. | [Book analysis](./docs/public/modules/book-analysis.md) |
+| Bring long-term reference material into your writing | Knowledge-base and RAG retrieval bring relevant material together with the book's world, characters, and style when building chapter context. | [Knowledge base](./docs/public/modules/knowledge-base.md) |
+| Understand AI activity and usage | AI Live shows execution activity and reconnects after interruptions. V2 usage pages show recorded calls, while run history shows progress and source pages. | [Task center](./docs/public/modules/task-center.md) · [Understanding AI usage](#understanding-ai-usage) |
+| Reduce repeated work during long projects | Separate stable reference material from changing story content, reuse input prefixes, and avoid repeated reviews under the same conditions. | [Token caching and usage optimization](#understanding-ai-usage) |
+| Choose the right model for each task | Configure providers, test connections, and route planning, drafting, review, and book-analysis tasks to different models. | [System settings](./docs/public/modules/system-settings.md) · [Model routing](./docs/public/modules/model-routing.md) |
+| Adapt a novel into other media | Build comic storyboards, character visuals, and drama materials from existing chapters, characters, and settings. | [Comic workspace](./docs/public/modules/comic-workspace.md) · [Short-drama workspace](./docs/public/modules/short-drama-workspace.md) |
 
-创作中枢 **Creative Hub** 也提供对话式的创作引导、规划和工具调用，帮助你找到下一步。漫画与短剧适合在小说主线、角色和章节内容明确之后使用。[了解创作中枢](./docs/public/modules/creative-hub.md)
+**Creative Hub** also provides conversational guidance, planning, and tool use to help you decide what to do next. Comics and short dramas work best once the novel's main story, characters, and chapters are established. [Learn about Creative Hub](./docs/public/modules/creative-hub.md)
 
-## 导演版本与运行模式
+## Director versions and run modes
 
-**长篇创作先选导演版本，再选这次怎样推进。V2 不等于全自动，V1 也不等于手动。** 短篇使用独立流程，不参与导演版本选择。
+**For a long-form project, choose a Director version and then choose how this run should proceed. V2 is not synonymous with full automation, and V1 is not synonymous with manual work.** Short stories use a separate workflow and do not require a Director version.
 
-### V1 与 V2 怎么选
+### Choosing between V1 and V2
 
-| | 导演 V1 | 导演 V2 |
+| | Director V1 | Director V2 |
 | --- | --- | --- |
-| 使用入口 | 原导演与小说工作台，保留熟悉的分阶段创作入口 | 本书导演台，集中阅读目录、正文和资料，并推进下一段创作 |
-| 适合情况 | 继续原有小说，或希望沿用原工作台操作 | 从新书开始，按授权范围连续规划和生成 |
-| 任务与恢复 | 使用自己的任务、检查点与恢复流程 | 使用自己的运行、阶段结果与保存进度 |
-| 版本选择 | 历史小说保留所属版本 | V2 可用时，新书默认优先选择 V2 |
+| Entry point | The original Director and novel workspace, with familiar staged workflows | A per-book Director workspace for browsing chapters, drafts, and reference material and advancing the next part |
+| Best for | Continuing an existing novel or keeping the original workspace workflow | Starting a new novel and planning or generating within an authorized range |
+| Tasks and recovery | Uses its own tasks, checkpoints, and recovery flow | Uses its own runs, stage results, and saved progress |
+| Version selection | Existing novels keep their assigned version | New novels prefer V2 when it is available |
 
-开书页可以选择可用的导演版本。已有小说需要先结束当前创作，再在本书设置切换；已保存正文与历史记录会保留。**切换版本只保存选择，不会自动开始生成，也不会恢复另一个版本的旧任务。**
+Choose an available Director version on the book-creation page. To switch an existing novel, finish its current run first, then change the version in the book settings. Saved drafts and history are retained. **Switching versions only saves the selection; it does not start generation or resume an old task from the other version.**
 
-桌面版和源码部署默认提供 V1/V2 选择；如需暂时关闭 V2，可显式设置 `DIRECTOR_NEXT_ENABLED=false`。此开关只控制 V2 是否可用，不会替已有小说更换导演。
+V1/V2 selection is available by default in the desktop app and source deployments. To temporarily disable V2, set `DIRECTOR_NEXT_ENABLED=false`. This only controls V2 availability; it does not change the version assigned to existing novels.
 
-### V2 的全自动与按阶段确认
+### V2: full automation or stage-by-stage approval
 
-| 创作方式 | AI 怎样推进 | 你需要做什么 |
+| Mode | How AI proceeds | What you do |
 | --- | --- | --- |
-| **全自动推进** | 在本次授权范围内补齐所需规划，写正文、检查和保存，普通阶段结果自动继续 | 先选择方向和范围；遇到明确暂停事项时处理，再从本书导演台继续 |
-| **按阶段确认（半自动）** | 在需要确认的阶段保存结果，等待你核对后继续；正文在批次收尾确认 | 打开本阶段结果，核对后点击确认；无需逐章手动触发整条链 |
+| **Full automation** | Completes the planning needed for the authorized range, drafts, reviews, and saves chapters, and continues through ordinary stages automatically | Choose a direction and range first. Resolve explicit pauses, then continue from the book's Director workspace |
+| **Stage-by-stage approval** | Saves results at stages that require approval and waits for your review; chapter batches are confirmed at the end | Open the current stage's result and approve it to continue. You do not need to trigger the whole chain one chapter at a time |
 
-书名旁与导演台顶部会显示当前方式，后续正文批次沿用所选模式。V2 的阶段确认在本书导演台完成；“运行记录”负责查看状态和打开来源页，继续、恢复、取消等操作在来源工作台处理。
+The current mode appears beside the title and at the top of the Director workspace; later drafting batches use the selected mode. Approvals happen in the V2 book workspace. Run History is for viewing status and opening the source page; continue, resume, and cancel actions are handled in the source workspace.
 
-### 全自动为什么也可能停下
+### Why a fully automated run can pause
 
-全自动会继续执行你授权的范围，**范围完成后需要你选择下一段**。例如提交第 1—3 章，完成后不会擅自写第 4 章。
+Full automation continues within the range you authorized. **When that range is complete, you choose the next one.** For example, submitting chapters 1-3 will not cause the system to write chapter 4 without your authorization.
 
-遇到模型不可用、需要重新规划、用量保护或数据完整性问题时，系统也可能暂停。普通局部质量问题默认记录为章节提醒并继续；如果明确选择“质量优先”的处理策略，则可能在正文保存后等待人工处理。
+The system can also pause if a model is unavailable, replanning is needed, usage protection is reached, or data integrity is at risk. Ordinary local quality issues are recorded as chapter warnings and do not stop the run by default. Choosing a quality-first policy may instead wait for human review after the draft is saved.
 
-V2 单章默认上限为 **100,000 Tokens**，累计包含该章的生成、检查、修文与资料整理调用。新章节按输入扣除供应商已报告的缓存命中后加输出计数；历史章节保留原计量方式。这是用量保护上限，与整次创作预算不同。达到上限时可在本书导演台查看原因，并按建议或自定额度继续本章，保留正文、累计用量和恢复位置。
+V2's default per-chapter ceiling is **100,000 tokens**, including generation, review, revision, and reference-preparation calls for that chapter. For new chapters, usage is calculated from input tokens after provider-reported cache hits are deducted, plus output tokens. Historical chapters keep their original accounting method. This is a usage safeguard, not a total-run budget. When the ceiling is reached, review the reason in the book's Director workspace and continue with the suggested or a custom limit; the draft, cumulative usage, and recovery position are retained.
 
-## 快速开始
+## Quick start
 
-### 下载安装
+### Download and install
 
-普通写作使用推荐 Windows 桌面版，无需安装 Node.js、pnpm 或手动启动服务端。
+The recommended Windows desktop app is ready for writing without installing Node.js or pnpm or manually starting a server.
 
-| 选择 | 下载文件 | 适合谁 |
+| Package | Download | Best for |
 | --- | --- | --- |
-| 安装版 | `Biz-Novel-Studio-<版本>-setup-x64.exe` | 长期使用，按安装向导完成安装 |
-| 便携版 | `Biz-Novel-Studio-<版本>-portable-x64.exe` | 希望从独立目录直接启动 |
+| Installer | `Biz-Novel-Studio-<version>-setup-x64.exe` | Regular use with a guided installation |
+| Portable | `Biz-Novel-Studio-<version>-portable-x64.exe` | Running from a standalone folder |
 
-**[前往最新桌面版下载页 →](https://github.com/ExplosiveCoderflome/AI-Novel-Writing-Assistant/releases/latest)**
+**[Download the latest desktop release →](https://github.com/ExplosiveCoderflome/AI-Novel-Writing-Assistant/releases/latest)**
 
-### 选择创作入口
+### Choose a creation workflow
 
-| 想写什么 | 从哪里进入 |
+| What you want to write | Where to start |
 | --- | --- |
-| 连续推进的长篇小说 | 小说列表或首页的“AI 自动导演开书”，新书可选择 V2 |
-| 一次读完、有完整结局的短篇 | 小说列表或首页的“创作短篇”，由 AI 整理方向与篇幅 |
-| 参考一本作品开新书 | 先完成拆书，再从“照着一本书写”进入开书 |
+| A long-form novel that advances over time | Choose “AI Auto Director” from the novel list or home page. New novels can use V2 |
+| A complete short story with an ending | Choose “Create a Short Story” from the novel list or home page; AI will help select a direction and length |
+| A new novel inspired by a reference work | Complete a book analysis, then choose “Write from a Reference Book” when creating a novel |
 
-### 用 V2 写出第一段正文
+### Draft your first chapters with V2
 
-1. **配置模型。** 在系统设置填写供应商、API Key、API 地址和文本模型，完成连接测试；首次使用先确保一个模型可用。
-2. **输入灵感。** 从小说开书入口选择 V2，输入故事想法。没有想法时可先看热门题材，有参考作品时可从完成的拆书进入。
-3. **选择方向。** 查看候选方案和标题，选定这本书想写成的样子，再进入本书导演台。
-4. **选择推进方式与范围。** 想让 AI 连续推进就选全自动，想核对阶段结果就选按阶段确认；先提交一小段章节，观察正文效果与用量。
-5. **查看并继续。** 勾选“跟随生成”观看正文流式输出。范围结束后检查已保存章节，选择下一段；出现暂停时阅读原因，从本书导演台处理。
+1. **Configure a model.** In System Settings, enter a provider, API key, API URL, and text model, then test the connection. Make sure at least one model is available.
+2. **Enter an idea.** Choose V2 from the novel-creation workflow and describe the story. If you need inspiration, browse popular genres; if you have a reference work, start from its completed book analysis.
+3. **Choose a direction.** Review the candidate concepts and titles, choose what you want the book to become, and open its Director workspace.
+4. **Choose a run mode and range.** Use full automation for continuous progress or stage-by-stage approval to review results. Start with a small chapter range and check the draft quality and usage.
+5. **Review and continue.** Select “Follow generation” to watch the live draft stream. When the range finishes, review the saved chapters and choose the next range. If the run pauses, read the reason and resolve it in the book's Director workspace.
 
-写法引擎、知识库和高级模型路由可以在跑通第一段正文后逐步配置。[安装与准备](./docs/public/installation.md) · [热门题材雷达](./docs/public/modules/market-radar.md) · [参考作品开书](./docs/public/modules/book-analysis.md)
+Set up the Style Engine, knowledge base, and advanced model routing after your first successful chapter. [Installation and setup](./docs/public/installation.md) · [Market Radar](./docs/public/modules/market-radar.md) · [Create from a reference work](./docs/public/modules/book-analysis.md)
 
-### 写一篇完整短篇
+### Write a complete short story
 
-配置好模型后，打开“创作短篇”，输入想法，让 AI 推荐方向与篇幅；选择方向后开始生成。调整篇幅或创作方向时，先让 AI 重新适配方案，再确认生产。
+Configure a model, open “Create a Short Story,” and enter an idea. Ask AI to suggest a direction and length, choose a direction, and start generation. If you change the target length or direction, have AI adapt the plan again before confirming production.
 
-短篇按内部片段生成，阅读与导出呈现连续正文；成稿后进行全篇检查和至多一次必要修复。你可以直接编辑，也可以提出修改要求，核对 AI 的修改范围后确认。“发展成长篇”会创建新作品，保留原短篇。改写中断时可“继续修改”；需要调整结构时，先“查看调整方案”，核对后“确认并继续”。
+Short stories are generated in internal segments but presented as continuous text for reading and export. Once complete, the story receives a full review and at most one necessary repair. Edit the text directly or request changes, review the proposed scope, and confirm. “Develop into a Novel” creates a new project and keeps the original story. If a revision is interrupted, choose “Continue Editing.” To change the structure, review the adjustment plan first, then confirm and continue.
 
-### AI 用量怎么看
+### Understanding AI usage
 
-在 V2 本书顶部或书架打开 **“AI 用量”**，先看全书已记录用量，再按章节、步骤、厂商、模型或状态筛选调用。规划、正文、审阅和修文都可能产生消耗，不能只按最终正文长度判断。
+Open **AI Usage** at the top of a V2 book or from the bookshelf. Review the book's recorded usage, then filter calls by chapter, step, provider, model, or status. Planning, drafting, review, and revision can all use tokens, so the final draft length alone does not determine usage.
 
-- **总 Tokens = 输入 Tokens + 输出 Tokens。** 缓存命中与未命中属于输入，不要再加一次。
-- 缓存统计以厂商返回为准；没有提供的统计显示未知，不能当作零。固定规则与稳定资料更容易复用，正文和章节任务变化时命中率可能不同。
-- 用量页覆盖已记录的调用；未记录的旧历史不会被估算补齐。Tokens 是调用计数，实际费用以厂商账单为准。
+- **Total tokens = input tokens + output tokens.** Cache hits and misses are already part of input; do not add them again.
+- Cache statistics come from the provider. If a statistic is not reported, it is unknown, not zero. Stable rules and reference material are easier to reuse; hit rates can vary as chapter tasks and drafts change.
+- The usage page covers recorded calls. Missing historical data is not estimated. Tokens count model usage; actual charges are determined by the provider's bill.
 
-### 遇到暂停或错误
+### Pauses and errors
 
-先查看本书导演台的暂停原因，再从对应工作台处理；需要追溯时打开“运行记录”查看状态和来源。保存的正文与任务进度有独立边界，重复点击生成不能代替恢复。
+First review the pause reason in the book's Director workspace, then resolve it in the relevant workspace. Open Run History to trace status and source pages. Saved drafts and task progress have separate boundaries; clicking Generate again is not a substitute for resuming.
 
-[常见问题](./docs/public/faq.md) · [故障排查](./docs/public/troubleshooting.md)
+[FAQ](./docs/public/faq.md) · [Troubleshooting](./docs/public/troubleshooting.md)
 
-模型、用量与写法等进阶配置可在作品创作过程中按需开启；具体操作见[模型设置](./docs/public/modules/system-settings.md)、[模型路由](./docs/public/modules/model-routing.md)与[项目文档站](https://explosivecoderflome.github.io/AI-Novel-Writing-Assistant/)。
+Advanced options for models, usage, and style can be enabled as needed. See [System Settings](./docs/public/modules/system-settings.md), [Model Routing](./docs/public/modules/model-routing.md), or the [online documentation site](https://explosivecoderflome.github.io/AI-Novel-Writing-Assistant/).
 
-## 功能预览
+## Feature preview
 
-以下截图展示现有功能示例，包含 V1 工作台与资料工具；界面与当前版本可能有差异。V2 的入口、模式与操作以[上方使用说明](#导演版本与运行模式)为准。
+These screenshots show examples of existing features, including the V1 workspace and reference tools. The interface may differ from the current release. For V2 entry points, modes, and actions, see [Director versions and run modes](#director-versions-and-run-modes).
 
-### 章节写作与拆书
+### Chapter writing and book analysis
 
-| V1 章节执行工作台 | 拆书与参考资料 |
+| V1 chapter workspace | Book analysis and reference materials |
 | --- | --- |
-| ![V1 章节执行：阅读正文并查看生成与检查入口](./images/write/章节执行.png) | ![拆书工作台：整理参考作品的结构与人物](./images/v2/微信截图_20260813220038.png) |
-| 正文、章节任务与检查结果围绕同一章组织。 | 从作品结构和原文证据中整理可复用的创作资料。 |
+| ![V1 chapter workspace for reading drafts, generating chapters, and reviewing results](./images/write/chapter-execution.png) | ![Book analysis workspace for organizing a reference work's structure and characters](./images/v2/feature-preview-20260813-220038.png) |
+| Drafts, chapter tasks, and review results are organized around the same chapter. | Extract reusable writing insights from a work's structure and source-text evidence. |
 
 <details>
-<summary><strong>展开：开书方向与 V1 分阶段工作台</strong></summary>
+<summary><strong>More: book setup and the staged V1 workspace</strong></summary>
 
-### 开书方向选择
+### Choose a book direction
 
-![自动导演方向选择示例](./images/导演模式-选择方向.png)
+![Auto Director direction selection](./images/director-select-direction.png)
 
-### V1 的故事规划与角色准备
+### V1 story planning and character preparation
 
-| 故事宏观规划 | 角色准备 |
+| Story macro planning | Character preparation |
 | --- | --- |
-| ![V1 故事宏观规划](./images/write/故事宏观规划.png) | ![V1 角色准备](./images/write/角色准备.png) |
+| ![V1 story macro planning](./images/write/story-macro-planning.png) | ![V1 character preparation](./images/write/character-preparation.png) |
 
-### V1 的卷规划与节奏拆章
+### V1 volume planning and chapter breakdown
 
-| 卷战略 | 节奏与章节规划 |
+| Volume strategy | Pacing and chapter planning |
 | --- | --- |
-| ![V1 卷战略](./images/write/卷战略.png) | ![V1 节奏拆章](./images/write/节奏拆章.png) |
+| ![V1 volume strategy](./images/write/volume-strategy.png) | ![V1 pacing and chapter breakdown](./images/write/pacing-and-chapter-breakdown.png) |
 
 </details>
 
 <details>
-<summary><strong>展开：世界资料、写法与模型配置</strong></summary>
+<summary><strong>More: world references, style tools, and model settings</strong></summary>
 
-### 世界资料与可视化
+### World references and visualization
 
-![世界手册与可视化示例](./images/v2/微信截图_20260813220255.png)
+![World reference and visualization example](./images/v2/feature-preview-20260813-220255.png)
 
-### 写法引擎与反 AI 规则
+### Style Engine and anti-AI rules
 
-| 写法资产 | 表达规则 |
+| Style assets | Expression rules |
 | --- | --- |
-| ![写法引擎](./images/v2/微信截图_20260813220303.png) | ![反 AI 规则](./images/v2/微信截图_20260813220310.png) |
+| ![Style Engine](./images/v2/feature-preview-20260813-220303.png) | ![Anti-AI rules](./images/v2/feature-preview-20260813-220310.png) |
 
-### 模型配置
+### Model settings
 
-![模型供应商配置示例](./images/模型配置.png)
+![Model provider settings](./images/model-settings.png)
 
 </details>
 
-## 从灵感到章节的创作链
+## From inspiration to chapters
 
-下面展示长篇的持续创作路径。实线表示创作推进，虚线表示按需导入资料或提供约束；短篇进入独立的计划、生成与全篇检查流程。
+This diagram shows the long-form writing workflow. Solid arrows represent the main production flow; dashed arrows represent optional references and constraints. Short stories use a separate planning, generation, and full-review process.
 
 ```mermaid
 flowchart TB
-    subgraph Planning[开书与本书规划]
-        IDEA[灵感与故事方向] --> CONTRACT[本书创作约定]
-        CONTRACT -->|按题材需要准备| WORLD[本书世界 · 规则与舞台]
-        WORLD --> CHARACTERS[本书角色 · 目标与关系]
-        CHARACTERS --> PLAN[卷纲与近期章节规划]
+    subgraph Planning[Book setup and planning]
+        IDEA[Inspiration and story direction] --> CONTRACT[Book writing contract]
+        CONTRACT -->|Prepare when needed for the genre| WORLD[Book world · rules and settings]
+        WORLD --> CHARACTERS[Book characters · goals and relationships]
+        CHARACTERS --> PLAN[Volume outline and near-term chapter plan]
     end
 
-    subgraph Assets[可选外部资产与表达规则]
-        REFERENCE[参考作品 · 拆书结果]
-        WORLD_LIBRARY[外部世界 · 世界样本库]
-        CHARACTER_LIBRARY[外部角色 · 基础角色库]
-        STYLE_LIBRARY[写法引擎 · 写法资产]
-        ANTI_AI[去 AI 化 · 反 AI 规则]
-        KNOWLEDGE[知识库 · 参考资料]
-        RULES[本书生效写法与表达规则]
+    subgraph Assets[Optional external assets and writing rules]
+        REFERENCE[Reference work · book analysis]
+        WORLD_LIBRARY[External worlds · world sample library]
+        CHARACTER_LIBRARY[External characters · character library]
+        STYLE_LIBRARY[Style Engine · style assets]
+        ANTI_AI[De-AI writing · anti-AI rules]
+        KNOWLEDGE[Knowledge base · reference material]
+        RULES[Writing and expression rules for this book]
     end
 
-    subgraph Production[章节生产与持续创作]
-        RANGE[授权正文范围] --> CONTEXT[组装本章上下文]
-        CONTEXT --> DRAFT[正文生成]
-        DRAFT --> REVIEW[章节检查]
-        REVIEW -->|通过或按策略保留提醒| SAVE[保存正文与检查结果]
-        REVIEW -->|按策略允许修正| PATCH[预算内局部修文]
-        PATCH --> RECHECK[复验并选择保留稿]
+    subgraph Production[Chapter production and continued writing]
+        RANGE[Authorized chapter range] --> CONTEXT[Assemble chapter context]
+        CONTEXT --> DRAFT[Draft]
+        DRAFT --> REVIEW[Review chapter]
+        REVIEW -->|Pass or keep warnings according to policy| SAVE[Save draft and review results]
+        REVIEW -->|Revise when policy allows| PATCH[Targeted revision within budget]
+        PATCH --> RECHECK[Review again and choose a draft]
         RECHECK --> SAVE
-        SAVE --> STATE[同步角色 · 资源 · 伏笔状态]
-        STATE -->|本次范围完成| RESULT[查看结果与质量提醒]
-        STATE -->|授权范围内继续| CONTEXT
+        SAVE --> STATE[Sync character · resource · foreshadowing state]
+        STATE -->|Range complete| RESULT[Review results and quality warnings]
+        STATE -->|Continue within authorized range| CONTEXT
     end
 
     PLAN --> RANGE
-    RESULT -->|选择下一批| PLAN
-    REFERENCE -.->|参考结构与人物| CONTRACT
-    REFERENCE -.->|提取文风与技法| STYLE_LIBRARY
-    REFERENCE -.->|沉淀参考资料| KNOWLEDGE
-    WORLD_LIBRARY -.->|导入为本书副本| WORLD
-    CHARACTER_LIBRARY -.->|导入并适配本书| CHARACTERS
-    STYLE_LIBRARY -.->|绑定本书写法| RULES
-    ANTI_AI -.->|全局基线与写法专属规则| RULES
-    WORLD -.->|世界规则与秘密边界| CONTEXT
-    CHARACTERS -.->|人物事实与当前状态| CONTEXT
-    KNOWLEDGE -.->|按需召回| PLAN
-    KNOWLEDGE -.->|按需召回| CONTEXT
-    RULES -.->|生成遵循表达约束| CONTEXT
-    RULES -.->|专项检测按设置启用| REVIEW
-    RULES -.->|修文遵循规则与权限| PATCH
+    RESULT -->|Choose the next range| PLAN
+    REFERENCE -.->|Reference structure and characters| CONTRACT
+    REFERENCE -.->|Extract style and techniques| STYLE_LIBRARY
+    REFERENCE -.->|Save reference material| KNOWLEDGE
+    WORLD_LIBRARY -.->|Import as a copy for this book| WORLD
+    CHARACTER_LIBRARY -.->|Import and adapt for this book| CHARACTERS
+    STYLE_LIBRARY -.->|Apply styles to this book| RULES
+    ANTI_AI -.->|Global baseline and style-specific rules| RULES
+    WORLD -.->|World rules and secret boundaries| CONTEXT
+    CHARACTERS -.->|Character facts and current state| CONTEXT
+    KNOWLEDGE -.->|Retrieve when needed| PLAN
+    KNOWLEDGE -.->|Retrieve when needed| CONTEXT
+    RULES -.->|Follow expression constraints when drafting| CONTEXT
+    RULES -.->|Run specialized checks when enabled| REVIEW
+    RULES -.->|Follow rules and permissions during revision| PATCH
 ```
 
-- **外部世界与角色：** [世界样本](./docs/public/modules/world-sample-library.md)导入为本书世界副本，[角色库](./docs/public/modules/character-library.md)资产导入为本书角色，按当前故事调整；本书剧情变化保留在书内，长期资产由你决定是否同步。
-- **写法与去 AI 化：** [写法引擎](./docs/public/modules/style-engine.md)与[反 AI 规则](./docs/public/modules/anti-ai-rules.md)提供生效的表达约束。专项检测按设置加入章节检查；需要修正时，沿用局部修文流程与规则权限，只提醒的规则保留为质量提醒。
-- **参考资料与状态回流：** 拆书和知识库提供按需参考，每章写后同步的人物、资源和伏笔状态参与后续章节，帮助连续创作承接已发生的剧情。
+- **External worlds and characters:** Import [world samples](./docs/public/modules/world-sample-library.md) as copies for a book and [character-library](./docs/public/modules/character-library.md) assets as book characters, then adapt them to the story. Story changes stay with the book; you choose whether to sync long-term assets.
+- **Style and de-AI writing:** The [Style Engine](./docs/public/modules/style-engine.md) and [anti-AI rules](./docs/public/modules/anti-ai-rules.md) provide expression constraints. Specialized checks are added to chapter review according to settings. Revisions follow the targeted-edit workflow and its permissions; rules configured as warnings remain warnings.
+- **References and state updates:** Book analysis and the knowledge base provide optional references. Character, resource, and foreshadowing state synchronized after each chapter helps later chapters carry forward established events.
 
-V1 与 V2 分别编排这条链，已保存的小说资料可以复用。章节检查与修文按本次质量策略执行，暂停与恢复方式见[使用说明](#遇到暂停或错误)。
+V1 and V2 orchestrate this workflow independently, and both can reuse saved book assets. Chapter review and revision follow the current quality policy. See [Pauses and errors](#pauses-and-errors) for recovery guidance.
 
 <details>
-<summary><strong>查看生产链与交互架构图</strong></summary>
+<summary><strong>View production and interaction diagrams</strong></summary>
 
-![长篇生成能力支撑图](./images/流程图.svg)
+![Long-form generation capability diagram](./images/workflow-diagram.svg)
 
-[![自动导演交互架构图](./docs/architecture/diagram.webp)](https://explosivecoderflome.github.io/AI-Novel-Writing-Assistant/architecture/auto-director-idea-to-novel.detailed.workflow.html)
+[![Auto Director interaction architecture](./docs/architecture/diagram.webp)](https://explosivecoderflome.github.io/AI-Novel-Writing-Assistant/architecture/auto-director-idea-to-novel.detailed.workflow.html)
 
-[打开交互架构图](https://explosivecoderflome.github.io/AI-Novel-Writing-Assistant/architecture/auto-director-idea-to-novel.detailed.workflow.html) · [图表源数据](./docs/architecture/auto-director-idea-to-novel.detailed.workflow.json)
+[Open the interactive architecture diagram](https://explosivecoderflome.github.io/AI-Novel-Writing-Assistant/architecture/auto-director-idea-to-novel.detailed.workflow.html) · [Diagram source data](./docs/architecture/auto-director-idea-to-novel.detailed.workflow.json)
 
-交互图由 [Archify](https://github.com/tt-a1i/archify) 生成，展示产品生产链的细节；V2 的独立运行与恢复规则见[开发 Wiki](./docs/wiki/workflows/director-version-isolation.md)。
+The interactive diagram was generated with [Archify](https://github.com/tt-a1i/archify) and shows details of the production workflow. For V2's independent runs and recovery rules, see the [Development Wiki](./docs/wiki/workflows/director-version-isolation.md).
 
 </details>
 
-## 文档导航
+## Documentation
 
-| 你想了解什么 | 从这里开始 |
+| Topic | Start here |
 | --- | --- |
-| 下载、模型准备与第一次启动 | [安装与准备](./docs/public/installation.md) · [模型设置](./docs/public/modules/system-settings.md) |
-| V2 的首次创作与模式选择 | [本文快速开始](#快速开始) · [版本与运行模式](#导演版本与运行模式) |
-| 短篇生成与后续修改 | [短篇使用路径](#写一篇完整短篇) · [短篇工作流开发说明](./docs/wiki/workflows/creation-studio-short-story.md) |
-| Token 缓存优化与消耗统计 | [缓存与调用优化](#token-缓存与调用优化) · [AI 用量读法](#ai-用量怎么看) |
-| V1 的分阶段创作路径 | [第一本小说实操路径](./docs/public/playbook/first-novel-walkthrough.md) · [自动导演阶段全景](./docs/public/flow/auto-director-pipeline.md) |
-| 维护写法、人物和资料 | [写法引擎](./docs/public/modules/style-engine.md) · [角色库](./docs/public/modules/character-library.md) · [知识库](./docs/public/modules/knowledge-base.md) |
-| 任务异常与恢复 | [故障排查](./docs/public/troubleshooting.md) · [运行记录](./docs/public/modules/task-center.md) · [V1 按阶段恢复](./docs/public/playbook/recovery-by-phase.md) |
-| 原理、模块边界与开发规范 | [开发 Wiki](./docs/wiki/README.md) · [文档目录](./docs/README.md) · [协作规则](./AGENTS.md) |
-| 历史更新与后续方向 | [完整更新记录](./docs/releases/release-notes.md) · [当前路线图](./TASK.md) |
+| Download, model setup, and first launch | [Installation and setup](./docs/public/installation.md) · [System Settings](./docs/public/modules/system-settings.md) |
+| First V2 project and run-mode selection | [Quick start](#quick-start) · [Versions and run modes](#director-versions-and-run-modes) |
+| Short-story generation and revision | [Short-story workflow](#write-a-complete-short-story) · [Short-story workflow development notes](./docs/wiki/workflows/creation-studio-short-story.md) |
+| Token caching and usage reporting | [Caching and usage optimization](#understanding-ai-usage) · [AI usage](#understanding-ai-usage) |
+| V1's staged writing workflow | [First-novel walkthrough](./docs/public/playbook/first-novel-walkthrough.md) · [Auto Director pipeline](./docs/public/flow/auto-director-pipeline.md) |
+| Style, characters, and reference material | [Style Engine](./docs/public/modules/style-engine.md) · [Character library](./docs/public/modules/character-library.md) · [Knowledge base](./docs/public/modules/knowledge-base.md) |
+| Task errors and recovery | [Troubleshooting](./docs/public/troubleshooting.md) · [Task center](./docs/public/modules/task-center.md) · [V1 phase recovery](./docs/public/playbook/recovery-by-phase.md) |
+| Architecture, module boundaries, and development | [Development Wiki](./docs/wiki/README.md) · [Documentation index](./docs/README.md) · [Agent guidelines](./AGENTS.md) |
+| Release history and roadmap | [Release history](./docs/releases/release-notes.md) · [Roadmap](./TASK.md) |
 
-也可以在[在线文档站](https://biznovelstudio.com)搜索模块与使用问题。
+You can also search the [online documentation site](https://biznovelstudio.com) for modules and usage questions.
 
-## 源码运行
+## Run from source
 
-### 环境要求
+### Requirements
 
-| 项目 | 要求 |
+| Component | Requirement |
 | --- | --- |
-| Node.js | `^20.19.0 \|\| ^22.12.0 \|\| >=24.0.0`，与根目录 `package.json` 一致 |
-| pnpm | `>=10.6.0`，仓库声明使用 `pnpm@10.6.0` |
-| 文本模型 | 至少一组可用 API 配置，可在启动后填写 |
-| 数据库 | 默认本地 SQLite；可通过服务端配置使用 PostgreSQL |
-| 知识库检索 | 可选 Qdrant 与 Embedding 模型，不是首次写作的前置条件 |
+| Node.js | `^20.19.0 \|\| ^22.12.0 \|\| >=24.0.0`, matching the root `package.json` |
+| pnpm | `>=10.6.0`; the repository specifies `pnpm@10.6.0` |
+| Text model | At least one working API configuration; it can be added after launch |
+| Database | Local SQLite by default; PostgreSQL can be configured on the server |
+| Knowledge retrieval | Optional Qdrant and embedding model; not required to start writing |
 
-### 安装与启动
+### Install and launch
 
 ```bash
 git clone https://github.com/ExplosiveCoderflome/AI-Novel-Writing-Assistant.git
@@ -332,7 +331,7 @@ cd AI-Novel-Writing-Assistant
 pnpm install
 ```
 
-复制服务端配置文件，任选与你的终端对应的一条：
+Copy the server configuration file using the command for your terminal:
 
 ```powershell
 # Windows PowerShell
@@ -344,64 +343,64 @@ Copy-Item server/.env.example server/.env
 cp server/.env.example server/.env
 ```
 
-在 `server/.env` 中确认：
+In `server/.env`, check the following defaults:
 
 ```env
-# 默认开放 V1/V2 选择；如需暂时关闭 V2，可设置为 false
+# V1/V2 selection is enabled by default; set to false to temporarily disable V2
 DIRECTOR_NEXT_ENABLED=true
 
-# 尚未配置 Qdrant 时关闭检索，先跑通创作
+# Keep retrieval disabled until Qdrant is configured
 RAG_ENABLED=false
 ```
 
-然后在仓库根目录启动：
+Then start the app from the repository root:
 
 ```bash
 pnpm dev
 ```
 
-前端默认为 `http://localhost:5173`，服务端为 `http://localhost:3000`。首次开发启动会准备 Prisma Client 与数据库结构，通常无需先手动执行数据库命令；如需连接已有数据库，先核对配置并保留备份。启动后打开系统设置配置并测试模型。
+The frontend is available at `http://localhost:5173` and the server at `http://localhost:3000`. The first development launch prepares Prisma Client and the database schema, so manual database commands are usually unnecessary. If connecting to an existing database, verify the configuration and keep a backup. After launch, configure and test a model in System Settings.
 
-Web 开发默认通过 Vite 的同源 `/api` 代理访问服务端，同机与局域网访问通常无需创建 `client/.env`。前后端分开部署或需要指定其他服务端时，才设置 `VITE_API_BASE_URL`。
+Web development uses Vite's same-origin `/api` proxy by default, so local and LAN access usually do not require `client/.env`. Set `VITE_API_BASE_URL` only when deploying the frontend and backend separately or using a different server.
 
-### 常用命令
+### Common commands
 
-| 命令 | 用途 |
+| Command | Purpose |
 | --- | --- |
-| `pnpm dev` | 启动共享包、服务端和 Web 客户端 |
-| `pnpm dev:desktop` | 启动桌面开发环境，首次按需准备 Electron 运行时 |
-| `pnpm dev:site` | 预览公开介绍与文档站 |
-| `pnpm build` | 构建共享包、服务端和 Web 客户端 |
-| `pnpm typecheck` | 检查共享包、服务端、客户端和桌面端类型 |
-| `pnpm test` | 运行服务端快速测试 |
-| `pnpm test:client` | 运行客户端测试 |
-| `pnpm check:docs-manifest` | 检查公开文档清单与阶段说明 |
+| `pnpm dev` | Start the shared package, server, and web client |
+| `pnpm dev:desktop` | Start the desktop development environment and prepare Electron as needed |
+| `pnpm dev:site` | Preview the public site and documentation |
+| `pnpm build` | Build the shared package, server, and web client |
+| `pnpm typecheck` | Type-check the shared package, server, client, and desktop app |
+| `pnpm test` | Run the server's fast test suite |
+| `pnpm test:client` | Run client tests |
+| `pnpm check:docs-manifest` | Check the public documentation manifest and stage descriptions |
 
-完整命令以[根目录 package.json](./package.json)为准；测试范围与隔离规则见[后端测试说明](./docs/architecture/testing.md)。
+See the root [package.json](./package.json) for all commands. Test scope and isolation are described in [backend testing](./docs/architecture/testing.md).
 
 <details>
-<summary><strong>高级配置：环境变量、知识库与安装排查</strong></summary>
+<summary><strong>Advanced setup: environment variables, knowledge retrieval, and troubleshooting</strong></summary>
 
-### 配置文件在哪里
+### Configuration files
 
-- 服务端读取 `server/.env`；前端读取 `client/.env` 或 `client/.env.local`。
-- 根目录 `.env.example` 用作总览，不能代替子包配置。
-- API Key 和模型可以在系统设置保存；模型路由用于分别配置规划、正文、审阅和拆书。
-- 默认 SQLite 连接为 `file:./dev.db`；已有数据的位置由实际运行配置决定，桌面版与源码版的数据目录不同。
+- The server reads `server/.env`; the frontend reads `client/.env` or `client/.env.local`.
+- The root `.env.example` is an overview and does not replace package-specific configuration.
+- Save API keys and models in System Settings. Model routing lets you configure planning, drafting, review, and book analysis separately.
+- The default SQLite connection is `file:./dev.db`. Existing data locations depend on the active runtime configuration; the desktop and source versions use different data directories.
 
-### 前后端分开运行
+### Run the frontend and backend separately
 
-如果前端需要连接另一台机器上的 API，在 `client/.env` 中填写：
+If the frontend needs to connect to an API on another machine, set this in `client/.env`:
 
 ```env
 VITE_API_BASE_URL=http://your-server:3000/api
 ```
 
-更改 Vite 环境变量后重新启动前端。服务端端口、绑定地址和跨域配置见 [server/.env.example](./server/.env.example)；正式 Web 部署还需要按实际域名设置访问边界。
+Restart the frontend after changing Vite environment variables. Server ports, bind addresses, and CORS settings are documented in [server/.env.example](./server/.env.example). Production web deployments also need access boundaries configured for their domain.
 
-### 启用知识库检索
+### Enable knowledge retrieval
 
-准备 Qdrant 地址与凭据，在 `server/.env` 中配置：
+Configure a Qdrant URL and credentials in `server/.env`:
 
 ```env
 RAG_ENABLED=true
@@ -409,11 +408,11 @@ QDRANT_URL=http://127.0.0.1:6333
 QDRANT_API_KEY=
 ```
 
-使用远程实例时替换地址和凭据。启动后在“知识库 → 向量设置”配置 Embedding 模型与集合，再导入并索引资料。[知识库使用说明](./docs/public/modules/knowledge-base.md)
+Replace the address and credentials when using a remote instance. After startup, configure an embedding model and collection under Knowledge Base → Vector Settings, then import and index material. See the [Knowledge Base guide](./docs/public/modules/knowledge-base.md).
 
-### 安装卡住或桌面运行时未准备
+### Installation stalls or the desktop runtime is missing
 
-先检查 Node 版本与包管理器配置：
+Check the Node.js version and package-manager configuration:
 
 ```bash
 node -v
@@ -422,75 +421,75 @@ pnpm config get script-shell
 npm config get script-shell
 ```
 
-如果 `script-shell` 配置为 `cmd.exe /k`，安装脚本可能停在交互式提示符；移除该自定义设置后重开终端再安装。桌面开发首次需要下载 Electron 运行时，网络不可用时先处理代理或镜像；也可单独执行 `pnpm run prepare:desktop-runtime`。
+If `script-shell` is set to `cmd.exe /k`, installation scripts may stop at an interactive prompt. Remove the custom setting and reopen the terminal before reinstalling. The first desktop-development launch downloads the Electron runtime; if the network is unavailable, configure a proxy or mirror, or run `pnpm run prepare:desktop-runtime` separately.
 
 </details>
 
-## 技术栈与架构
+## Technology and architecture
 
-| 层级 | 主要技术 |
+| Layer | Main technologies |
 | --- | --- |
-| 客户端 | React 19、Vite、TypeScript、TanStack Query、Plate |
-| 服务端 | Express 5、Prisma、Zod |
-| AI 与工具编排 | LangChain、LangGraph、产品级 Prompt Registry |
-| 桌面端 | Electron |
-| 数据与检索 | SQLite / PostgreSQL、Qdrant |
-| 工程组织 | pnpm workspace |
+| Client | React 19, Vite, TypeScript, TanStack Query, Plate |
+| Server | Express 5, Prisma, Zod |
+| AI and tool orchestration | LangChain, LangGraph, product-level Prompt Registry |
+| Desktop | Electron |
+| Data and retrieval | SQLite / PostgreSQL, Qdrant |
+| Repository structure | pnpm workspace |
 
 ```text
-client/   Web 界面、小说工作台与导演台
-server/   API、模型调用、导演与章节生产
-shared/   前后端共享类型与运行契约
-desktop/  Electron 壳、桌面运行与打包
-site/     公开介绍站与文档导航
-docs/     使用文档、开发 Wiki、设计与发布记录
-scripts/  启动、验证与工程脚本
-images/   功能预览与文档截图
+client/   Web interface, novel workspace, and Director workspace
+server/   API, model calls, Director, and chapter production
+shared/   Shared frontend/backend types and runtime contracts
+desktop/  Electron shell, desktop runtime, and packaging
+site/     Public introduction and documentation navigation
+docs/     User guides, Development Wiki, design notes, and release history
+scripts/  Startup, verification, and engineering scripts
+images/   Feature previews and documentation screenshots
 ```
 
-V2 内核位于 `server/src/modules/director/`，业务能力由应用层接入；V1 保留自己的编排模块。两者共用已保存的小说资产与底层章节能力，任务、恢复和版本归属独立管理。[版本隔离规则](./docs/wiki/workflows/director-version-isolation.md) · [模块边界](./docs/wiki/architecture/module-boundaries.md) · [章节生产链](./docs/wiki/workflows/chapter-production-chain.md)
+The V2 core is in `server/src/modules/director/`, with capabilities connected through the application layer. V1 retains its own orchestration modules. Both versions use saved novel assets and shared chapter capabilities, while tasks, recovery, and version ownership remain independent. See [version isolation](./docs/wiki/workflows/director-version-isolation.md), [module boundaries](./docs/wiki/architecture/module-boundaries.md), and the [chapter production workflow](./docs/wiki/workflows/chapter-production-chain.md).
 
-## 参与项目
+## Contributing
 
-欢迎通过 [Issues](https://github.com/ExplosiveCoderflome/AI-Novel-Writing-Assistant/issues)反馈问题，或提交 Pull Request。优先关注连续生成与恢复、新手开书体验、长篇一致性和可追溯的模型用量。反馈时附上使用版本、所选导演与模式、操作步骤和相关日志，会更容易定位问题。
+Report problems through [Issues](https://github.com/ExplosiveCoderflome/AI-Novel-Writing-Assistant/issues) or submit a Pull Request. Areas of interest include continuous generation and recovery, the first-book experience, long-form consistency, and traceable model usage. Include the app version, selected Director and mode, steps to reproduce, and relevant logs when reporting an issue.
 
-提交贡献前请阅读 [CONTRIBUTING.md](./CONTRIBUTING.md) 与 [CLA.md](./CLA.md)，并说明第三方代码、素材及其许可证。感谢参与测试、提出建议和提交修复的朋友，也感谢贡献者 [@ystyleb](https://github.com/ystyleb)。
+Before contributing, read [CONTRIBUTING.md](./CONTRIBUTING.md) and [CLA.md](./CLA.md), and identify third-party code or assets and their licenses. Thanks to everyone who tests, shares suggestions, and contributes fixes, including [@ystyleb](https://github.com/ystyleb).
 
-### 友情链接
+### Community
 
 <p align="center">
-  <a href="https://linux.do/"><img src="https://img.shields.io/badge/LINUX%20DO-%E7%A4%BE%E5%8C%BA-FDD835?style=flat-square&amp;labelColor=222" alt="LINUX DO 社区" /></a>
+  <a href="https://linux.do/"><img src="https://img.shields.io/badge/LINUX%20DO-Community-FDD835?style=flat-square&amp;labelColor=222" alt="LINUX DO community" /></a>
 </p>
 
 <p align="center">
   <a href="https://linux.do/"><strong>LINUX DO</strong></a>
   ·
-  <a href="https://linux.do/t/topic/2738271">本项目讨论帖</a>
+  <a href="https://linux.do/t/topic/2738271">Project discussion</a>
 </p>
 
-### 交流与支持
+### Contact and support
 
 <details>
-<summary><strong>展开：QQ 交流群与支持项目</strong></summary>
+<summary><strong>Expand: QQ group and project support</strong></summary>
 
-想交流创作体验、自动导演或项目开发，可以扫码加入 QQ 群。如果工作台对你有帮助，也欢迎支持持续开发与维护。
+Join the QQ group to discuss writing, Auto Director, or project development. If the studio is useful to you, you can also support its continued development and maintenance.
 
-| QQ 交流群 | 支持项目（支付宝） |
+| QQ group | Support the project (Alipay) |
 | --- | --- |
-| <img src="./images/群2.png" alt="QQ 群二维码" width="240" /> | <img src="./images/c838dd8eb412d6fde536b2a43f53e95.jpg" alt="支付宝支持二维码" width="240" /> |
+| <img src="./images/community-qr-2.png" alt="QQ group QR code" width="240" /> | <img src="./images/c838dd8eb412d6fde536b2a43f53e95.jpg" alt="Alipay support QR code" width="240" /> |
 
 </details>
 
-### 在 Codex 中创作：Ani Book Skill
+### Write in Codex: Ani Book Skill
 
-希望直接在 Codex 的本地文件工作区推进长篇，可以了解配套的 [Ani Book Skill](https://github.com/ExplosiveCoderflome/ani-book-skill)，通过阶段工件持续规划、写作和审校。本仓库提供可视化工作台，两种入口按你的使用习惯选择。
+If you prefer to advance a long-form project directly in Codex's local file workspace, see the companion [Ani Book Skill](https://github.com/ExplosiveCoderflome/ani-book-skill). It uses staged artifacts for planning, writing, and review. This repository provides a visual workspace; choose either entry point to suit your workflow.
 
 ## License
 
-本项目采用双许可证授权模式：
+This project uses a dual-licensing model:
 
-- 默认基于 GNU Affero General Public License v3.0（AGPLv3）授权，详见 [LICENSE](./LICENSE)；归属与附加说明见 [NOTICE](./NOTICE)。
-- 服务型商用：将本项目或其修改版本作为后端，以 SaaS、托管等形式向第三方提供服务，须通过作者获取商业授权许可。
-- 新贡献默认按 [CLA.md](./CLA.md) 提交，可随项目按 AGPL-3.0-only 分发，也可纳入维护者另行提供的商业授权。
+- By default, it is licensed under the GNU Affero General Public License v3.0 (AGPLv3); see [LICENSE](./LICENSE). Attribution and additional notices are in [NOTICE](./NOTICE).
+- Commercial service use: using this project or a modified version as a backend service for third parties, including SaaS or hosted services, requires a commercial license from the author.
+- New contributions are submitted under [CLA.md](./CLA.md). They may be distributed under AGPL-3.0-only or included in a separate commercial license offered by the maintainers.
 
-[贡献与授权说明](./CONTRIBUTING.md)
+[Contribution and licensing details](./CONTRIBUTING.md)
